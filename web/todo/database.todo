@@ -8,20 +8,34 @@ DATABASE:
     ☐ USER_NAME
     ☐ INITIALS
     ☐ TAG
-    ☐ CONTACT
+    ☐ USER_EMAIL[]
+    ☐ USER_PHONE[]
     ☐ INTITIALS
     ☐ ONE_LINE_DESCRIPTION
     ☐ SOCIAL_LINKS[]
+
+
+    debate mark
+    team
   
+  USER_PHONE:
+    ☐ PHONE
+    ☐ VERIFIED
+    ☐ USER_ID
+  
+  USER_EMAIL:
+    ☐ EMAIL
+    ☐ VERIFIED
+    ☐ USER_ID
+
   LIVE_DEBATE:
     ☐ TITLE
-    ☐ FOLLOWER_COUNT
     ☐ HOST_ID
     ☐ DEBATE_TYPE
     ☐ AUTO_FLAGGED_KEYWORDS
-    ☐ DESCRIPTION
+<>    ☐ DESCRIPTION <>?
     ☐ CHAT_RULES
-    ☐ TEAMS[]
+!    ☐ TEAMS[]
     ☐ FOLLOWER_ONLY_CHAT
     ☐ SUPPORT_ONLY_CHAT
     ☐ TEAM_ONLY_CHAT ( SELECT ONE OR MORE TAGS )
@@ -75,7 +89,7 @@ DATABASE:
     ☐ DEBATE_ID
     ☐ THUMBNAIL_URL
   
-  HOST:
+  HOST: <>
     ☐ USERNAME
     ☐ SUPPORT_COUNT
     ☐ DESCRIPTION

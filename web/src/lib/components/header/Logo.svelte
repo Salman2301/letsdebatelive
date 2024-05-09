@@ -25,6 +25,10 @@
 		animation: blink 1.2s infinite ease-in-out;
 	}
 
+	.live svg {
+		animation: shrink 1.2s infinite ease-in-out;
+	}
+
 	@keyframes blink {
 		from {
 			opacity: 0.8;
@@ -34,6 +38,17 @@
     }
 		to {
 			opacity: 0.8;
+		}
+	}
+	@keyframes shrink {
+		from {
+			scale: 0.9;
+		}
+    50% {
+      scale: 1;
+    }
+		to {
+			scale: 0.9;
 		}
 	}
 </style>

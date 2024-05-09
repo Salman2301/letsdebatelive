@@ -13,6 +13,7 @@ export default {
       "secondary-dark": "var(--color-secondary-dark)",
       black: "var(--color-black)",
       white: "var(--color-white)",
+      "light-gray": "var(--color-light-gray)",
     }
   },
   plugins: [],

@@ -7,6 +7,7 @@
   --color-secondary-dark: #4A0335;
   --color-accent-gray: #272727;
   --color-accent-red: #C1063E;
+  --color-light-gray: rgba(204, 204, 204, 0.3)
 }
 
 html, body {
