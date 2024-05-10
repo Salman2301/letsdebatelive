@@ -1,2 +1,19 @@
+TODO:
+  ☐ Auth
+    ☐ Login
+    ☐ Register
+      ☐ Verified
+    ☐ Forgot Password
+    ☐ Reset Password
+    ☐ Logout
+  ☐ Create a debate screen
+    ☐ Test
+      ☐ Webcam
+      ☐ Microphone
+      ☐ Screenshare
+      ☐ Speaker
+      ☐ Stage component
+      
+
 ☐ Connect my webstream like webcam and screenshare to a video player
 
