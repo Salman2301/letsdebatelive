@@ -3,16 +3,17 @@
 	import Modal from './Modal.svelte';
 	import BigButton from '$lib/components/button/BigButton.svelte';
 	import { currentModal } from './modal.store';
-	import { enhance } from '$app/forms';
-	import { z } from 'zod';
+	import { z } from "zod";
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
+	import supabase from '$lib/supbase';
+	import { onMount } from 'svelte';
 
 	const form = {
 		email: '',
-		password: ''
+		password: ''	
 	};
 
 	const loginSchema = z.object({
@@ -27,11 +28,37 @@
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;
 
-	function handleSubmit(event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
-		parsed = loginSchema.safeParse(form);
-		hasErrors = hasErrorParse(parsed);
-		console.log(loginSchema.safeParse(form));
+	async function handleSubmit(event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
+		try {
+			parsed = loginSchema.safeParse(form);
+			hasErrors = hasErrorParse(parsed);
+			isLoading = true;
+
+			if(!parsed.success) throw new Error("Form error");
+
+			const { data: { session }} = await supabase.auth.getSession();
+			if( session ) throw new Error("Already signed in!");
+
+			const { data, error } = await supabase.auth.signInWithPassword({
+				email: form.email,
+				password: form.password
+			});
+			
+			if( error ) throw new Error(error.message);
+
+			isLoading = false;
+			$currentModal = null;
+		}
+		catch(e) {
+			isLoading = false;
+			console.error(e);
+		}
 	}
+
+	onMount(async ()=>{
+		const { data: { session }} = await supabase.auth.getSession();
+		if( session ) $currentModal = null; // close the modal
+	})
 </script>
 
 <Modal title="Login">
