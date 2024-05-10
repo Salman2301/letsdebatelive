@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { logoutUser } from "../auth";
-	import { isLoggedIn } from "../auth/auth.store";
+	import { authUserData, isLoggedIn } from "../auth/auth.store";
 	import { currentModal } from "../modal/modal.store";
 
   let showPopup = false;
+
+  async function handleCreateDebate() {
+    if( !$authUserData ) return;
+    goto(`/${$authUserData.username}/new-debate`);    
+  }
 </script>
 
 <div class="icon-container">
@@ -28,6 +34,7 @@
     <div class="popup">
       <button
         class="btn-popup"
+        on:click={handleCreateDebate}
       >
         Create Debate
       </button>
