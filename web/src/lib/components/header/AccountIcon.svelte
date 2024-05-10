@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { logoutUser } from "../auth";
+	import { isLoggedIn } from "../auth/auth.store";
+	import { currentModal } from "../modal/modal.store";
+
   let showPopup = false;
 </script>
 
@@ -29,13 +33,24 @@
       </button>
       <button
         class="btn-popup"
+        on:click={()=>($currentModal="login")}
+        class:hidden={$isLoggedIn}
       >
         Login
       </button>
       <button
         class="btn-popup"
+        on:click={()=>($currentModal="register")}
+        class:hidden={$isLoggedIn}
       >
         Create account
+      </button>
+      <button
+        class="btn-popup logout"
+        on:click={logoutUser}
+        class:hidden={!$isLoggedIn}
+      >
+        Logout
       </button>
     </div>
   {/if}
@@ -65,6 +80,12 @@
   .btn-popup:hover {
     @apply text-white;
     @apply bg-primary;
+  }
+  .logout:hover {
+    @apply bg-accent-red;
+  }
+  .btn-popup.hidden {
+    display: none;
   }
   .btn-popup:last-child {
     border-bottom: 0px;

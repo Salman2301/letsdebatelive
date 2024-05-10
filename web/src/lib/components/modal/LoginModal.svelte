@@ -11,6 +11,7 @@
 	import supabase from '$lib/supbase';
 	import { onMount } from 'svelte';
 	import { add } from '../toast/Toast.svelte';
+	import { checkLoginSetStore } from '../auth';
 
 	const form = {
 		email: '',
@@ -31,6 +32,7 @@
 
 	async function handleSubmit(event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
 		try {
+			event.preventDefault();
 			parsed = loginSchema.safeParse(form);
 			hasErrors = hasErrorParse(parsed);
 			isLoading = true;
@@ -49,6 +51,7 @@
 				add({ type: "error", message: error.message })
 				throw new Error(error.message);
 			}
+			await checkLoginSetStore();
 
 			isLoading = false;
 			$currentModal = null;
@@ -79,10 +82,18 @@
 			hasError={!!hasErrors?.password}
 		/>
 		<div class="text-content">
-			<button class="w-full text-left" onclick={() => currentModal.set('register')}>
-				Already Register? click here
+			<button
+				class="w-full text-left"
+				onclick={() => currentModal.set('register')}
+				type="button"
+			>
+				Create an account? click here
 			</button>
-			<button class="w-full text-right" onclick={() => currentModal.set('forgot-password')}>
+			<button
+				class="w-full text-right"
+				onclick={() => currentModal.set('forgot-password')}
+				type="button"
+			>
 				Forgot password?
 			</button>
 		</div>
