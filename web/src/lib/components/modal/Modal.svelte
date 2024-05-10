@@ -105,4 +105,18 @@
 	button {
 		display: block;
 	}
+
+	button:hover {
+		animation: spin 0.2s;
+	}
+	
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(90deg);
+		}
+	}
+
 </style>

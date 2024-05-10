@@ -1,15 +1,30 @@
 <script lang="ts">
-	export let label = "Button";
-	export let color: "primary" | "secondary" = "primary";
+	import Loader from "../icon/Loader.svelte";
+
+	interface Props {
+		label?: string;
+		color?: "primary" | "secondary";
+		isLoading?: boolean;
+		disabled?: boolean;
+	}
+	
+	let { label = "Button", color="primary", isLoading = false, disabled=false }: Props = $props();
+	
 </script>
 
 <button
 	class:primary={color === "primary"}
 	class:secondary={color === "secondary"}
+	class:loading={isLoading}
+	disabled={isLoading || disabled}
   on:click
 >
-	<slot name="icon-left" />
-	{label}
+	{#if isLoading}
+		<Loader />
+	{:else}
+		<slot name="icon-left" />
+		{label}
+	{/if}
 </button>
 
 <style lang="postcss">
@@ -25,12 +40,15 @@
     @apply text-center;
     @apply border border-light-gray;
 	}
-
+	button.loading {
+		@apply opacity-50 cursor-not-allowed;
+		@apply bg-primary;
+	}
 	button.primary {
 		@apply bg-primary;
 	}
 
-	button:hover.primary {
+	button:hover.primary:not(:disabled) {
 		@apply bg-primary-dark;
 	}
 
@@ -38,7 +56,7 @@
 		@apply bg-secondary;
 	}
 
-	button:hover.secondary {
+	button:hover.secondary:not(:disabled) {
 		@apply bg-secondary-dark;
 	}
 </style>
