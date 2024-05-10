@@ -3,11 +3,15 @@
   import Header from "$lib/components/header/Header.svelte";
   import ModalAll from "$lib/components/modal/ModalAll.svelte";
   import Toast from "$lib/components/toast/Toast.svelte";
+	import { currentModal } from "$lib/components/modal/modal.store";
 
+  
 </script>
 
-<Toast />
 <ModalAll />
+{#if $currentModal}
+  <Toast />
+{/if}
 <Header />
 
 <slot />

@@ -10,6 +10,7 @@
 	import InPassword from '../form/input/InPassword.svelte';
 	import supabase from '$lib/supbase';
 	import { onMount } from 'svelte';
+	import { add } from '../toast/Toast.svelte';
 
 	const form = {
 		email: '',
@@ -20,7 +21,7 @@
 		email: z.string().email(),
 		password: z.string().regex(REGEX_PASSWORD_VALIDATION, {
 			message:
-				'Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+				'Invalid password'
 		})
 	});
 
@@ -44,7 +45,10 @@
 				password: form.password
 			});
 			
-			if( error ) throw new Error(error.message);
+			if( error ) {
+				add({ type: "error", message: error.message })
+				throw new Error(error.message);
+			}
 
 			isLoading = false;
 			$currentModal = null;
