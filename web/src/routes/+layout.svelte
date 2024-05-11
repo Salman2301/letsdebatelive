@@ -34,4 +34,13 @@
 {/if}
 <Header />
 
-<slot />
+<div class="page">
+  <slot />
+</div>
+
+<style lang="postcss">
+  .page {
+    @apply bg-primary-dark;
+    min-height: calc(100vh - 76px);
+  }
+</style>

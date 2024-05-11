@@ -16,8 +16,9 @@
 </h3>
 
 <style lang="postcss">
-  h2 {
-    font-size: 18px;
+  h3 {
+    font-size: 16px;
+    letter-spacing: 1px;
   }
   .txt-left {
     @apply text-left;

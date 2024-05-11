@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { clickOutside } from "$lib/action/clickOutisde";
 	import { logoutUser } from "../auth";
 	import { authUserData, isLoggedIn } from "../auth/auth.store";
 	import { currentModal } from "../modal/modal.store";
@@ -12,7 +13,7 @@
   }
 </script>
 
-<div class="icon-container">
+<div class="icon-container" use:clickOutside={()=>(showPopup = false)}>
 	<button on:click={() => (showPopup = !showPopup)}>
     <svg
     width="34"

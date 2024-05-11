@@ -8,6 +8,11 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		webkitAudioContext: typeof AudioContext;
+		audioContext:  AudioContext;
+	}
 }
 
 export {};

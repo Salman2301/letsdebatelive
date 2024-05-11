@@ -29,7 +29,7 @@
     display: block;
   }
   .message-content {
-    position: absolute;
+    position: fixed;
     display: none;
     border: 1px solid var(--color-light-gray);
     @apply bg-secondary-dark;
