@@ -7,17 +7,18 @@
 	let { label = 'No Feed' }: Props = $props();
 </script>
 
-<div class="no-feed-container">
+<button class="no-feed-container" on:click>
 	<div class="content">
 		<NoFeed />
 		<p>{label}</p>
 	</div>
 	<img src="/images/thumbnail/NO_VIDEO.png" class="no-feed-thumbnail" alt="web cam feed" />
-</div>
+</button>
 
 <style lang="postcss">
 	.no-feed-container {
 		position: absolute;
+		z-index: 1;
 	}
 	.content {
 		position: absolute;
@@ -27,5 +28,8 @@
 		align-items: center;
 		width: 100%;
 		height: 100%;
+	}
+	p {
+		font-size: 18px;
 	}
 </style>

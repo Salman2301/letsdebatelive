@@ -5,10 +5,12 @@
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
-	import WebCamDisabled from './icons/WebCamDisabled.svelte';
-	import WebCamEnabled from './icons/WebCamEnabled.svelte';
-	import ScreenShareEnabled from './icons/ScreenShareEnabled.svelte';
-	import ScreenShareDisabled from './icons/ScreenShareDisabled.svelte';
+	import {
+		ScreenShareDisabled,
+		ScreenShareEnabled,
+		WebCamDisabled,
+		WebCamEnabled
+	} from './icons';
 	import NoFeedCard from './components/NoFeedCard.svelte';
 
 	let errorWebcamFeed: string = '';
@@ -75,7 +77,7 @@
 				screenSharePlaying = true;
 			} else {
 				if (videoScreenShareInstance && videoScreenShareInstance.srcObject) {
-					const streams = videoInstance.srcObject as MediaStream;
+					const streams = videoScreenShareInstance.srcObject as MediaStream;
 					streams.getTracks().forEach((str) => str.stop());
 				}
 				screenSharePlaying = false;
@@ -126,9 +128,62 @@
 		}
 	}
 
+	let micVolume = 0;
+	let micDeviceId: string;
+	let micStream: MediaStream | null;
+	let micCtx: AudioContext;
+	let currentMicSource: MediaStreamAudioSourceNode;
+
 	onMount(async () => {
+		micCtx = new (window.AudioContext || window.webkitAudioContext)();
 		await getDevices();
+		micDeviceId = kindMapDevices["audioinput"]?.[0].deviceId;
+		micAnalyser();
+
+		document.addEventListener("click", ()=>{
+			if (micCtx.state === 'suspended') micCtx.resume();
+		}, { once: true});
+	
 	});
+
+	async function micAnalyser() {
+		if (micStream) {
+			await Promise.all(micStream.getTracks().map(track => track.stop()));
+			micStream = null;
+			currentMicSource?.disconnect?.()
+		}
+
+		micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { deviceId: micDeviceId, echoCancellation: true }
+    });
+
+		currentMicSource = micCtx.createMediaStreamSource(micStream);
+
+    let analyser = micCtx.createAnalyser();
+
+    analyser.fftSize = 32;
+    let analyserData = new Uint8Array(analyser.frequencyBinCount);
+
+		currentMicSource.connect(analyser);
+
+		function getAnalyserLevel() {
+			analyser.getByteFrequencyData(analyserData);
+			let sum = 0;
+			for (let i = 0; i < analyserData.length; i++) {
+				sum += analyserData[i] / 255;
+			}
+			sum = sum / analyserData.length;
+			return sum;
+		}
+		
+
+    function updateValue() {
+      micVolume = getAnalyserLevel();
+			setTimeout(updateValue, 30);
+    }
+
+		updateValue();
+	}
 </script>
 
 <Heading2 content="New debate" textAlign="center" />
@@ -137,7 +192,7 @@
 	<div class="video-title-container">
 		<div class="video-container">
 			{#if !webcamFeedPlaying}
-				<NoFeedCard label="No web camera feed" />
+				<NoFeedCard label="No web camera feed" on:click={toggleWebCam} />
 			{/if}
 
 			<video bind:this={videoInstance} class="video-el" autoplay playsinline>
@@ -170,7 +225,7 @@
 				<track kind="captions" />
 			</video>
 			{#if !screenSharePlaying}
-				<NoFeedCard label="No screen share feed" />
+				<NoFeedCard label="No screen share feed" on:click={toggleScreenShare} />
 			{/if}
 		</div>
 
@@ -194,13 +249,13 @@
 	<div class="audio-mic-container">
 		<Heading3 content="MICROPHONE" />
 		<div class="audio-select-container">
-			<select class="select-audio">
+			<select class="select-audio" bind:value={micDeviceId} on:change={micAnalyser}>
 				{#each kindMapDevices['audioinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
 			</select>
 
-			<VolumeProgress />
+			<VolumeProgress percent={micVolume} />
 		</div>
 	</div>
 
@@ -281,7 +336,7 @@
 	.select-audio {
 		width: 240px;
 		border: 1px solid var(--color-light-gray);
-		padding: 10px 0px;
+		padding: 10px 4px;
 		border-radius: 4px;
 		font-size: 12px;
 	}
