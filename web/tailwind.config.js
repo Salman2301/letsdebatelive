@@ -8,6 +8,7 @@ export default {
       primary: "var(--color-primary)",
       secondary: "var(--color-secondary)",
       "accent-red": "var(--color-accent-red)",
+      "accent-red-dark": "var(--color-accent-red-dark)",
       "accent-gray": "var(--color-accent-gray)",
       "primary-dark": "var(--color-primary-dark)",
       "secondary-dark": "var(--color-secondary-dark)",

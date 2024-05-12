@@ -5,12 +5,7 @@
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
-	import {
-		ScreenShareDisabled,
-		ScreenShareEnabled,
-		WebCamDisabled,
-		WebCamEnabled
-	} from './icons';
+	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from './icons';
 	import NoFeedCard from './components/NoFeedCard.svelte';
 
 	let errorWebcamFeed: string = '';
@@ -18,6 +13,7 @@
 	let webcamFeedPlaying: boolean = false;
 	let screenSharePlaying: boolean = false;
 
+	let webCamDeviceId: string;
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
 
@@ -113,7 +109,9 @@
 			let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 			if (feedNotAvailable) errorWebcamFeed = 'Unsupported browser try different browser';
 
-			const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+			const stream = await navigator.mediaDevices.getUserMedia({
+				video: { deviceId: webCamDeviceId }
+			});
 			errorWebcamFeed = '';
 			videoInstance.srcObject = stream;
 			videoInstance.play();
@@ -129,40 +127,66 @@
 	}
 
 	let micVolume = 0;
-	let micDeviceId: string;
-	let micStream: MediaStream | null;
+	let micDeviceId: string = 'default';
+
 	let micCtx: AudioContext;
+	let micStream: MediaStream | null;
 	let currentMicSource: MediaStreamAudioSourceNode;
+	let clearIntervalMic: NodeJS.Timeout;
+
+	let speakerCtx: AudioContext;
+	let speakerDeviceId: string = 'default';
+	let speakerNode: GainNode;
+	let audioBuffer: AudioBufferSourceNode | null;
 
 	onMount(async () => {
 		micCtx = new (window.AudioContext || window.webkitAudioContext)();
-		await getDevices();
-		micDeviceId = kindMapDevices["audioinput"]?.[0].deviceId;
-		micAnalyser();
+		speakerCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-		document.addEventListener("click", ()=>{
-			if (micCtx.state === 'suspended') micCtx.resume();
-		}, { once: true});
-	
+		await getDevices();
+
+		micAnalyser();
+		webCamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
+
+		speakerNode = speakerCtx.createGain();
+		speakerNode.connect(speakerCtx.destination);
+
+		document.addEventListener(
+			'click',
+			() => {
+				if (micCtx.state === 'suspended') micCtx.resume();
+				if (speakerCtx.state === 'suspended') speakerCtx.resume();
+			},
+			{ once: true }
+		);
 	});
+
+	let decodedAudioData: AudioBuffer;
+	async function getDecodedAudioData(): Promise<AudioBuffer> {
+		if (decodedAudioData) return decodedAudioData;
+		const audioData = await fetch('/sounds/test/guitar.mp3').then((resp) => resp.arrayBuffer());
+		decodedAudioData = await speakerCtx.decodeAudioData(audioData);
+		return decodedAudioData;
+	}
 
 	async function micAnalyser() {
 		if (micStream) {
-			await Promise.all(micStream.getTracks().map(track => track.stop()));
+			await Promise.all(micStream.getTracks().map((track) => track.stop()));
 			micStream = null;
-			currentMicSource?.disconnect?.()
+			clearInterval(clearIntervalMic);
+			currentMicSource?.disconnect?.();
 		}
 
 		micStream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId: micDeviceId, echoCancellation: true }
-    });
+			audio: { deviceId: micDeviceId, echoCancellation: true }
+		});
 
 		currentMicSource = micCtx.createMediaStreamSource(micStream);
 
-    let analyser = micCtx.createAnalyser();
+		let analyser = micCtx.createAnalyser();
 
-    analyser.fftSize = 32;
-    let analyserData = new Uint8Array(analyser.frequencyBinCount);
+		analyser.fftSize = 32;
+		let analyserData = new Uint8Array(analyser.frequencyBinCount);
 
 		currentMicSource.connect(analyser);
 
@@ -175,14 +199,48 @@
 			sum = sum / analyserData.length;
 			return sum;
 		}
-		
 
-    function updateValue() {
-      micVolume = getAnalyserLevel();
-			setTimeout(updateValue, 30);
-    }
+		function updateValue() {
+			micVolume = getAnalyserLevel();
+			clearIntervalMic = setTimeout(updateValue, 30);
+		}
 
 		updateValue();
+	}
+
+	let speakerIsPlaying = false;
+	async function toggleSound() {
+		if (audioBuffer) {
+			audioBuffer.stop();
+			audioBuffer = null;
+			speakerIsPlaying = false;
+			return;
+		}
+		audioBuffer = speakerCtx.createBufferSource();
+
+		let decodedAudioData = await getDecodedAudioData();
+		audioBuffer.buffer = decodedAudioData;
+
+		audioBuffer.connect(speakerNode);
+
+		audioBuffer.onended = () => {
+			speakerIsPlaying = false;
+		};
+
+		speakerIsPlaying = true;
+		audioBuffer.start();
+	}
+
+	function handleSpeakerChange() {
+		speakerNode.disconnect();
+		const dest = speakerCtx.createMediaStreamDestination();
+		speakerNode.connect(dest);
+
+		const audioOutput = new Audio();
+		audioOutput.srcObject = dest.stream;
+		audioOutput.setSinkId(speakerDeviceId);
+		
+		audioOutput.play();
 	}
 </script>
 
@@ -192,7 +250,7 @@
 	<div class="video-title-container">
 		<div class="video-container">
 			{#if !webcamFeedPlaying}
-				<NoFeedCard label="No web camera feed" on:click={toggleWebCam} />
+				<NoFeedCard label="No web camera feed" feedType="profile" on:click={toggleWebCam} />
 			{/if}
 
 			<video bind:this={videoInstance} class="video-el" autoplay playsinline>
@@ -207,9 +265,9 @@
 					<WebCamDisabled />
 				{/if}
 			</button>
-			<select>
+			<select bind:value={webCamDeviceId}>
 				{#each kindMapDevices['videoinput'] as device}
-					<option>{device.label}</option>
+					<option value={device.deviceId}>{device.label}</option>
 				{:else}
 					<option disabled>No device found</option>
 				{/each}
@@ -225,7 +283,7 @@
 				<track kind="captions" />
 			</video>
 			{#if !screenSharePlaying}
-				<NoFeedCard label="No screen share feed" on:click={toggleScreenShare} />
+				<NoFeedCard label="No screen share feed" on:click={toggleScreenShare} feedType="screen" />
 			{/if}
 		</div>
 
@@ -262,13 +320,17 @@
 	<div class="audio-speaker-container">
 		<Heading3 content="SPEAKER" />
 		<div class="audio-select-container">
-			<select class="select-audio">
+			<select class="select-audio" bind:value={speakerDeviceId} on:change={handleSpeakerChange}>
 				{#each kindMapDevices['audiooutput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
 			</select>
 
-			<Button label="Test Speaker" />
+			<Button
+				label={speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
+				on:click={toggleSound}
+				color={speakerIsPlaying ? 'danger' : 'primary'}
+			/>
 		</div>
 	</div>
 </div>
@@ -306,6 +368,7 @@
 	select {
 		@apply bg-black;
 		width: 290px;
+		height: 40px;
 	}
 
 	.btn-icon {
@@ -345,7 +408,7 @@
 		@apply flex items-center justify-start gap-4;
 		@apply mt-2;
 	}
-  .audio-speaker-container {
-    @apply mt-8;
-  }
+	.audio-speaker-container {
+		@apply mt-8;
+	}
 </style>

@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 export class AudioDeviceManager {
   constructor() {
     this.currentInputDevice = null;

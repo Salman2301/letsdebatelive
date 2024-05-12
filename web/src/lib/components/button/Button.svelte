@@ -1,10 +1,15 @@
 <script lang="ts">
-	export let label = "Button";
-	export let color: "primary" | "secondary" = "primary";
+	interface Props {
+		label: string;
+		color: "primary" | "secondary" | "danger";
+	}
+	let { label = "Button", color = "primary" }: Props = $props();
+
 </script>
 
 <button
 	class:primary={color === "primary"}
+	class:danger={color === "danger"}
 	class:secondary={color === "secondary"}
   on:click
 >
@@ -38,5 +43,12 @@
 
 	button:hover.secondary {
 		@apply bg-secondary-dark;
+	}
+
+	button.danger { 
+		@apply bg-accent-red;
+	}
+	button:hover.danger { 
+		@apply border-accent-red bg-accent-red-dark;
 	}
 </style>
