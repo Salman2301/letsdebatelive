@@ -3,15 +3,13 @@
 		label: string;
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
-		fillType?: 'solid' | 'outline' | 'hover';
+		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline';
 	}
 	let { label = 'Button', color = 'primary', fillType = 'solid', width }: Props = $props();
 </script>
 
 <button
-	class:fill-type-solid={fillType === 'solid'}
-	class:fill-type-outline={fillType === 'outline'}
-	class:fill-type-hover={fillType === 'hover'}
+	class="fill-type-{fillType}"
 	style="--theme-color:var(--color-{color});--theme-color-dark:var(--color-{color}-dark);width: {width
 		? `${width}px`
 		: 'fit-content'}"
@@ -37,14 +35,14 @@
 	}
 
 	button {
-		&.fill-type-solid {
+		&.fill-type-solid* {
 			background-color: var(--theme-color);
 			&:hover {
 				background-color: var(--theme-color-dark);
 			}
 		}
 
-		&.fill-type-outline {
+		&.fill-type-outline* {
 			@apply bg-transparent;
 			@apply border;
 			border-color: var(--theme-color);
@@ -55,6 +53,25 @@
 		}
 
 		&.fill-type-hover {
+			@apply bg-transparent;
+
+			&:hover {
+				background-color: var(--theme-color);
+			}
+		}
+
+		&.fill-type-solid-outline {
+			background-color: var(--theme-color);
+			border-color: var(--theme-color);
+			@apply border;
+
+			&:hover {
+				@apply bg-transparent;
+			}
+		}
+		&.fill-type-outline-solid {
+			border-color: var(--theme-color);
+			@apply border;
 			@apply bg-transparent;
 
 			&:hover {

@@ -327,7 +327,7 @@
 				label={speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
 				on:click={toggleSound}
 				color={speakerIsPlaying ? 'accent-red' : 'secondary'}
-				fillType="hover"
+				fillType="{speakerIsPlaying ? "solid": "outline-solid"}"
 			/>
 		</div>
 	</div>
