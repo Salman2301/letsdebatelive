@@ -5,7 +5,7 @@
 	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
 	import StageTeam from "./stages/StageTeam.svelte";
 
-	let currentState: number = 1;
+	let currentState: number = 2;
 	const stageInstance: StageTestingFeeds[] = [];
 
 	async function handleNext() {

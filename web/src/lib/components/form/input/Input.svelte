@@ -40,7 +40,8 @@
   }
   input:focus {
     outline: none;
-    border: 1px solid var(--color-secondary);
+    border: 1px solid;
+    @apply: border-secondary;
   }
 
   input:disabled {
@@ -49,7 +50,8 @@
   }
 
   input.has-error {
-    border: 1px solid var(--color-accent-red);
+    border: 1px solid;
+    @apply border-accent-red;
   }
   div {
     position: relative;

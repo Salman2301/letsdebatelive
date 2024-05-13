@@ -5,15 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "var(--color-primary)",
-        secondary: "var(--color-secondary)",
-        "accent-red": "var(--color-accent-red)",
-        "accent-red-dark": "var(--color-accent-red-dark)",
-        "accent-gray": "var(--color-accent-gray)",
-        "primary-dark": "var(--color-primary-dark)",
-        "secondary-dark": "var(--color-secondary-dark)",
-        black: "var(--color-black)",
-        white: "var(--color-white)",
+        primary: "rgba(var(--color-primary) / <alpha-value>)",
+        secondary: "rgba(var(--color-secondary) / <alpha-value>)",
+        "accent-red": "rgba(var(--color-accent-red) / <alpha-value>)",
+        "accent-red-dark": "rgba(var(--color-accent-red-dark) / <alpha-value>)",
+        "accent-gray": "rgba(var(--color-accent-gray) / <alpha-value>)",
+        "primary-dark": "rgba(var(--color-primary-dark) / <alpha-value>)",
+        "secondary-dark": "rgba(var(--color-secondary-dark) / <alpha-value>)",
+        black: "rgba(var(--color-black) / <alpha-value>)",
+        white: "rgba(var(--color-white) / <alpha-value>)",
         "light-gray": "var(--color-light-gray)",
       }
     },

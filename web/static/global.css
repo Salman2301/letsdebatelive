@@ -1,22 +1,23 @@
 :root {
-  --color-black: #000;
-  --color-white: #F7F0FF;
-  --color-primary: #7D07E4;
-  --color-secondary: #8B0457;
-  --color-primary-dark: #0D0117;
-  --color-secondary-dark: #4A0335;
-  --color-accent-gray: #272727;
-  --color-accent-red: #C1063E;
-  --color-accent-red-dark: #740224;
+  --color-black: 0 0 0;
+  --color-white: 247 240 255;
+  --color-primary: 125 7 228;
+  --color-secondary: 139 4 87;
+  --color-primary-dark: 13 1 23;
+  --color-secondary-dark: 74 3 53;
+  --color-accent-gray: 39 39 39;
+  --color-accent-red: 193 6 62;
+  --color-accent-red-dark: 116 2 36;
   --color-light-gray: rgba(204, 204, 204, 0.3);
 }
 
 html, body {
-  background: var(--color-black);
+  background: rgb(var(--color-black));
+  color: #4A0335;
 }
 
 * {
-  color: var(--color-white);
+  color: rgb(var(--color-white));
   font-family: "Urbanist";
 }
 

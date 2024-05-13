@@ -15,7 +15,7 @@
     },
     {
       label: 3,
-      info: "Debate"
+      info: "Debate Agenda"
     },
     {
       label: 4,

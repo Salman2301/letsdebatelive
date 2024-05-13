@@ -20,7 +20,7 @@
 	}
 
 	.live {
-		color: var(--color-accent-red);
+		@apply text-accent-red;
 		opacity: 1;
 		animation: blink 1.2s infinite ease-in-out;
 	}

@@ -3,14 +3,14 @@
 		label: string;
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
-		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline';
+		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark";
 	}
 	let { label = 'Button', color = 'primary', fillType = 'solid', width }: Props = $props();
 </script>
 
 <button
 	class="fill-type-{fillType}"
-	style="--theme-color:var(--color-{color});--theme-color-dark:var(--color-{color}-dark);width: {width
+	style="--theme-color:rgb(var(--color-{color}));--theme-color-dark:rgba(var(--color-{color}-dark));width: {width
 		? `${width}px`
 		: 'fit-content'}"
 	on:click
@@ -74,6 +74,12 @@
 			@apply border;
 			@apply bg-transparent;
 
+			&:hover {
+				background-color: var(--theme-color);
+			}
+		}
+		&.fill-type-dark {
+			background-color: var(--theme-color-dark);
 			&:hover {
 				background-color: var(--theme-color);
 			}
