@@ -20,9 +20,7 @@
 	}
 
 	export function clear(id: string) {
-		console.log(id);
 		toast.set(get(toast).filter((e) => e.id !== id));
-		console.log('cleared', id);
 	}
 </script>
 
@@ -32,7 +30,7 @@
 </script>
 
 <div class="toast-container">
-	{#each $toast as currToast}
+	{#each $toast as currToast (currToast.id)}
 		<ToastItem data={currToast} />
 	{/each}
 </div>
