@@ -23,7 +23,7 @@
         username: email,
         email: email,
       });
-      console.log({ error });
+      console.error({ error });
     }
   })
 </script>

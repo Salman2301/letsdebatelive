@@ -241,6 +241,17 @@
 
 		audioOutput.play();
 	}
+
+
+	export async function beforeOnNext() {
+		try {
+
+			return true;
+		}
+		catch(e) {
+			return false;
+		}
+	}
 </script>
 
 <div class="video-feed">

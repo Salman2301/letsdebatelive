@@ -4,7 +4,28 @@
   }
   let { active }: Props = $props();
 
-  let stages = new Array(5).fill("").map((_,i)=>i+1);
+  let stages = [
+    {
+      label: 1,
+      info: "Local Setup"
+    },
+    {
+      label: 2,
+      info: "Team"
+    },
+    {
+      label: 3,
+      info: "Debate"
+    },
+    {
+      label: 4,
+      info: "Studio mode"
+    },
+    {
+      label: 5,
+      info: "Broadcast"
+    }
+  ]
 
 </script>
 
@@ -12,13 +33,15 @@
   {#each stages as stage}
     <div
       class="stage-number"
-      class:active={stage <= active}
+      class:active={stage.label <= active}
     >
-      {stage}
+      {stage.label}
+
+      <div class="bubble-info">{stage.info}</div>
     </div>
     <div
       class="stage-dash"
-      class:active={stage <= active}
+      class:active={stage.label <= active}
     >
     </div>
   {/each}
@@ -41,6 +64,7 @@
     justify-content: center;
     align-items: center;
 
+    position: relative;
     font-size: 16px;
   }
   .stage-dash {
@@ -56,5 +80,26 @@
 
   .active {
     @apply bg-white;
+  }
+
+  .bubble-info {
+    @apply absolute;
+    @apply mt-1;
+    @apply border border-light-gray;
+    padding: 10px 20px;
+    @apply bg-white;
+    color: black;
+    min-width: 140px;
+    font-size: 12px;
+    top: 40px;
+
+    display: none;
+    z-index: 2;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .stage-number:hover .bubble-info {
+    display: inline;
   }
 </style>
