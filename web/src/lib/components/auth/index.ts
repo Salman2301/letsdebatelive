@@ -2,6 +2,10 @@ import supabase from "$lib/supbase";
 import { authUserData } from "./auth.store";
 
 
+export async function getUserId() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.user.id;
+}
 
 export async function checkLoginSetStore() {
   const { data: { session } } = await supabase.auth.getSession();

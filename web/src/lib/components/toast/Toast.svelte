@@ -22,7 +22,7 @@
 	export function clear(id: string) {
 		toast.set(get(toast).filter((e) => e.id !== id));
 	}
-</script>
+</script> 
 
 <script lang="ts">
 	import ToastItem from './ToastItem.svelte';
@@ -37,12 +37,15 @@
 
 <style lang="postcss">
 	.toast-container {
-		position: absolute;
+		position: fixed;
 		/* border: 1px solid white; */
-		width: 380px;
+		width: 300px;
 
-		bottom: 0px;
+		top: 80px;
 		right: 0px;
+		/* height: 400px; */
+		/* right: 50%; */
+		/* transform: translate(-50%, -50%); */
 		z-index: 1000;
 	}
 </style>

@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"db:schema": "supabase gen types typescript --project-id udnbqyqoblwiatxwbvgx --schema public > ./src/lib/schema/database.types.ts",
+		"db:schema": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts",
 		"db:pull": "supabase db pull --linked",
 		"db:reset": "supabase db reset"
 	},

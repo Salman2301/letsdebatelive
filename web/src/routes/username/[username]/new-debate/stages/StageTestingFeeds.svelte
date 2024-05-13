@@ -1,11 +1,16 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icons';
 	import NoFeedCard from '../components/NoFeedCard.svelte';
+	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE } from '../new-debate.constant';
+	import supabase from '$lib/supbase';
+	import { getUserId } from '$lib/components/auth';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
+	import type { Tables } from '$lib/schema/database.types';
 
 	let errorWebcamFeed: string = '';
 	let errorScreenShareFeed: string = '';
@@ -242,17 +247,68 @@
 		audioOutput.play();
 	}
 
-
+	const liveDebate = getContext<CTX_KEY_NEW_DEBATE_TYPE>(CTX_KEY_NEW_DEBATE);
+	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
 	export async function beforeOnNext() {
 		try {
+			// add host to the current  participants table
+			// Create a live debate If the debate didn't exist in the store
+			// 
+			if( !$liveDebate?.id ) {
+				console.log([{
+					host: await getUserId(),
+					studio_mode: true,
+				}])
+				const { data, error } = await supabase.from("live_debate").insert([{
+					host: await getUserId(),
+					studio_mode: true,
+				}]).select();
+				console.log({ data, error })
+				if( error || !data ) throw new Error("Failed create debate");
+				
+				$liveDebate = data[0] as Tables<"live_debate">;
+
+				const { data: hostData, error: hostError } = await supabase.from("live_debate_participants").insert([{
+					debate: $liveDebate.id,
+					is_debate_owner: true,
+
+					cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
+					mic_available: kindMapDevices.audioinput.length > 0,
+					speaker_available: kindMapDevices.audiooutput.length > 0,
+					screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
+					
+					cam_enable: webcamFeedPlaying,
+					mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
+					speaker_enable: kindMapDevices.audiooutput.length > 0,
+
+					cam_id: webCamDeviceId,
+					speaker_id: speakerDeviceId,
+					mic_id: micDeviceId,
+				}]).select();
+				
+				if( hostError || !hostData ) throw new Error("Failed to create database participants!");
+
+				$hostParticipant = hostData[0];
+
+			}
 
 			return true;
 		}
 		catch(e) {
-			return false;
+			console.error(e);
+			newToast({
+				type: "error",
+				message: "Something went wrong!"
+			});
+			throw new Error("Failed to create new debate")
 		}
 	}
 </script>
+
+<!-- TODO: Display Name?  -->
+<!-- TODO: UI MIC Mute -->
+<!-- TODO: UI SPEAKER VOLUME -->
+<!-- TODO: UI MIC FEEDBACK AFTER SPOKEN -->
 
 <div class="video-feed">
 	<div class="video-title-container">

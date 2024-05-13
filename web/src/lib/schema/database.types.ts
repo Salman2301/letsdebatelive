@@ -63,10 +63,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "live_debate_host_fkey"
+            foreignKeyName: "public_live_debate_host_fkey"
             columns: ["host"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
         ]
@@ -123,8 +123,10 @@ export type Database = {
           cam_id: string | null
           created_at: string
           current_stage: string | null
+          debate: string | null
           display_name: string | null
           id: string
+          is_debate_owner: boolean | null
           is_kicked: boolean | null
           mic_available: boolean | null
           mic_enable: boolean | null
@@ -141,8 +143,10 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
+          debate?: string | null
           display_name?: string | null
           id?: string
+          is_debate_owner?: boolean | null
           is_kicked?: boolean | null
           mic_available?: boolean | null
           mic_enable?: boolean | null
@@ -159,8 +163,10 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
+          debate?: string | null
           display_name?: string | null
           id?: string
+          is_debate_owner?: boolean | null
           is_kicked?: boolean | null
           mic_available?: boolean | null
           mic_enable?: boolean | null
@@ -172,6 +178,13 @@ export type Database = {
           team?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_live_debate_participants_debate_fkey"
+            columns: ["debate"]
+            isOneToOne: false
+            referencedRelation: "live_debate"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_live_debate_participants_team_fkey"
             columns: ["team"]
@@ -500,3 +513,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+
