@@ -23,6 +23,8 @@ export type Database = {
           debater_card_show: boolean | null
           host: string | null
           id: string
+          initiated: boolean | null
+          initiatedTime: string | null
           studio_mode: boolean | null
           title: string | null
           viewer_type: string | null
@@ -40,6 +42,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          initiated?: boolean | null
+          initiatedTime?: string | null
           studio_mode?: boolean | null
           title?: string | null
           viewer_type?: string | null
@@ -57,6 +61,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          initiated?: boolean | null
+          initiatedTime?: string | null
           studio_mode?: boolean | null
           title?: string | null
           viewer_type?: string | null
@@ -123,7 +129,7 @@ export type Database = {
           cam_id: string | null
           created_at: string
           current_stage: string | null
-          debate: string | null
+          debate: string
           display_name: string | null
           id: string
           is_debate_owner: boolean | null
@@ -143,7 +149,7 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
-          debate?: string | null
+          debate: string
           display_name?: string | null
           id?: string
           is_debate_owner?: boolean | null
@@ -163,7 +169,7 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
-          debate?: string | null
+          debate?: string
           display_name?: string | null
           id?: string
           is_debate_owner?: boolean | null

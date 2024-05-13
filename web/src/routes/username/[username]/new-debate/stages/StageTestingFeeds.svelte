@@ -269,7 +269,7 @@
 				$liveDebate = data[0] as Tables<"live_debate">;
 
 				const { data: hostData, error: hostError } = await supabase.from("live_debate_participants").insert([{
-					debate: $liveDebate.id,
+					debate: $liveDebate.id as string,
 					is_debate_owner: true,
 
 					cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
@@ -284,6 +284,8 @@
 					cam_id: webCamDeviceId,
 					speaker_id: speakerDeviceId,
 					mic_id: micDeviceId,
+
+
 				}]).select();
 				
 				if( hostError || !hostData ) throw new Error("Failed to create database participants!");
