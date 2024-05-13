@@ -1,8 +1,14 @@
 <script lang="ts">
+	import { getContext } from "svelte";
+	import type { CTX_KEY_TITLE_TYPE } from "../new-debate.constant";
+
   interface Props {
     active: number;
   }
   let { active }: Props = $props();
+
+  const title = getContext<CTX_KEY_TITLE_TYPE>("CTX_KEY_TITLE");
+  
 
   let stages = [
     {
@@ -25,7 +31,13 @@
       label: 5,
       info: "Broadcast"
     }
-  ]
+  ];
+
+  $effect(()=>{
+    $title = stages[active-1].info;
+  });
+
+
 
 </script>
 
