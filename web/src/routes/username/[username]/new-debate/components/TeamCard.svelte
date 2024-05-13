@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from "$lib/components/button/Button.svelte";
 	import { newToast } from "$lib/components/toast/Toast.svelte";
-import type { Tables } from "$lib/schema/database.types";
+  import type { Tables } from "$lib/schema/database.types";
 
   interface Props {
     team: Partial<Tables<"live_debate_team">>;
@@ -34,7 +34,7 @@ import type { Tables } from "$lib/schema/database.types";
       </div>
       {:else}
         <div class="flex items-center w-full mt-10 justify-center flex-col gap-4 bg-secondary-dark/40 py-2 rounded">   
-          <p class="text-white">No participant found (Optional)</p>     
+          <p class="text-white/80 text-xs">No participant found (Optional)</p>     
           <Button label="Invite user" color="secondary" fillType="dark" on:click={()=>newToast({ type: "error", message: "Not implemented!"})} >
             <svg slot="icon-left" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.5 2.5V11.25" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,8 +48,6 @@ import type { Tables } from "$lib/schema/database.types";
 
 <style lang="postcss">
   .team-card {
-    /* border: 1px  dashed var(--color-light-gray);
-     */
      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='rgba(120,120,120, 0.8)' stroke-width='2' stroke-dasharray='6%2c 3' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
     width: 250px;
     min-height: 380px;

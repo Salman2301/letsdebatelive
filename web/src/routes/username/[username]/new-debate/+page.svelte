@@ -5,8 +5,9 @@
 	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
 	import StageTeam from "./stages/StageTeam.svelte";
 
-	let currentState: number = 2;
-	const stageInstance: StageTestingFeeds[] = [];
+	let currentState: number = 3;
+	// @ts-expect-error
+	let stageInstance: [StageTestingFeeds, StageTeam] = [];
 
 	async function handleNext() {
 		await stageInstance[currentState-1].beforeOnNext()
@@ -30,11 +31,11 @@
 {#if currentState === 1}
 	<StageTestingFeeds bind:this={stageInstance[0]} />
 {:else if currentState === 2}
-	<StageTeam />
+	<StageTeam bind:this={stageInstance[1]}/>
 {/if}
 
 <div class="action-btn">
-	<div class:invisible={currentState==1} >
+	<div class:invisible={currentState===1} >
 		<Button label="Prev" color="secondary" fillType="outline-solid" width={120} on:click={handlePrev} />
 	</div>
 	

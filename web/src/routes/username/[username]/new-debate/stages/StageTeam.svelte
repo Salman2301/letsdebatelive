@@ -21,6 +21,10 @@
     ]
   }
 
+  export function beforeOnNext() {
+    // Add all stage to teams and participants table
+  }
+
 </script>
 
 <div class="flex justify-center gap-4">
