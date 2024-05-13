@@ -9,83 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      debate_agenda: {
-        Row: {
-          completed: boolean | null
-          created_at: string
-          id: string
-          live_debate: string | null
-          team: string | null
-          time: string | null
-          title: string | null
-        }
-        Insert: {
-          completed?: boolean | null
-          created_at?: string
-          id?: string
-          live_debate?: string | null
-          team?: string | null
-          time?: string | null
-          title?: string | null
-        }
-        Update: {
-          completed?: boolean | null
-          created_at?: string
-          id?: string
-          live_debate?: string | null
-          team?: string | null
-          time?: string | null
-          title?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "debate_agenda_live_debate_fkey"
-            columns: ["live_debate"]
-            isOneToOne: false
-            referencedRelation: "live_debate"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "debate_agenda_team_fkey"
-            columns: ["team"]
-            isOneToOne: false
-            referencedRelation: "debate_team"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      debate_team: {
-        Row: {
-          color: string | null
-          created_at: string
-          id: string
-          title: string | null
-          user_id: string | null
-        }
-        Insert: {
-          color?: string | null
-          created_at?: string
-          id?: string
-          title?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          color?: string | null
-          created_at?: string
-          id?: string
-          title?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "debate_team_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       live_debate: {
         Row: {
           backstage_allow_only: string | null
@@ -142,6 +65,148 @@ export type Database = {
           {
             foreignKeyName: "live_debate_host_fkey"
             columns: ["host"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_debate_agenda: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          id: string
+          live_debate: string | null
+          team: string | null
+          time: string | null
+          title: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          live_debate?: string | null
+          team?: string | null
+          time?: string | null
+          title?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          live_debate?: string | null
+          team?: string | null
+          time?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debate_agenda_live_debate_fkey"
+            columns: ["live_debate"]
+            isOneToOne: false
+            referencedRelation: "live_debate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "debate_agenda_team_fkey"
+            columns: ["team"]
+            isOneToOne: false
+            referencedRelation: "live_debate_team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_debate_participants: {
+        Row: {
+          cam_available: boolean | null
+          cam_enable: boolean | null
+          cam_id: string | null
+          created_at: string
+          current_stage: string | null
+          display_name: string | null
+          id: string
+          is_kicked: boolean | null
+          mic_available: boolean | null
+          mic_enable: boolean | null
+          mic_id: string | null
+          screenshare_available: boolean | null
+          speaker_available: boolean | null
+          speaker_enable: boolean | null
+          speaker_id: string | null
+          team: string | null
+        }
+        Insert: {
+          cam_available?: boolean | null
+          cam_enable?: boolean | null
+          cam_id?: string | null
+          created_at?: string
+          current_stage?: string | null
+          display_name?: string | null
+          id?: string
+          is_kicked?: boolean | null
+          mic_available?: boolean | null
+          mic_enable?: boolean | null
+          mic_id?: string | null
+          screenshare_available?: boolean | null
+          speaker_available?: boolean | null
+          speaker_enable?: boolean | null
+          speaker_id?: string | null
+          team?: string | null
+        }
+        Update: {
+          cam_available?: boolean | null
+          cam_enable?: boolean | null
+          cam_id?: string | null
+          created_at?: string
+          current_stage?: string | null
+          display_name?: string | null
+          id?: string
+          is_kicked?: boolean | null
+          mic_available?: boolean | null
+          mic_enable?: boolean | null
+          mic_id?: string | null
+          screenshare_available?: boolean | null
+          speaker_available?: boolean | null
+          speaker_enable?: boolean | null
+          speaker_id?: string | null
+          team?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_live_debate_participants_team_fkey"
+            columns: ["team"]
+            isOneToOne: false
+            referencedRelation: "live_debate_team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_debate_team: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debate_team_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
