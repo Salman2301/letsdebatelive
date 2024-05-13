@@ -7,6 +7,7 @@
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from './icons';
 	import NoFeedCard from './components/NoFeedCard.svelte';
+	import StageNumber from './components/StageNumber.svelte';
 
 	let errorWebcamFeed: string = '';
 	let errorScreenShareFeed: string = '';
@@ -246,6 +247,10 @@
 
 <Heading2 content="New debate" textAlign="center" />
 
+<div class="stage-margin">
+	<StageNumber active={1}/>
+</div>
+
 <div class="video-feed">
 	<div class="video-title-container">
 		<div class="video-container">
@@ -336,6 +341,9 @@
 </div>
 
 <style lang="postcss">
+	.stage-margin {
+		@apply my-10;
+	}
 	.video-feed {
 		@apply flex justify-center gap-10;
 	}

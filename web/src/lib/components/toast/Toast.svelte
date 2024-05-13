@@ -10,7 +10,7 @@
 
 	const toast: Writable<ToastItemI[]> = writable([]);
 
-	export function add(toastNewMessage: ToastItemI) {
+	export function newToast(toastNewMessage: ToastItemI) {
 
     let id = toastNewMessage.id || genId();
     setTimeout(()=>{

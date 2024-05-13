@@ -10,7 +10,7 @@
 	import InPassword from '../form/input/InPassword.svelte';
 	import supabase from '$lib/supbase';
 	import { onMount } from 'svelte';
-	import { add } from '../toast/Toast.svelte';
+	import { newToast } from '../toast/Toast.svelte';
 	import { checkLoginSetStore } from '../auth';
 
 	const form = {
@@ -48,7 +48,7 @@
 			});
 			
 			if( error ) {
-				add({ type: "error", message: error.message })
+				newToast({ type: "error", message: error.message })
 				throw new Error(error.message);
 			}
 

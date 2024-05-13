@@ -13,6 +13,7 @@
     const { data: {session}} = await supabase.auth.getSession();
     if(!session) return;
 
+    // Create an account for new user! Should be handled somewhere backend? without RLS
     const { data: userData } = await supabase.from("user_data").select();
     if( userData && userData.length > 0) {
       authUserData.set(userData[0])

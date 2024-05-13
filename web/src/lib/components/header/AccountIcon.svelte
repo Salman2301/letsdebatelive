@@ -9,7 +9,7 @@
 
   async function handleCreateDebate() {
     if( !$authUserData ) return;
-    goto(`/${$authUserData.username}/new-debate`);    
+  goto(`/username/${$authUserData.username}/new-debate`);    
   }
 </script>
 
