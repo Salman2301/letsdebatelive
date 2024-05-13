@@ -1,17 +1,21 @@
 <script lang="ts">
 	interface Props {
 		label: string;
-		color: "primary" | "secondary" | "danger";
+		color?: 'primary' | 'secondary' | 'accent-red';
+		width?: number;
+		fillType?: 'solid' | 'outline' | 'hover';
 	}
-	let { label = "Button", color = "primary" }: Props = $props();
-
+	let { label = 'Button', color = 'primary', fillType = 'solid', width }: Props = $props();
 </script>
 
 <button
-	class:primary={color === "primary"}
-	class:danger={color === "danger"}
-	class:secondary={color === "secondary"}
-  on:click
+	class:fill-type-solid={fillType === 'solid'}
+	class:fill-type-outline={fillType === 'outline'}
+	class:fill-type-hover={fillType === 'hover'}
+	style="--theme-color:var(--color-{color});--theme-color-dark:var(--color-{color}-dark);width: {width
+		? `${width}px`
+		: 'fit-content'}"
+	on:click
 >
 	<slot name="icon-left" />
 	{label}
@@ -27,28 +31,35 @@
 		border-radius: 4px;
 		font-size: 12px;
 		font-weight: bold;
+
+		display: flex;
+		justify-content: center;
 	}
 
-	button.primary {
-		@apply bg-primary;
-	}
+	button {
+		&.fill-type-solid {
+			background-color: var(--theme-color);
+			&:hover {
+				background-color: var(--theme-color-dark);
+			}
+		}
 
-	button:hover.primary {
-		@apply bg-primary-dark;
-	}
+		&.fill-type-outline {
+			@apply bg-transparent;
+			@apply border;
+			border-color: var(--theme-color);
 
-	button.secondary {
-		@apply bg-secondary;
-	}
+			&:hover {
+				border-color: var(--theme-color-dark);
+			}
+		}
 
-	button:hover.secondary {
-		@apply bg-secondary-dark;
-	}
+		&.fill-type-hover {
+			@apply bg-transparent;
 
-	button.danger { 
-		@apply bg-accent-red;
-	}
-	button:hover.danger { 
-		@apply border-accent-red bg-accent-red-dark;
+			&:hover {
+				background-color: var(--theme-color);
+			}
+		}
 	}
 </style>
