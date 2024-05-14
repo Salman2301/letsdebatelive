@@ -24,7 +24,7 @@
 
 	async function handleNext() {
 		await stageInstance[currentState - 1].beforeOnNext();
-		if (currentState === 4) {
+		if (currentState === 5) {
 			// redirect to control room
 			if(!$liveDebate) {
 				newToast({

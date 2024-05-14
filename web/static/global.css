@@ -13,12 +13,16 @@
 
 html, body {
   background: rgb(var(--color-black));
-  color: #4A0335;
+  color: white
 }
 
-* {
+p, h1, h2, h3, h4, h5, h6, input {
   color: rgb(var(--color-white));
   font-family: "Urbanist";
+}
+
+input {
+  background: rgb(var(--color-black));
 }
 
 button:focus,

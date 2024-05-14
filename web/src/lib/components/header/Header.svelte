@@ -44,4 +44,8 @@
 		gap: 80px;
 		align-items: center;
 	}
+
+	.user-extra {
+		color: white;
+	}
 </style>

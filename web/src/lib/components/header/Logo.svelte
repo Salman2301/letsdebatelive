@@ -17,6 +17,7 @@
 		display: flex;
 		align-items: center;
 		gap: 2px;
+		color: white;
 	}
 
 	.live {
