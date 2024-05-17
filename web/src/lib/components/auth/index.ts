@@ -1,4 +1,4 @@
-import supabase from "$lib/supbase";
+import supabase from "$lib/supabase";
 import { authUserData } from "./auth.store";
 
 

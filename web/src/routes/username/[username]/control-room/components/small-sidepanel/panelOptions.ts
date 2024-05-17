@@ -36,6 +36,10 @@ export const panelOptions = [
     value: "users"
   },
   {
+    label: "Banner",
+    value: "banner"
+  },
+  {
     label: "Ban / Kick list",
     value: "ban-kick-list"
   },

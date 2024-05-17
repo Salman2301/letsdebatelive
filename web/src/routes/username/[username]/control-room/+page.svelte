@@ -1,15 +1,43 @@
 <script lang="ts">
-	import LayoutProfileMain from './components/layout-setting-icon/LayoutProfileMain.svelte';
-	import LayoutScreenProfile from './components/layout-setting-icon/LayoutScreenProfile.svelte';
-	import LayoutScreen from './components/layout-setting-icon/LayoutScreen.svelte';
-	import LayoutProfileTwo from './components/layout-setting-icon/LayoutProfileTwo.svelte';
-	import LayoutProfileChat from './components/layout-setting-icon/LayoutProfileChat.svelte';
+	import StartingScene from './components/scenes/StartingScene.svelte';
+  import BreakScene from './components/scenes/BreakScene.svelte';
+	import Loader from '$lib/components/icon/Loader.svelte';
 	import SmallSidePanel from "./components/small-sidepanel/SmallSidePanel.svelte";
-	import TakeABreak from './components/TakeABreak.svelte';
+	import supabase from '$lib/supabase';
+	import { onMount } from 'svelte';
+	import LayoutHeader from './components/LayoutHeader.svelte';
 
+  let hostId = "123-1234-123";
+
+  let next10Mins = new Date();
+  next10Mins.setMinutes( next10Mins.getMinutes() + 10 );
   
-  type LayoutStyle = "profileTwo" | "screen" | "screenProfile" | "profileMain" | "profileChat";
-  export let currentLayoutStyle: LayoutStyle = "profileTwo";
+  supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
+    type: "broadcast",
+    event: "scene_change",
+    payload: {
+      sceneType: "scene_start",
+      layerId: "layer_text",
+      metadata: {
+        text: "Starting soon..."
+      }
+    }
+  });
+
+  let sceneType: any, payloadData: any= { metadata: { text: "loading"}};
+
+  onMount(()=>{
+    supabase.channel(`scene_${hostId}`).on("broadcast", { event: "scene_change"}, ( { payload } )=> {
+      if( !payload || !payload.sceneType ) {
+        console.error("Empty payload received?", payload);
+        return;
+      }
+      sceneType = payload.sceneType;
+      payloadData = payload;
+      console.log({ sceneType, payload })
+    }).subscribe();
+  })
+
 </script>
 
 <!-- Check for admin -->
@@ -17,48 +45,15 @@
 
 <div class="control-room-container">
   <div class="video-container">
-
+    {#if sceneType === "scene_start"}
+      <StartingScene payload={payloadData}/>
+    {:else if sceneType === "scene_break"}
+      <BreakScene payload={payloadData}/>
+    {:else}
+      <Loader />
+    {/if}
   </div>
-  <div class="layout-setting-container">
-    <div class="layout-icons">
-      <button
-        class="layout-icon"
-        class:active={currentLayoutStyle === "profileTwo"} on:click={() => (currentLayoutStyle = "profileTwo")}
-      >
-        <LayoutProfileTwo />
-      </button>
-      <button
-        class="layout-icon"
-        class:active={currentLayoutStyle === "screen"} on:click={() => (currentLayoutStyle = "screen")}
-      >
-        <LayoutScreen />
-      </button>
-      <button
-        class="layout-icon"
-        class:active={currentLayoutStyle === "screenProfile"} on:click={() => (currentLayoutStyle = "screenProfile")}
-      >
-        <LayoutScreenProfile />
-      </button>
-      <button
-        class="layout-icon"
-        class:active={currentLayoutStyle === "profileMain"} on:click={() => (currentLayoutStyle = "profileMain")}
-      >
-        <LayoutProfileMain />
-      </button>
-      <button
-        class="layout-icon"
-        class:active={currentLayoutStyle === "profileChat"} on:click={() => (currentLayoutStyle = "profileChat")}
-      >
-        <LayoutProfileChat />
-      </button>
-    </div>
-    <div class="layout-break-end">
-      <TakeABreak />
-      <button class="btn-stop" on:click={()=>console.log("stop broadcast")}>
-        Stop Broadcast
-      </button>
-    </div>
-  </div>
+  <LayoutHeader />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">
       <SmallSidePanel />
@@ -73,11 +68,7 @@
   .video-container {
     aspect-ratio: 16 / 9;
     @apply border border-light-gray;
-  }
-  .layout-setting-container {
-    height: 48px;
-    width: 100%;
-    @apply flex justify-between;
+    overflow: hidden;
   }
   .small-panel-container {
     display: flex;
@@ -95,36 +86,5 @@
   }
   .small-panel-2 {
     /* @apply border-r border-light-gray; */
-  }
-  .layout-setting-container {
-    @apply flex items-center;
-  }
-
-  .layout-icons {
-    @apply flex gap-2;
-  }
-
-  .layout-icon {
-    @apply text-secondary-dark;
-  }
-
-  .layout-icon.active {
-    @apply text-secondary;
-  }
-
-  .layout-break-end {
-    @apply flex gap-2 items-center justify-end; 
-
-  }
-  .btn-stop {
-    @apply h-full;
-    width: 140px;
-    @apply bg-accent-red rounded;
-    height: 40px;
-    font-size: 14px;
-  }
-
-  .btn-stop:hover {
-    @apply bg-accent-red-dark;
   }
 </style>

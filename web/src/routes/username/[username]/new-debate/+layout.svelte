@@ -3,7 +3,7 @@
 	import { writable, type Writable } from "svelte/store";
 	import { CTX_KEY_NEW_DEBATE, CTX_KEY_HOST_PARTICIPANT, type CTX_KEY_NEW_DEBATE_TYPE, type CTX_KEY_HOST_PARTICIPANT_TYPE, CTX_KEY_TITLE, type CTX_KEY_TITLE_TYPE } from "./new-debate.constant";
 	import { browser } from "$app/environment";
-	import supabase from "$lib/supbase";
+	import supabase from "$lib/supabase";
 	import { onMount } from "svelte"
 	import Loader from "$lib/components/icon/Loader.svelte";
 	 

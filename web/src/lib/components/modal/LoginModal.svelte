@@ -8,7 +8,7 @@
 	import ZodError from '../form/ZodError.svelte';
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
-	import supabase from '$lib/supbase';
+	import supabase from '$lib/supabase';
 	import { onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
 	import { checkLoginSetStore } from '../auth';

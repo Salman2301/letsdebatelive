@@ -7,7 +7,7 @@
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icons';
 	import NoFeedCard from '../components/NoFeedCard.svelte';
 	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE } from '../new-debate.constant';
-	import supabase from '$lib/supbase';
+	import supabase from '$lib/supabase';
 	import { getUserId } from '$lib/components/auth';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Tables } from '$lib/schema/database.types';

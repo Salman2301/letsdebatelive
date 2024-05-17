@@ -5,7 +5,7 @@
   import Toast from "$lib/components/toast/Toast.svelte";
 
   import { onMount } from "svelte";
-	import supabase from "$lib/supbase";
+	import supabase from "$lib/supabase";
 	import { authUserData } from "$lib/components/auth/auth.store";
 
   onMount(async ()=>{

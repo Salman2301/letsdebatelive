@@ -6,7 +6,7 @@
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
-	import supabase from '$lib/supbase';
+	import supabase from '$lib/supabase';
 	import { onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
 	import { checkLoginSetStore } from '../auth';
