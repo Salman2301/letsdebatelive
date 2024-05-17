@@ -50,7 +50,9 @@
     {:else if sceneType === "scene_break"}
       <BreakScene payload={payloadData}/>
     {:else}
-      <Loader />
+      <div class="loader-container">       
+        <Loader />
+      </div>
     {/if}
   </div>
   <LayoutHeader />
@@ -86,5 +88,10 @@
   }
   .small-panel-2 {
     /* @apply border-r border-light-gray; */
+  }
+
+  .loader-container {
+    @apply flex justify-center items-center;
+    @apply w-full h-full;
   }
 </style>
