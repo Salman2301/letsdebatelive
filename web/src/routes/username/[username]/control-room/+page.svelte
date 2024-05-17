@@ -5,6 +5,7 @@
 	import LayoutProfileTwo from './components/layout-setting-icon/LayoutProfileTwo.svelte';
 	import LayoutProfileChat from './components/layout-setting-icon/LayoutProfileChat.svelte';
 	import SmallSidePanel from "./components/small-sidepanel/SmallSidePanel.svelte";
+	import TakeABreak from './components/TakeABreak.svelte';
 
   
   type LayoutStyle = "profileTwo" | "screen" | "screenProfile" | "profileMain" | "profileChat";
@@ -52,7 +53,10 @@
       </button>
     </div>
     <div class="layout-break-end">
-
+      <TakeABreak />
+      <button class="btn-stop" on:click={()=>console.log("stop broadcast")}>
+        Stop Broadcast
+      </button>
     </div>
   </div>
   <div class="small-panel-container">
@@ -73,6 +77,7 @@
   .layout-setting-container {
     height: 48px;
     width: 100%;
+    @apply flex justify-between;
   }
   .small-panel-container {
     display: flex;
@@ -100,13 +105,26 @@
   }
 
   .layout-icon {
-    color: #4A0335;
-  }
-  .layout-icon:focus {
-    outline: none;
+    @apply text-secondary-dark;
   }
 
   .layout-icon.active {
-    color: #8B0457;
+    @apply text-secondary;
+  }
+
+  .layout-break-end {
+    @apply flex gap-2 items-center justify-end; 
+
+  }
+  .btn-stop {
+    @apply h-full;
+    width: 140px;
+    @apply bg-accent-red rounded;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .btn-stop:hover {
+    @apply bg-accent-red-dark;
   }
 </style>
