@@ -139,16 +139,16 @@
 	}
 	.popup {
 		@apply absolute left-20 top-0;
-		width: 140px;
-		font-size: 12px;
 		@apply bg-black;
 		@apply rounded;
-		height: 40px;
 		@apply px-2;
 		@apply flex items-center;
+		@apply border border-light-gray;
+		width: 140px;
+		font-size: 12px;
+		height: 40px;
 		display: none;
 		word-wrap: none;
-		@apply border border-light-gray;
 	}
 	.icon-item:hover .popup {
 		display: flex;

@@ -17,7 +17,6 @@
     @apply flex;
     height: calc(100vh - 76px);
     width: 100vw;
-    overflow: hidden;
   }
 
   .control-room {

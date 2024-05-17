@@ -13,7 +13,9 @@
 
 html, body {
   background: rgb(var(--color-black));
-  color: white
+  color: white;
+  box-sizing: border-box;
+
 }
 
 p, h1, h2, h3, h4, h5, h6, input {
