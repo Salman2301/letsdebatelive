@@ -80,8 +80,8 @@ export const panelOptions = [
     value: "scenes"
   },
   {
-    label: "Overlays",
-    value: "overlays"
+    label: "Screens",
+    value: "screens"
   },
   {
     label: "Overlays",
@@ -92,34 +92,3 @@ export const panelOptions = [
     value: "broadcast"
   }
 ]
-
-// Panel List
-// Live Setting
-// Title
-// Participants settings
-// Participants list
-// Backstage setting
-// Subscribers only
-// Followers only
-// Specific team only
-// Backstage audience
-// Backstage chat
-// QA
-// Live Chat
-// Users
-// Ban / Kick list
-// Activity feeds
-// Moderation logs
-// Create poll
-// Poll analytics
-// Call for stage?
-// Team panel
-// Agenda panel
-// Flagged chats
-// Chat settings
-// Scenes
-// Overlays?
-// Broadcast
-// End YouTube broadcast
-// Move Broadcast to subscribers only 
-
