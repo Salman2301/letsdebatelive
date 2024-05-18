@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { OnSceneChangeProps } from "../video-feed.types";
-	import BackgroundLayer from "./BackgroundLayer.svelte";
 	import SceneLayout from "./component/SceneLayout.svelte";
 
   let { payload }: OnSceneChangeProps= $props();
@@ -9,7 +8,6 @@
 <SceneLayout>
   <div class="text-center">{payload.metadata.text}</div>
 </SceneLayout>
-
 
 <style lang="postcss">
   .text-center {

@@ -1,15 +1,9 @@
 <script lang="ts">
-	import { onDestroy, onMount } from "svelte";
-	import BackgroundLayer from "./BackgroundLayer.svelte";
+	import { onDestroy } from "svelte";
+	import SceneLayout from "./component/SceneLayout.svelte";
+	import type { OnSceneChangeProps } from "../video-feed.types";
 
-  interface PayloadBreaking {
-    metadata : {
-      timeout: string;
-      breakEndAt: string;
-    }
-  }
-
-  let { payload={ metadata: { timeout: "5min", breakEndAt: new Date().toISOString() }} }: { payload: PayloadBreaking} = $props();
+  let { payload }: OnSceneChangeProps = $props();
 
   let timerStr = $state("00:00:00");
   let timeoutInterval: NodeJS.Timeout;
@@ -45,28 +39,14 @@
 
 </script>
 
-<div class="scene-start-container">
-  <div class="layer">  
+<SceneLayout>
+  <div class="flex flex-col">
     <p class="text-center">Taking a break</p>
     <p class="text-center timer">{timerStr}</p>
   </div>
-  <BackgroundLayer />
-</div>
+</SceneLayout>
 
 <style lang="postcss">
-  .scene-start-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .layer {
-    @apply absolute;
-    z-index: 1;
-    @apply flex items-center justify-center flex-col;
-    @apply w-full h-full;
-  }
-
   .text-center {
     font-size: 24px;
   }

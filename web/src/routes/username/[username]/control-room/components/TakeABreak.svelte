@@ -1,7 +1,7 @@
 <script lang="ts">
 	import supabase from '$lib/supabase';
 
-  let hostId = '123-1234-123';
+  let hostId = '123-456-789';
   
   let timeout = $state("5min");
   function handleLayoutShift() {

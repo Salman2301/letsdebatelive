@@ -10,7 +10,7 @@
 	type LayoutStyle = 'profileTwo' | 'screen' | 'screenProfile' | 'profileMain' | 'profileChat';
 	export let currentLayoutStyle: LayoutStyle = 'profileTwo';
 	
-	let hostId = "123-1234-123";
+	let hostId = "123-456-789";
 
 	function handleStopBroadcast() {
 

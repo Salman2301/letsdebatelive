@@ -5,9 +5,8 @@
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { onMount } from 'svelte';
 
-  let hostId = "123-1234-123";
+  let hostId = "123-456-789";
   onMount(async ()=>{
-    
     supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
       type: "broadcast",
       event: "scene_change",
