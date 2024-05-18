@@ -66,35 +66,35 @@
 			<button
 				class="layout-icon"
 				class:active={currentLayoutStyle === 'profileTwo'}
-				on:click={() => (currentLayoutStyle = 'profileTwo')}
+				onclick={() => (currentLayoutStyle = 'profileTwo')}
 			>
 				<LayoutProfileTwo />
 			</button>
 			<button
 				class="layout-icon"
 				class:active={currentLayoutStyle === 'screen'}
-				on:click={() => (currentLayoutStyle = 'screen')}
+				onclick={() => (currentLayoutStyle = 'screen')}
 			>
 				<LayoutScreen />
 			</button>
 			<button
 				class="layout-icon"
 				class:active={currentLayoutStyle === 'screenProfile'}
-				on:click={() => (currentLayoutStyle = 'screenProfile')}
+				onclick={() => (currentLayoutStyle = 'screenProfile')}
 			>
 				<LayoutScreenProfile />
 			</button>
 			<button
 				class="layout-icon"
 				class:active={currentLayoutStyle === 'profileMain'}
-				on:click={() => (currentLayoutStyle = 'profileMain')}
+				onclick={() => (currentLayoutStyle = 'profileMain')}
 			>
 				<LayoutProfileMain />
 			</button>
 			<button
 				class="layout-icon"
 				class:active={currentLayoutStyle === 'profileChat'}
-				on:click={() => (currentLayoutStyle = 'profileChat')}
+				onclick={() => (currentLayoutStyle = 'profileChat')}
 			>
 				<LayoutProfileChat />
 			</button>
@@ -122,7 +122,8 @@
 	}
 
 	.layout-icons {
-		@apply flex gap-2;
+		@apply flex gap-1;
+		/* scale: 0.9; */
 	}
 
 	.layout-icon {
@@ -143,10 +144,10 @@
 	}
 	.btn-stop {
 		@apply h-full;
-		width: 140px;
+		width: 120px;
 		@apply bg-accent-red rounded;
-		height: 40px;
-		font-size: 14px;
+		height: 30px;
+		font-size: 12px;
 	}
 
 	.btn-stop:hover {

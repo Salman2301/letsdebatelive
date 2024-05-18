@@ -39,8 +39,8 @@
 	.container {
 		@apply rounded overflow-hidden;
 		@apply flex justify-center;
-		height: 40px;
-		width: fit-content;
+		height: 30px;
+		width: 150px;
 	}
 	button {
 		@apply bg-secondary;
