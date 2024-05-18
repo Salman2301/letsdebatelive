@@ -1,4 +1,5 @@
 <script lang="ts">
+	import EndingScene from './scenes/EndingScene.svelte';
 	import StartingScene from './scenes/StartingScene.svelte';
   import BreakScene from './scenes/BreakScene.svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
@@ -23,10 +24,16 @@
 </script>
 
 <div class="video-container">
+  {#if !!sceneType}
+    <!-- Need to communicate with puppetter page ready -->
+    <div class="loaded-video-el"></div> 
+  {/if}
   {#if sceneType === "scene_start"}
     <StartingScene payload={payloadData}/>
   {:else if sceneType === "scene_break"}
     <BreakScene payload={payloadData}/>
+  {:else if sceneType === "scene_end"}
+    <EndingScene payload={payloadData}/>
   {:else}
     <div class="loader-container">       
       <Loader />
@@ -39,6 +46,7 @@
     aspect-ratio: 16 / 9;
     @apply border border-light-gray;
     overflow: hidden;
+    width: 100%;
   }
 
   .loader-container {

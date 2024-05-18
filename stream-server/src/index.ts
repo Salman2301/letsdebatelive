@@ -40,7 +40,6 @@ const channel = supabase.channel(`broadcast_${hostId}`);
 channel
   .on("broadcast", { event: "broadcast_start" }, async () => {
     lastRecording = await onNewLiveDebate();
-    console.log({ lastRecording });
   })
 
 channel
@@ -63,7 +62,9 @@ async function onNewLiveDebate() {
 
   await page.goto("http://localhost:5172/username/salman2301/record-view");
 
-  await page.waitForSelector("#loaded");
+  // There is a bug in the app where the screen is stuck in loading.
+  // Fix the bug in the video element
+  await page.waitForSelector(".loaded-video-el", { visible: false });
 
   const recorder = new PuppeteerScreenRecorder(page, Config);
 
