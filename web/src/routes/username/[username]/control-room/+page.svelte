@@ -61,11 +61,16 @@
 </div>
 
 <style lang="postcss">
+  .control-room-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
   .small-panel-container {
     display: flex;
     width: 100%;
-    height: calc( 100vh - 420px - 48px - 76px );  /* 100vh - video height -layout-panel - navbar height */
     @apply border border-light-gray;
+    @apply flex-auto;
   }
 
   .small-panel {

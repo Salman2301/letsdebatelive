@@ -171,7 +171,7 @@
 	}
 	.sidebar-content {
 		@apply bg-primary-dark;
-		width: 400px;
+		width: calc( 50vw - 180px );
 		height: 100%;
 		margin-left: 70px;
     overflow: auto;
