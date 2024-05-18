@@ -1,0 +1,27 @@
+{
+  "name": "stream-server",
+  "version": "1.0.0",
+  "description": "Listen for the supabase broadcast on broadcast start, spin up a new machine with puppeteer and start the recording, send the recording started.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "db:schema": "supabase --workdir ../web gen types typescript --local --schema public > ./src/db/schema/database.types.ts",
+    "db:pull": "supabase --workdir ../web db pull --linked",
+    "db:reset": "supabase --workdir ../web db reset"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "node-media-server": "^2.6.6",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.43.2",
+    "dotenv": "^16.4.5",
+    "pino": "^9.1.0",
+    "pino-pretty": "^11.0.0",
+    "puppeteer-screen-recorder": "^3.0.3"
+  }
+}
