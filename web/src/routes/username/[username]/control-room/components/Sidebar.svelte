@@ -10,7 +10,7 @@
 		ICON_BANNER,
 		ICON_CHAT_LIVE,
 		ICON_CHAT_MODERATION
-	} from "./sidebar-icons";
+	} from "./sidebars/sidebar-icons";
 	
 	import {
 		SidebarBroadcast,
@@ -23,7 +23,7 @@
 		SidebarChatLive,
 		SidebarChatModerator,
 		SidebarParticipants
-	} from "./sidebars";
+	} from "./sidebars/sidebar-unit";
 
 	interface SidebarSmall {
 		[name: string]: {

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import VideoFeed from './components/VideoFeed.svelte';
-	import SmallSidePanel from "./components/small-sidepanel/SmallSidePanel.svelte";
+	import VideoFeed from './components/videoFeed/VideoFeed.svelte';
+	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import supabase from '$lib/supabase';
-	import LayoutHeader from './components/LayoutHeader.svelte';
+	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { onMount } from 'svelte';
 
   let hostId = "123-1234-123";

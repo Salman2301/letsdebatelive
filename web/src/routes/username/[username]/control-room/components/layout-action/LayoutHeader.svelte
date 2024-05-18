@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TakeABreak from './TakeABreak.svelte';
+	import TakeABreak from '../TakeABreak.svelte';
 	import LayoutProfileMain from './layout-setting-icon/LayoutProfileMain.svelte';
 	import LayoutScreenProfile from './layout-setting-icon/LayoutScreenProfile.svelte';
 	import LayoutScreen from './layout-setting-icon/LayoutScreen.svelte';
