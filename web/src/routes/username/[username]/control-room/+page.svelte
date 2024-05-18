@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 
   let hostId = "123-456-789";
+  let latestScenePayload: any;
   onMount(async ()=>{
     supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
       type: "broadcast",
@@ -21,6 +22,12 @@
 
     console.log("sent broadcast")
     handleLive();
+
+    supabase.channel(`scene_${hostId}`).on('broadcast', { event: 'scene_change' }, ({ payload }) => {
+      latestScenePayload = payload;
+      console.log('Latest scene payload:', latestScenePayload);
+    });
+
   });
 
   async function handleLive() {
@@ -37,13 +44,12 @@
       }
     });
     console.log("clicked!")
-
   }
 </script>
 
 <div class="control-room-container">
   <VideoFeed />
-  <LayoutHeader />
+  <LayoutHeader currentLayoutStyle="profileTwo" currentSceneType={latestScenePayload?.sceneType} />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">
       <SmallSidePanel />
