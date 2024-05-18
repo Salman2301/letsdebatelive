@@ -44,7 +44,6 @@
 
 <div class="control-room-container">
   <VideoFeed />
-  <button on:click={handleLive}>Go Live!!!!</button>
   <LayoutHeader />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">

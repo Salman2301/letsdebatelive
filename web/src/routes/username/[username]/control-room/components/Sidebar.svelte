@@ -1,30 +1,29 @@
 <script lang="ts">
-	import ICON_SETTINGS from "./sidebar-icons/ICON_SETTINGS.svelte";
-	import ICON_DEBATE_AGENDA from "./sidebar-icons/ICON_DEBATE_AGENDA.svelte";
-	import ICON_POLL_ANALYTICS from "./sidebar-icons/ICON_POLL_ANALYTICS.svelte";
-	import ICON_QA from "./sidebar-icons/ICON_QA.svelte";
-	import ICON_BANNER from "./sidebar-icons/ICON_BANNER.svelte";
-	import ICON_BACKSTAGE_SETTINGS from "./sidebar-icons/ICON_BACKSTAGE_SETTINGS.svelte";
-	import ICON_BACKSTAGE_CHAT from "./sidebar-icons/ICON_BACKSTAGE_CHAT.svelte";
-	import ICON_CHAT_LIVE from "./sidebar-icons/ICON_CHAT_LIVE.svelte";
-	import ICON_CHAT_MODERATION from "./sidebar-icons/ICON_CHAT_MODERATION.svelte";
-	import ICON_CHAT_FLAGGED from "./sidebar-icons/ICON_CHAT_FLAGGED.svelte";
-	import ICON_USER_BAN from "./sidebar-icons/ICON_USER_BAN.svelte";
-	import SidebarSetting from "./sidebars/SidebarSetting.svelte";
-	import SidebarAgenda from "./sidebars/SidebarAgenda.svelte";
-	import SidebarPoll from "./sidebars/SidebarPoll.svelte";
-	import SidebarQA from "./sidebars/SidebarQA.svelte";
-	import SidebarBanner from "./sidebars/SidebarBanner.svelte";
-	import SidebarBackstageSetting from "./sidebars/SidebarBackstageSetting.svelte";
-	import SidebarBackstageChat from "./sidebars/SidebarBackstageChat.svelte";
-	import SidebarChatSetting from "./sidebars/SidebarChatSetting.svelte";
-	import SidebarChatLive from "./sidebars/SidebarChatLive.svelte";
-	import SidebarChatModerator from "./sidebars/SidebarChatModerator.svelte";
-	import SidebarChatFlagged from "./sidebars/SidebarChatFlagged.svelte";
-	import SidebarUserBan from "./sidebars/SidebarUserBan.svelte";
-
-
-
+	import {
+		ICON_BACKSTAGE_SETTINGS,
+		ICON_BROADCAST,
+		ICON_PARTICIPANTS,
+		ICON_SETTINGS,
+		ICON_DEBATE_AGENDA,
+		ICON_POLL_ANALYTICS,
+		ICON_QA,
+		ICON_BANNER,
+		ICON_CHAT_LIVE,
+		ICON_CHAT_MODERATION
+	} from "./sidebar-icons";
+	
+	import {
+		SidebarBroadcast,
+		SidebarSetting,
+		SidebarAgenda,
+		SidebarPoll,
+		SidebarQA,
+		SidebarBanner,
+		SidebarBackstageSetting,
+		SidebarChatLive,
+		SidebarChatModerator,
+		SidebarParticipants
+	} from "./sidebars";
 
 	interface SidebarSmall {
 		[name: string]: {
@@ -43,6 +42,23 @@
 			icon: ICON_SETTINGS,
 			sidebar: SidebarSetting
 		},
+		participants: {
+			label: "Participants",
+			icon: ICON_PARTICIPANTS,
+			sidebar: SidebarParticipants
+		},
+		backstageSetting: {
+			label: "Backstage Setting",
+			icon: ICON_BACKSTAGE_SETTINGS,
+			sidebar: SidebarBackstageSetting
+		},
+		chatLive: {
+			label: "Chat Live",
+			icon: ICON_CHAT_LIVE,
+			sidebar: SidebarChatLive,
+			divider: true
+		},
+
 		agenda: {
 			label: "Debate Agenda",
 			icon: ICON_DEBATE_AGENDA,
@@ -64,41 +80,16 @@
 			sidebar: SidebarBanner,
 			divider: true
 		},
-		backstageSetting: {
-			label: "Backstage Setting",
-			icon: ICON_BACKSTAGE_SETTINGS,
-			sidebar: SidebarBackstageSetting
-		},
-		backstageChat: {
-			label: "Backstage Chat",
-			icon: ICON_BACKSTAGE_CHAT,
-			sidebar: SidebarBackstageChat,
-			divider: true
-		},
-		chatSetting: {
-			label: "Chat Setting",
-			sidebar: SidebarChatSetting,
-			icon: ICON_SETTINGS,
-		},
-		chatLive: {
-			label: "Chat Live",
-			icon: ICON_CHAT_LIVE,
-			sidebar: SidebarChatLive
-		},
+		
 		chatModerator: {
 			label: "Chat Moderator",
 			icon: ICON_CHAT_MODERATION,
 			sidebar: SidebarChatModerator
 		},
-		chatFlagged: {
-			label: "Chat Flagged",
-			icon: ICON_CHAT_FLAGGED,
-			sidebar: SidebarChatFlagged
-		},
-		userBan: {
-			label: "User Ban",
-			icon: ICON_USER_BAN,
-			sidebar: SidebarUserBan
+		broadcast: {
+			label: "Broadcast setting",
+			icon: ICON_BROADCAST,
+			sidebar: SidebarBroadcast
 		}
 	}
 </script>
@@ -138,7 +129,7 @@
 		@apply flex justify-center items-center;
 	}
 	.popup {
-		@apply absolute left-20 top-0;
+		@apply absolute left-14 top-0;
 		@apply bg-black;
 		@apply rounded;
 		@apply px-2;
@@ -164,12 +155,9 @@
 	.active {
 		color: white;
 	}
-  .sidebar-small-container {
-    height: calc(100vh - 76px);
-  }
 	.sidebar-small-icon {
 		@apply bg-secondary-dark;
-		width: 70px;
+		width: 50px;
 		height: 100%;
 		position: sticky;
 		top: 0px;
@@ -179,7 +167,7 @@
 		flex-direction: column;
 	}
 	.divider {
-		@apply mb-4;
+		@apply mb-8;
 	}
 	.sidebar-content {
 		@apply bg-primary-dark;
