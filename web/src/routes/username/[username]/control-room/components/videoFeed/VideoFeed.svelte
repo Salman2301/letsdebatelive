@@ -9,6 +9,7 @@
 
 	import type { ScenePayload, SceneType } from './video-feed.types';
 	import { lastScreenPayloadContent } from './scenes/store/scente.store';
+	import type { Tables } from '$lib/schema/database.types';
 
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = {
@@ -18,12 +19,19 @@
 	};
 
 	let hostId = getContext('HOST_ID');
+	let participantsList: Tables<"live_debate_participants">[] = [];
 
-	onMount(() => {
+	onMount(async () => {
 		supabase
 			.channel(`scene_${hostId}`)
 			.on('broadcast', { event: 'scene_change' }, onSceneChange)
 			.subscribe();
+
+		// Get participants list
+		const { data, error } = await supabase.from("live_debate_participants").select();
+		participantsList = data as Tables<"live_debate_participants">[];
+		participantsList.length = 2
+		console.log({ error, participantsList });
 	});
 
 	function onSceneChange({ payload }: { payload: ScenePayload }) {
@@ -53,7 +61,7 @@
 	{:else if payloadData.sceneType === 'scene_end'}
 		<EndingScene payload={payloadData} />
 	{:else if payloadData.sceneType === 'scene_content'}
-		<ContentScene payload={payloadData} />
+		<ContentScene payload={payloadData} {participantsList} />
 	{:else}
 		<div class="loader-container">
 			<Loader />
@@ -64,9 +72,11 @@
 <style lang="postcss">
 	.video-container {
 		aspect-ratio: 16 / 9;
+		/* padding-top: 56.25%; */
 		@apply border border-light-gray;
 		overflow: hidden;
 		width: 100%;
+		/* height: 100%; */
 	}
 
 	.loader-container {

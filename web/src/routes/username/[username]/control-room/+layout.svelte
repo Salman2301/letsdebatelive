@@ -26,6 +26,7 @@
   .control-room {
     @apply bg-black;
     width: 100%;
+    min-height: 600px;
   }
 
 </style>
