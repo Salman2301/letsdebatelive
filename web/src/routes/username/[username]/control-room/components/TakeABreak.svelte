@@ -10,6 +10,7 @@
 
     const breakEnd = new Date();
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
+    breakEnd.setSeconds(breakEnd.getSeconds() +1);
 
 		emitSceneChange(hostId, {
 			sceneType: 'scene_break',

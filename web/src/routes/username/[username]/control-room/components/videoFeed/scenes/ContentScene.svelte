@@ -31,7 +31,7 @@
 
 <SceneLayout>
 	<div class="layer">
-		{payload.layerId}
+		<!-- {payload.layerId} -->
 		{#if payload.layerId === 'profile_multiple'}
 			{#each filterParticipants(payload.layerId) as participant}
 				<ProfileVideoCard {participant} />
@@ -43,16 +43,20 @@
 				{/each}
 			</div>
 		{:else if payload.layerId === 'screen'}
-			{#each filterParticipants(payload.layerId) as participant}
-				<ProfileVideoCard {participant} />
-			{/each}
 			<div class="w-full h-full">
 				<ScreenCard screen={filterScreen()} />
 			</div>
 
 		{:else if payload.layerId === 'screen_profile'}
-			<div class="m-4">
-				<ScreenCard screen={filterScreen()} />
+			<div class="m-4 flex items-center justify-between">
+				<div class="flex flex-col h-full">
+					{#each filterParticipants(payload.layerId) as participant}
+						<ProfileVideoCard {participant} />
+					{/each}
+				</div>
+				<div class="w-[70%] h-full">
+					<ScreenCard screen={filterScreen()} />
+				</div>
 			</div>
 		{:else if payload.layerId === 'profile_chat'}
 			<ScreenCard screen={filterScreen()} />
