@@ -34,7 +34,7 @@
 		}
 	}
 
-	let currentSidebar: string = "setting";
+	let currentSidebar: string = "backstageSetting";
 
 	const sidebarSmall: SidebarSmall = {
 		setting: {
@@ -173,8 +173,8 @@
 		@apply bg-primary-dark;
 		width: calc( 50vw - 180px );
 		height: 100%;
-		margin-left: 70px;
-    overflow: auto;
+		overflow: auto;
+		@apply px-4;
 	}
 
 </style>
