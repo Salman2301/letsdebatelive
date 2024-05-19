@@ -49,8 +49,8 @@
 		<div class="layout-icons">
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profileTwo'}
-				onclick={() => (currentLayoutStyle = 'profileTwo')}
+				class:active={currentLayoutStyle === 'profile_multiple'}
+				onclick={() => (currentLayoutStyle = 'profile_multiple')}
 			>
 				<LayoutProfileTwo />
 			</button>
@@ -63,22 +63,22 @@
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'screenProfile'}
-				onclick={() => (currentLayoutStyle = 'screenProfile')}
+				class:active={currentLayoutStyle === 'screen_profile'}
+				onclick={() => (currentLayoutStyle = 'screen_profile')}
 			>
 				<LayoutScreenProfile />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profileMain'}
-				onclick={() => (currentLayoutStyle = 'profileMain')}
+				class:active={currentLayoutStyle === 'profile_main'}
+				onclick={() => (currentLayoutStyle = 'profile_main')}
 			>
 				<LayoutProfileMain />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profileChat'}
-				onclick={() => (currentLayoutStyle = 'profileChat')}
+				class:active={currentLayoutStyle === 'profile_chat'}
+				onclick={() => (currentLayoutStyle = 'profile_chat')}
 			>
 				<LayoutProfileChat />
 			</button>

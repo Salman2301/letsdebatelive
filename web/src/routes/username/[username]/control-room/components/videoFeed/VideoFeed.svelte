@@ -6,14 +6,17 @@
 	import Loader from '$lib/components/icon/Loader.svelte';
 	import { getContext, onMount } from 'svelte';
 	import supabase from '$lib/supabase';
-	import type { OnSceneChangeProps, Payload, SceneType } from './video-feed.types';
+	import type { ScenePayload, SceneType } from './video-feed.types';
 
+	// let sceneType: SceneType;
+	let payloadData: ScenePayload = {
+		sceneType: 'scene_loading',
+		layerId: 'layer_text',
+		metadata: { text: 'loading' }
+	};
 
-	let sceneType: SceneType;
-	let payloadData: Payload = { sceneType: "scene_loading", metadata: { text: 'loading' } };
+	let hostId = getContext('HOST_ID');
 
-	let hostId = getContext("HOST_ID");
-  
 	onMount(() => {
 		supabase
 			.channel(`scene_${hostId}`)
@@ -21,31 +24,28 @@
 			.subscribe();
 	});
 
-
-	function onSceneChange({ payload }: OnSceneChangeProps ) {
+	function onSceneChange({ payload }: { payload: ScenePayload }) {
 		if (!payload || !payload.sceneType) {
 			console.error('Empty payload received?', payload);
 			return;
 		}
-		sceneType = payload.sceneType;
 		payloadData = payload;
-		console.log({ sceneType, payload });
+		console.log({ payload });
 	}
-
 </script>
 
 <div class="video-container">
-	{#if !!sceneType}
+	{#if !!payloadData.sceneType}
 		<!-- Need to communicate with puppetter page ready -->
 		<div class="loaded-video-el"></div>
 	{/if}
-	{#if sceneType === 'scene_start'}
+	{#if payloadData.sceneType === 'scene_start'}
 		<StartingScene payload={payloadData} />
-	{:else if sceneType === 'scene_break'}
+	{:else if payloadData.sceneType === 'scene_break'}
 		<BreakScene payload={payloadData} />
-	{:else if sceneType === 'scene_end'}
+	{:else if payloadData.sceneType === 'scene_end'}
 		<EndingScene payload={payloadData} />
-	{:else if sceneType === 'scene_content'}
+	{:else if payloadData.sceneType === 'scene_content'}
 		<ContentScene payload={payloadData} />
 	{:else}
 		<div class="loader-container">

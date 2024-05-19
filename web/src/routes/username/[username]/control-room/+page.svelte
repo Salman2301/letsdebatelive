@@ -36,7 +36,7 @@
 
 <div class="control-room-container">
   <VideoFeed />
-  <LayoutHeader currentLayoutStyle="profileTwo" currentSceneType={latestScenePayload?.sceneType} />
+  <LayoutHeader currentLayoutStyle="profile_multiple" currentSceneType={latestScenePayload?.sceneType} />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">
       <SmallSidePanel />
