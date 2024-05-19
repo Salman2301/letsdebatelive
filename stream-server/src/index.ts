@@ -7,10 +7,13 @@ import puppeteer from "puppeteer";
 import { PassThrough } from "node:stream";
 import { logger } from "./logger";
 
-// width: 1920,
-// height: 1080,
-let width = 1280;
-let height = 720;
+// 1080p
+let width = 1920;
+let height = 1080;
+
+// 720p
+// let width = 1280;
+// let height = 720;
 
 const Config = {
   followNewTab: false,
@@ -31,7 +34,7 @@ const Config = {
 
 logger().info("Listening for broadcast_start");
 
-let hostId = "123-1234-123";
+let hostId = "123-456-789";
 
 let lastRecording: { unsubscribe: () => Promise<void> } | null;
 
