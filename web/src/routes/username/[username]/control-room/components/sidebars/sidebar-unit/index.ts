@@ -4,7 +4,7 @@ export { default as SidebarAgenda } from "./SidebarAgenda.svelte";
 export { default as SidebarPoll } from "./SidebarPoll.svelte";
 export { default as SidebarQA } from "./SidebarQA.svelte";
 export { default as SidebarBanner } from "./SidebarBanner.svelte";
-export { default as SidebarBackstageSetting } from "./SidebarBackstageSetting.svelte";
+export { default as SidebarBackstageSetting } from "./SidebarBackstageSetting/SidebarBackstageSetting.svelte";
 export { default as SidebarChatLive } from "./SidebarChatLive.svelte";
 export { default as SidebarChatModerator } from "./SidebarChatModerator.svelte";
 export { default as SidebarParticipants } from './SidebarParticipants.svelte';

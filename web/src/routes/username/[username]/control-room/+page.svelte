@@ -33,7 +33,7 @@
   }
 </script>
 
-<div class="control-room-container">
+<div class="control-room-container hidden">
   <VideoFeed />
   <LayoutHeader />
   <div class="small-panel-container">
