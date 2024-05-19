@@ -54,35 +54,35 @@
 		<div class="layout-icons">
 			<button
 				class="layout-icon"
-				class:active={layerIdContent === 'profile_multiple'}
+				class:active={$lastScreenPayloadContent.layerId === 'profile_multiple'}
 				onclick={() => setScreenLayout('profile_multiple')}
 			>
 				<LayoutProfileTwo />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={layerIdContent === 'screen'}
+				class:active={$lastScreenPayloadContent.layerId === 'screen'}
 				onclick={() => setScreenLayout('screen')}
 			>
 				<LayoutScreen />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={layerIdContent === 'screen_profile'}
+				class:active={$lastScreenPayloadContent.layerId === 'screen_profile'}
 				onclick={() => setScreenLayout('screen_profile')}
 			>
 				<LayoutScreenProfile />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={layerIdContent === 'profile_main'}
+				class:active={$lastScreenPayloadContent.layerId === 'profile_main'}
 				onclick={() => setScreenLayout('profile_main')}
 			>
 				<LayoutProfileMain />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={layerIdContent === 'profile_chat'}
+				class:active={$lastScreenPayloadContent.layerId === 'profile_chat'}
 				onclick={() => setScreenLayout('profile_chat')}
 			>
 				<LayoutProfileChat />

@@ -4,11 +4,11 @@
 	import BreakScene from './scenes/BreakScene.svelte';
 	import ContentScene from './scenes/ContentScene.svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
-	import { getContext, onMount } from 'svelte';
 	import supabase from '$lib/supabase';
+	import { getContext, onMount } from 'svelte';
+	import { lastScreenPayloadContent } from './scenes/store/scente.store';
 
 	import type { ScenePayload, SceneType } from './video-feed.types';
-	import { lastScreenPayloadContent } from './scenes/store/scente.store';
 	import type { Tables } from '$lib/schema/database.types';
 
 	// let sceneType: SceneType;
@@ -43,6 +43,7 @@
 
 		if (payload.sceneType === 'scene_content') {
 			lastScreenPayloadContent.set(payload);
+			console.log("setting last screen", payload)
 		}
 
 		console.log({ payload });
@@ -72,11 +73,9 @@
 <style lang="postcss">
 	.video-container {
 		aspect-ratio: 16 / 9;
-		/* padding-top: 56.25%; */
 		@apply border border-light-gray;
 		overflow: hidden;
 		width: 100%;
-		/* height: 100%; */
 	}
 
 	.loader-container {

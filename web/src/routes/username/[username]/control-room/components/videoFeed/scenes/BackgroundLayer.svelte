@@ -8,9 +8,9 @@
   .scene-background {
     width: 100%;
     height: 100%;
-    background-color: whitesmoke;
+    @apply bg-secondary-dark/60;
     position: absolute;
-    border: 1px dashed red;
-    border-radius: 100px;
+    border: 1px dashed white;
+    border-radius: 20px;
   }
 </style>

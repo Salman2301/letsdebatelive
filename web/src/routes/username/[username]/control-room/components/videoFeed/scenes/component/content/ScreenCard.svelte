@@ -9,13 +9,15 @@
 </script>
 
 <div class="screen-layout">
-
+screen
 </div>
 
 <style lang="postcss">
   .screen-layout {
     width: 100%;
     height: 100%;
+    border: 4px solid white;
+
     @apply rounded;
   }
 

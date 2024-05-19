@@ -37,6 +37,12 @@
 <style lang="postcss">
 	.card {
 		aspect-ratio: 4 / 3;
-		width: 100%;
+		border: 1px solid white;
+		@apply flex flex-col items-center justify-center;
+		@apply m-1 p-1;
+	}
+	svg {
+		width: 140px;
+		height: 140px;
 	}
 </style>
