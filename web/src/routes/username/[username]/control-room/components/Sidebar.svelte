@@ -140,6 +140,7 @@
 		height: 40px;
 		display: none;
 		word-wrap: none;
+		z-index: 1000;
 	}
 	.icon-item:hover .popup {
 		display: flex;
@@ -159,7 +160,8 @@
 		@apply bg-secondary-dark;
 		width: 50px;
 		height: 100%;
-		position: sticky;
+		/* Causing z-index issue with the sidebar name popup? */
+		/* position: sticky; */ 
 		top: 0px;
 
 		display: flex;

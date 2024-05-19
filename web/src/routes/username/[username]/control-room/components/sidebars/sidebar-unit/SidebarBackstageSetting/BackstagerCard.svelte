@@ -158,4 +158,8 @@
 		@apply bg-primary-dark;
 	}
 
+	.btn-action {
+		@apply w-full flex justify-end;
+	}
+
 </style>
