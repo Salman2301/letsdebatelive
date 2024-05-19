@@ -1,6 +1,13 @@
 <script lang="ts">
 	import Heading2 from '$lib/components/form/Heading2.svelte';
+	import DeviceCamera from "./icons/DeviceCamera.svelte";
+	import DeviceMic from "./icons/DeviceMic.svelte";
+	import DeviceScreen from "./icons/DeviceScreen.svelte";
+	import DeviceUserProfile from "./icons/DeviceUserProfile.svelte";
+	import UserBan from "./icons/UserBan.svelte";
+	
 	import { backstage_participants } from '$lib/dummy/backstage';
+
 	import type { Tables } from '$lib/schema/database.types';
 
 	let backstagers: Tables<'live_debate_participants'>[] = backstage_participants;
@@ -89,7 +96,7 @@
 	</div>
 </div>
 
-<div class="flex flex-wrap justify-evenly gap-2">
+<div class="flex flex-wrap justify-between gap-2">
 	{#each backstagers as backstager}
 		<div class="card-container">
 			<div class="username-img-default">
@@ -97,7 +104,33 @@
 					{backstager.display_name?.[0].toUpperCase() || 'A'}
 				</div>
 			</div>
-			<div class="username-text">{backstager.display_name}</div>
+			<div class="username-text">
+				<input class="username-input" value={backstager.display_name} />
+			</div>
+			<div class="toggle-devices">
+				<div class="toggle-device">
+					<DeviceCamera />
+				</div>
+				<div class="toggle-device">
+					<DeviceMic />
+				</div>
+				<div class="toggle-device">
+					<DeviceScreen />
+				</div>
+				<div class="toggle-device">
+					<DeviceUserProfile />
+				</div>
+				<div class="toggle-device">
+					<UserBan />
+				</div>
+			</div>
+			<div class="footer">
+				<div class="team-circle">
+				</div>
+				<div class="btn-action">
+					<button class="btn-stage">Add to stage</button>
+				</div>
+			</div>
 		</div>
 	{/each}
 </div>
@@ -109,7 +142,8 @@
 	.card-container {
 		@apply bg-secondary-dark;
 		@apply rounded border border-light-gray;
-		width: 140px;
+		width: 192px;
+		height: 260px;
 	}
 	.username-img-default {
 		width: 100%;
@@ -138,9 +172,64 @@
 		@apply text-secondary-dark;
 	}
 
+	.username-img-default {
+		width: calc(100% - 8px);
+		aspect-ratio: 4 / 3;
+		@apply m-1;
+		background: linear-gradient(0deg, white, rgb(var(--color-secondary)));
+	}
+
 	.username-text {
-		@apply text-center;
+		@apply text-left;
 		height: 30px;
 		@apply flex items-center justify-center;
+	}
+
+	.username-input {
+		@apply bg-transparent;
+		@apply outline-none;
+		@apply border border-transparent;
+		@apply my-2;
+	}
+	.username-input:hover {
+		@apply border-light-gray;
+	}
+	
+	.toggle-devices {
+		@apply flex justify-evenly;
+		@apply text-secondary;
+		@apply my-2;
+	}
+	.toggle-device {
+		@apply border border-transparent;
+		@apply rounded;
+	}
+
+	.toggle-device:hover {
+		@apply text-secondary-dark;
+		@apply border border-light-gray;
+	}
+
+	.footer {
+		@apply flex justify-between items-center px-1;
+	}
+
+	.team-circle {
+		width: 14px;
+		height: 14px;
+		border-radius: 100%;
+		@apply bg-team-a;
+	}
+
+	.btn-stage {
+		@apply bg-primary;
+		width: 120px;
+		@apply rounded;
+		font-size: 12px;
+		@apply font-semibold;
+		height: 30px;
+	}
+	.btn-stage:hover {
+		@apply bg-primary-dark;
 	}
 </style>

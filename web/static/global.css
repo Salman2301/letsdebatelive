@@ -9,6 +9,9 @@
   --color-accent-red: 193 6 62;
   --color-accent-red-dark: 116 2 36;
   --color-light-gray: rgba(204, 204, 204, 0.3);
+  --color-team-a: 50 222 138;
+  --color-team-b: 239 118 116;
+  --color-team-c: 68  131 255;
 }
 
 html, body {
