@@ -9,13 +9,19 @@
   let hostId: string = getContext("HOST_ID");
   let latestScenePayload: any;
   onMount(async ()=>{
+    
     emitSceneChange(hostId, {
-      sceneType: "scene_start",
-      layerId: "layer_text",
-      metadata: {
-        text: "Starting soon..."
-      }
+      sceneType: "scene_content",
+      layerId: "screen"
     });
+
+    // emitSceneChange(hostId, {
+    //   sceneType: "scene_start",
+    //   layerId: "layer_text",
+    //   metadata: {
+    //     text: "Starting soon..."
+    //   }
+    // });
 
     console.log("sent broadcast")
     handleLive();

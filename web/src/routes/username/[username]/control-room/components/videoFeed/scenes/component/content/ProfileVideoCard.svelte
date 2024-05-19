@@ -1,11 +1,14 @@
 <script lang="ts">
+	import type { Tables } from "$lib/schema/database.types";
+
   let profileImage: string;
 
 	interface Props {
 		type?: "audio" | "video";
-		list: any;
+		participant: Tables<"live_debate_participants">;
 	}
-	let { type }: Props = $props();
+	let { type, participant }: Props = $props();
+
 </script>
 
 <div class="card">
