@@ -8,7 +8,7 @@
   .scene-background {
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: whitesmoke;
     position: absolute;
     border: 1px dashed red;
     border-radius: 100px;
