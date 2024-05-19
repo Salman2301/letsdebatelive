@@ -3,20 +3,17 @@
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import supabase from '$lib/supabase';
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
+	import { emitBroadcastEvent, emitSceneChange } from './channel';
 
-  let hostId = "123-456-789";
+  let hostId: string = getContext("HOST_ID");
   let latestScenePayload: any;
   onMount(async ()=>{
-    supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
-      type: "broadcast",
-      event: "scene_change",
-      payload: {
-        sceneType: "scene_start",
-        layerId: "layer_text",
-        metadata: {
-          text: "Starting soon..."
-        }
+    emitSceneChange(hostId, {
+      sceneType: "scene_start",
+      layerId: "layer_text",
+      metadata: {
+        text: "Starting soon..."
       }
     });
 
@@ -31,18 +28,8 @@
   });
 
   async function handleLive() {
-    
     // Create a live_debate
-    await supabase.channel(`broadcast_${hostId}`).send({
-      type: "broadcast",
-      event: "broadcast_start",// broadcast_suspended broadcast_ended
-      payload: {
-        // host id,
-        // start time,
-        // title
-        //
-      }
-    });
+    emitBroadcastEvent("broadcast_start", hostId);
     console.log("clicked!")
   }
 </script>

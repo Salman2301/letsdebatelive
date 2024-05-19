@@ -1,7 +1,9 @@
 <script lang="ts">
 	import supabase from '$lib/supabase';
+	import { getContext } from 'svelte';
+	import { emitSceneChange } from '../channel';
 
-  let hostId = '123-456-789';
+	let hostId: string = getContext("HOST_ID");
   
   let timeout = $state("5min");
   function handleLayoutShift() {
@@ -9,16 +11,12 @@
     const breakEnd = new Date();
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
 
-		supabase.channel(`scene_${hostId}`, { config: { broadcast: { self: true } } }).send({
-			type: 'broadcast',
-			event: 'scene_change',
-			payload: {
-				sceneType: 'scene_break',
-				layerId: 'layer_break',
-				metadata: {
-          timeout: timeout,
-          breakEndAt: breakEnd.toISOString()
-				}
+		emitSceneChange(hostId, {
+			sceneType: 'scene_break',
+			layerId: 'layer_break',
+			metadata: {
+				timeout: timeout,
+				breakEndAt: breakEnd.toISOString()
 			}
 		});
 

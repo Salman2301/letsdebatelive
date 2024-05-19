@@ -1,5 +1,9 @@
 <script lang="ts">
 	import Sidebar from "./components/Sidebar.svelte";
+  import { setContext } from "svelte";
+
+
+  setContext("HOST_ID", "123-456-789");
 
  
 </script>

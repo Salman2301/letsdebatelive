@@ -4,7 +4,7 @@
 	import BreakScene from './scenes/BreakScene.svelte';
 	import ContentScene from './scenes/ContentScene.svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import supabase from '$lib/supabase';
 	import type { OnSceneChangeProps, Payload, SceneType } from './video-feed.types';
 
@@ -12,8 +12,8 @@
 	let sceneType: SceneType;
 	let payloadData: Payload = { sceneType: "scene_loading", metadata: { text: 'loading' } };
 
-	let hostId = '123-456-789';
-
+	let hostId = getContext("HOST_ID");
+  
 	onMount(() => {
 		supabase
 			.channel(`scene_${hostId}`)

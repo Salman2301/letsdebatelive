@@ -5,38 +5,30 @@
 	import LayoutScreen from './layout-setting-icon/LayoutScreen.svelte';
 	import LayoutProfileTwo from './layout-setting-icon/LayoutProfileTwo.svelte';
 	import LayoutProfileChat from './layout-setting-icon/LayoutProfileChat.svelte';
-	import supabase from '$lib/supabase';
-	import type { ContentLayoutStyle, SceneType } from '../videoFeed/video-feed.types';
-	import SceneLayout from '../videoFeed/scenes/component/SceneLayout.svelte';
-
+	import { getContext } from 'svelte';
+	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
+	
+	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
+	
 	interface Props {
-		currentLayoutStyle: ContentLayoutStyle;
+		currentLayoutStyle: LayerIdContent;
 		currentSceneType: SceneType;
 	}
 
 	let { currentLayoutStyle, currentSceneType }: Props = $props();
 
-	let hostId = "123-456-789";
+	let hostId: string = getContext("HOST_ID");
+  
 
 	function handleStopBroadcast() {
 
-		// Create a live_debate
-		supabase.channel(`broadcast_${hostId}`).send({
-			type: "broadcast",
-			event: "broadcast_end",// broadcast_suspended broadcast_ended
-			payload: { hostId }
-		});
-
+		emitBroadcastEvent("broadcast_end", hostId, { hostId });
 		
-		supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
-			type: "broadcast",
-			event: "scene_change",
-			payload: {
-				sceneType: "scene_end",
-				layerId: "layer_text",
-				metadata: {
-					text: "Broadcast has ended!"
-				}
+		emitSceneChange(hostId, {
+			sceneType: "scene_end",
+			layerId: "layer_text",
+			metadata: {
+				text: "Broadcast has ended!"
 			}
 		});
 
@@ -45,17 +37,9 @@
 	}
 
 	function handleResume() {
-		
-		supabase.channel(`scene_${hostId}`, { config: {broadcast: {self: true}} }).send({
-			type: "broadcast",
-			event: "scene_change",
-			payload: {
-				sceneType: "scene_content",
-				layerId: currentLayoutStyle,
-				metadata: {
-					text: "Broadcast has ended!"
-				}
-			}
+		emitSceneChange(hostId, {
+			sceneType: "scene_content",
+			layerId: currentLayoutStyle,
 		});
 	}
 </script>
