@@ -1,18 +1,16 @@
 <script lang="ts">
 	import VideoFeed from './components/videoFeed/VideoFeed.svelte';
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
-	import supabase from '$lib/supabase';
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
 
   let hostId: string = getContext("HOST_ID");
-  let latestScenePayload: any;
   onMount(async ()=>{
     
     emitSceneChange(hostId, {
       sceneType: "scene_content",
-      layerId: "screen"
+      layerId: "profile_multiple"
     });
 
     // emitSceneChange(hostId, {
@@ -26,11 +24,6 @@
     console.log("sent broadcast")
     handleLive();
 
-    supabase.channel(`scene_${hostId}`).on('broadcast', { event: 'scene_change' }, ({ payload }) => {
-      latestScenePayload = payload;
-      console.log('Latest scene payload:', latestScenePayload);
-    });
-
   });
 
   async function handleLive() {
@@ -42,7 +35,7 @@
 
 <div class="control-room-container">
   <VideoFeed />
-  <LayoutHeader currentLayoutStyle="profile_multiple" currentSceneType={latestScenePayload?.sceneType} />
+  <LayoutHeader />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">
       <SmallSidePanel />

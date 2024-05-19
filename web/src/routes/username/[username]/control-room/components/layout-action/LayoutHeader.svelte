@@ -5,92 +5,95 @@
 	import LayoutScreen from './layout-setting-icon/LayoutScreen.svelte';
 	import LayoutProfileTwo from './layout-setting-icon/LayoutProfileTwo.svelte';
 	import LayoutProfileChat from './layout-setting-icon/LayoutProfileChat.svelte';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
-	
+
 	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
-	
-	interface Props {
-		currentLayoutStyle: LayerIdContent;
-		currentSceneType: SceneType;
-	}
+	import { lastScreenPayloadContent } from '../videoFeed/scenes/store/scente.store';
 
-	let { currentLayoutStyle, currentSceneType }: Props = $props();
+	let layerIdContent: LayerIdContent;
 
-	let hostId: string = getContext("HOST_ID");
-  
+	let hostId: string = getContext('HOST_ID');
+
+	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
+	// made sense to use LayoutHeader for short
 
 	function handleStopBroadcast() {
+		emitBroadcastEvent('broadcast_end', hostId, { hostId });
 
-		emitBroadcastEvent("broadcast_end", hostId, { hostId });
-		
 		emitSceneChange(hostId, {
-			sceneType: "scene_end",
-			layerId: "layer_text",
+			sceneType: 'scene_end',
+			layerId: 'layer_text',
 			metadata: {
-				text: "Broadcast has ended!"
+				text: 'Broadcast has ended!'
 			}
 		});
 
-		
 		console.log('stop broadcast');
 	}
 
-	function handleResume() {
+	onMount(()=>{
+		layerIdContent = $lastScreenPayloadContent.layerId;
+	})
+
+	function setScreenLayout(newLayerIdContent?: LayerIdContent) {
+		if (newLayerIdContent) {
+
+			layerIdContent = newLayerIdContent;
+		}
+
 		emitSceneChange(hostId, {
-			sceneType: "scene_content",
-			layerId: currentLayoutStyle,
+			sceneType: 'scene_content',
+			layerId: layerIdContent
 		});
 	}
 </script>
 
 <div class="layout-setting-container">
-	{#if currentSceneType === "scene_content"}
+	{#if $lastScreenPayloadContent.sceneType === 'scene_content'}
 		<div class="layout-icons">
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profile_multiple'}
-				onclick={() => (currentLayoutStyle = 'profile_multiple')}
+				class:active={layerIdContent === 'profile_multiple'}
+				onclick={() => setScreenLayout('profile_multiple')}
 			>
 				<LayoutProfileTwo />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'screen'}
-				onclick={() => (currentLayoutStyle = 'screen')}
+				class:active={layerIdContent === 'screen'}
+				onclick={() => setScreenLayout('screen')}
 			>
 				<LayoutScreen />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'screen_profile'}
-				onclick={() => (currentLayoutStyle = 'screen_profile')}
+				class:active={layerIdContent === 'screen_profile'}
+				onclick={() => setScreenLayout('screen_profile')}
 			>
 				<LayoutScreenProfile />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profile_main'}
-				onclick={() => (currentLayoutStyle = 'profile_main')}
+				class:active={layerIdContent === 'profile_main'}
+				onclick={() => setScreenLayout('profile_main')}
 			>
 				<LayoutProfileMain />
 			</button>
 			<button
 				class="layout-icon"
-				class:active={currentLayoutStyle === 'profile_chat'}
-				onclick={() => (currentLayoutStyle = 'profile_chat')}
+				class:active={layerIdContent === 'profile_chat'}
+				onclick={() => setScreenLayout('profile_chat')}
 			>
 				<LayoutProfileChat />
 			</button>
 		</div>
 	{:else}
-		<button onclick={handleResume}>Resume</button>
+		<button onclick={() => setScreenLayout()}>Resume</button>
 	{/if}
 	<div class="layout-break-end">
 		<TakeABreak />
-		<button class="btn-stop" onclick={handleStopBroadcast}>
-			Stop Broadcast
-		</button>
+		<button class="btn-stop" onclick={handleStopBroadcast}> Stop Broadcast </button>
 	</div>
 </div>
 
@@ -107,7 +110,6 @@
 
 	.layout-icons {
 		@apply flex gap-1;
-		/* scale: 0.9; */
 	}
 
 	.layout-icon {

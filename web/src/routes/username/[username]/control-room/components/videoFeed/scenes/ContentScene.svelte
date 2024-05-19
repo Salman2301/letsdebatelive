@@ -2,14 +2,14 @@
 	import ScreenCard from './component/content/ScreenCard.svelte';
 	import ProfileVideoCard from './component/content/ProfileVideoCard.svelte';
 	import SceneLayout from "./component/SceneLayout.svelte";
-	import type { LayoutContentType, ScenePayloadContent } from "../video-feed.types";
+	import type { LayerIdContent, ScenePayloadContent } from "../video-feed.types";
 	import type { Tables } from '$lib/schema/database.types';
 
   let { payload }: { payload: ScenePayloadContent } = $props();
-  let layoutId: LayoutContentType = "profile_single";
+  // let layoutId: LayoutContentType = "profile_multiple";
   let participantsList: Tables<"live_debate_participants">[] = [];
 
-  function filterParticipants(layoutId: LayoutContentType): Tables<"live_debate_participants">[] {
+  function filterParticipants(layoutId: LayerIdContent ): Tables<"live_debate_participants">[] {
     if(participantsList) {
       return participantsList.filter(({ type }: any) => type === "profile");
     }
@@ -29,46 +29,42 @@
 
 <SceneLayout>
   <div class="layer">
-    {layoutId}
-    {#if layoutId === "profile_single"}
-      {#each filterParticipants(layoutId) as participant}
+    {payload.layerId}
+    {#if payload.layerId === "profile_multiple"}
+      {#each filterParticipants(payload.layerId) as participant}
         <ProfileVideoCard {participant} />
       {/each}
 
-    {:else if layoutId === "profile_main"}
+    {:else if payload.layerId === "profile_main"}
     <div class="layer">
-      {#each filterParticipants(layoutId) as participant}
+      {#each filterParticipants(payload.layerId) as participant}
         <ProfileVideoCard {participant} />
       {/each}
     </div>
 
-    {:else if layoutId === "profile_screen"}
-      {#each filterParticipants(layoutId) as participant}
+    {:else if payload.layerId === "screen"}
+      {#each filterParticipants(payload.layerId) as participant}
         <ProfileVideoCard {participant} />
       {/each}
       <ScreenCard screen={filterScreen()} />
-
-    {:else if layoutId === "screen_full"}
-      <ScreenCard screen={filterScreen()} />
-
-    {:else if layoutId === "screen_focus"}
+    {:else if payload.layerId === "screen_profile"}
       <div class="m-4">
         <ScreenCard screen={filterScreen()} />
       </div>
 
-    {:else if layoutId === "screen_overlay_profile"}
+    {:else if payload.layerId === "profile_chat"}
       <ScreenCard screen={filterScreen()} />
 
-    {:else if layoutId === "audio_only"}
-      {#each filterParticipants(layoutId) as participant}
+    <!-- {:else if payload.layerId === "audio_only"}
+      {#each filterParticipants(payload.layerId) as participant}
         <ProfileVideoCard {participant} type="audio" />
       {/each}
 
-    {:else if layoutId === "audio_profile"}
-      {#each filterParticipants(layoutId) as participant}
+    {:else if payload.layerId === "audio_profile"}
+      {#each filterParticipants(payload.layerId) as participant}
         <ProfileVideoCard {participant} type="audio" />
-      {/each}
-    {/if}
+      {/each} -->
+    {/if} 
     </div>
 </SceneLayout>
 

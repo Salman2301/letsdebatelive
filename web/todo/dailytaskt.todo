@@ -1,97 +1,17 @@
 TODO:
   ☐ Layout Changes and Share webCam and Screenshare
+    ☐ Different type of layouts
+      - profile_multiple
+        Can handle single or multiple profile
+      - Screen only
+        Can show screen with background or full screen with no border
+      - Screen with profiles
+      - Profiles with profiles?
+      - Profiles with chat / or backstage (can react and hands up)
+      - profile with audio only? 
     ☐ Fix the selection of different layout
     ☐ Display the web cam feed
     ☐ On page reload, request for the screen and webcam share
     ☐ Abiltiy to toggle different user and screen from the panel
     ☐ Ability to disable from app.html showing screen for debug purpose
 
-
-  ✔ List all channel with type @done(24-05-19 07:18)
-  ✔ Re-write the pubsub channel based on the current channel type @done(24-05-19 08:24)
-
-
-pub/sub:
-  channel_lists:
-    - host:video_activity:$sec_channel_id
-    - host:setting_activity:$channel_id
-    - host:request_action:$channel_id
-    - service:notification_read:$channel_id
-    - backstage:activity:$channel_id
-    - moderation:activity:$channel_id
-    - user:activity:$channel_id ( user / moderation / host)
-  
-Channel:
-  host_activity:
-    video_channel:
-      Video channel only affect record room and control room
-      ☐ layout_change
-      ☐ scene_change
-        ☐ banner_active
-        ☐ overlay
-      ☐ widget_overlay
-        ☐ new_follower
-        ☐ subscribtion
-
-      
-    host_setting:
-      Channel connects between the host control room and live stage / backstage
-      ☐ screen_setting
-        ☐ remove_all
-      ☐ participant_change
-        ☐ kick_all
-        ☐ ban_all
-      ☐ backstage_change
-      ☐ live_title_change
-      ☐ chat_setting_change
-        ☐ subscriber_only
-      ☐ team_list_change
-      ☐ agenda_result_change
-      ☐ backstage_change
-        ☐ support_only | viewer | team only
-      
-    host_request_action:
-      channel subs between the host and the end user
-      ☐ agenda_new
-      ☐ create_poll
-      ☐ call_for_stage
-  
-  moderation_activity:
-    channel changes from moderators to host and selected user
-    moderation_change:
-      ☐ flagged_chat
-      ☐ moderation_logs
-      ☐ ban_user
-      ☐ kick_user
-      ☐ activity_feeds
-      ☐ team_participants
-      ☐ auto_bot
-  
-  user_activity:
-    channel betweent the host and user activity. There should be a working third-party to actively checking
-    notification_read:
-      ☐ live_chat_read
-      ☐ question_answer_read
-      ☐ participant_read
-      ☐ audience_hand_read
-      ☐ activity_feed
-      ☐ screen_share_read
-      ☐ backstage_read
-      ☐ poll_result_read
-      ☐ screen_read
-
-    participation_channel:
-      participant channel that affect both the stage and backstage
-      ☐ participant_add
-      ☐ participant_remove
-      ☐ participat_setting_change
-        ☐ video / audio available?
-
-  user_type:
-    ☐ host
-    ☐ co-host
-    ☐ moderators
-    ☐ supporters
-    ☐ followers
-    ☐ viewers
-    ☐ anonymous

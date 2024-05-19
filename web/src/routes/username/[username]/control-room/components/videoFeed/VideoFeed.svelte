@@ -6,7 +6,9 @@
 	import Loader from '$lib/components/icon/Loader.svelte';
 	import { getContext, onMount } from 'svelte';
 	import supabase from '$lib/supabase';
+
 	import type { ScenePayload, SceneType } from './video-feed.types';
+	import { lastScreenPayloadContent } from './scenes/store/scente.store';
 
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = {
@@ -30,6 +32,11 @@
 			return;
 		}
 		payloadData = payload;
+
+		if (payload.sceneType === 'scene_content') {
+			lastScreenPayloadContent.set(payload);
+		}
+
 		console.log({ payload });
 	}
 </script>
