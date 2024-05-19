@@ -174,7 +174,7 @@
 		width: calc( 50vw - 180px );
 		height: 100%;
 		overflow: auto;
-		@apply px-4;
+		/* @apply px-4; */
 	}
 
 </style>
