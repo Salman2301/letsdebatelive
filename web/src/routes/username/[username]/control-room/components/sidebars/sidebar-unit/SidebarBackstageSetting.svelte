@@ -1,11 +1,13 @@
 <script lang="ts">
+	import RaiseHand from './icons/RaiseHand.svelte';
+	import UserRemove from './icons/UserRemove.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import DeviceCamera from "./icons/DeviceCamera.svelte";
 	import DeviceMic from "./icons/DeviceMic.svelte";
 	import DeviceScreen from "./icons/DeviceScreen.svelte";
 	import DeviceUserProfile from "./icons/DeviceUserProfile.svelte";
 	import UserBan from "./icons/UserBan.svelte";
-	
+
 	import { backstage_participants } from '$lib/dummy/backstage';
 
 	import type { Tables } from '$lib/schema/database.types';
@@ -100,11 +102,21 @@
 	{#each backstagers as backstager}
 		<div class="card-container">
 			<div class="username-img-default">
+				<div class="header-float">
+					{#if true}
+						<RaiseHand />
+					{:else}
+						<div></div>
+					{/if}
+					<UserRemove />
+				</div>
 				<div class="circle-icon">
 					{backstager.display_name?.[0].toUpperCase() || 'A'}
 				</div>
 			</div>
 			<div class="username-text">
+				<div class="team-circle">
+				</div>
 				<input class="username-input" value={backstager.display_name} />
 			</div>
 			<div class="toggle-devices">
@@ -125,8 +137,6 @@
 				</div>
 			</div>
 			<div class="footer">
-				<div class="team-circle">
-				</div>
 				<div class="btn-action">
 					<button class="btn-stage">Add to stage</button>
 				</div>
@@ -150,6 +160,12 @@
 		aspect-ratio: 4 / 3;
 		@apply rounded overflow-clip;
 		@apply flex items-center justify-center;
+		@apply relative;
+	}
+	.header-float {
+		@apply flex justify-between items-center;
+		@apply w-full pr-2;
+		@apply absolute top-0;
 	}
   .icon-container {
     padding: 4px;
@@ -182,7 +198,8 @@
 	.username-text {
 		@apply text-left;
 		height: 30px;
-		@apply flex items-center justify-center;
+		@apply flex items-center justify-center gap-1;
+		@apply px-1;
 	}
 
 	.username-input {
@@ -190,6 +207,8 @@
 		@apply outline-none;
 		@apply border border-transparent;
 		@apply my-2;
+
+		width: calc(100% - 12px);
 	}
 	.username-input:hover {
 		@apply border-light-gray;
@@ -215,6 +234,8 @@
 	}
 
 	.team-circle {
+		min-width: 14px;
+		min-height: 14px;
 		width: 14px;
 		height: 14px;
 		border-radius: 100%;
@@ -227,7 +248,7 @@
 		@apply rounded;
 		font-size: 12px;
 		@apply font-semibold;
-		height: 30px;
+		height: 28px;
 	}
 	.btn-stage:hover {
 		@apply bg-primary-dark;
