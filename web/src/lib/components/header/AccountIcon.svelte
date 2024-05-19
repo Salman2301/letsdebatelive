@@ -76,6 +76,7 @@
     @apply bg-accent-gray;
     border-radius: 4px;
     overflow: hidden;
+    z-index: 1000;
   }
 
   .btn-popup {
