@@ -9,7 +9,7 @@
 	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
 
 	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
-	import { lastScreenPayloadContent } from '../videoFeed/scenes/store/scente.store';
+	import { lastScreenPayloadContent } from '../videoFeed/scenes/store/scene';
 
 	let layerIdContent: LayerIdContent;
 

@@ -4,13 +4,14 @@
 	import Button from '$lib/components/button/Button.svelte';
 	import BackstagerCard from './BackstagerCard.svelte';
 
-	import { backstage_participants } from '$lib/dummy/backstage';
-	import type { Tables } from '$lib/schema/database.types';
 	import UserBan from '$lib/components/icon/UserBan.svelte';
 	import DeviceCamera from '$lib/components/icon/DeviceCamera.svelte';
 	import DeviceMic from '$lib/components/icon/DeviceMic.svelte';
 	import DeviceScreen from '$lib/components/icon/DeviceScreen.svelte';
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
+	import { isLessThanLg } from '$lib/stores/screen-size.store';
+	import { backstage_participants } from '$lib/dummy/backstage';
+	import type { Tables } from '$lib/schema/database.types';
 
 	let backstagers: Tables<'live_debate_participants'>[] = backstage_participants;
 
@@ -24,7 +25,31 @@
 <div class="heading">
 	<Heading2 content="Backstage" />
 	<div class="right-content">
-		<Button color="primary" fillType="outline-solid" label="Copy backstage link"></Button>
+		<Button
+			color="primary"
+			fillType="outline-solid"
+			label={$isLessThanLg ? 'Copy Backstage link' : ''}
+		>
+			<svg
+				slot="icon-left"
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				id="Hyperlink-3--Streamline-Ultimate"
+				height="24"
+				width="24"
+				><g
+					><path
+						d="m10.46 18.37 -2.74 2.74a2.86 2.86 0 0 1 -3.94 0l-0.89 -0.89a2.77 2.77 0 0 1 -0.82 -2 2.74 2.74 0 0 1 0.82 -2l5.8 -5.81a2.8 2.8 0 0 1 3.94 0l0.89 0.9A1 1 0 1 0 14.94 10l-0.89 -0.89a4.79 4.79 0 0 0 -6.77 0l-5.81 5.8a4.79 4.79 0 0 0 0 6.77l0.89 0.89a4.78 4.78 0 0 0 6.78 0l2.73 -2.73a1 1 0 0 0 0 -1.42 1 1 0 0 0 -1.41 -0.05Z"
+						fill="#fff"
+						stroke-width="1"
+					/><path
+						d="m22.53 2.36 -0.9 -0.89a4.8 4.8 0 0 0 -6.77 0L12 4.38a1 1 0 1 0 1.41 1.41l2.91 -2.9a2.79 2.79 0 0 1 3.94 0l0.89 0.9a2.74 2.74 0 0 1 0.82 2 2.77 2.77 0 0 1 -0.82 2l-5.8 5.8a2.77 2.77 0 0 1 -2 0.82 2.75 2.75 0 0 1 -2 -0.82A1 1 0 0 0 10 14.93a4.76 4.76 0 0 0 3.39 1.41 4.75 4.75 0 0 0 3.38 -1.4l5.81 -5.81a4.79 4.79 0 0 0 0 -6.77Z"
+						fill="#fff"
+						stroke-width="1"
+					/></g
+				></svg
+			>
+		</Button>
 		<div class="icon-container">
 			<SettingIcon />
 		</div>
@@ -89,7 +114,7 @@
 		border-radius: 100%;
 	}
 	.right-content {
-		@apply flex items-center justify-center gap-4;
+		@apply flex items-center justify-center gap-2;
 	}
 
 	.backstage-bulkaction {

@@ -6,7 +6,7 @@
 	import Loader from '$lib/components/icon/Loader.svelte';
 	import supabase from '$lib/supabase';
 	import { getContext, onMount } from 'svelte';
-	import { lastScreenPayloadContent } from './scenes/store/scente.store';
+	import { lastScreenPayloadContent } from './scenes/store/scene';
 
 	import type { ScenePayload, SceneType } from './video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';

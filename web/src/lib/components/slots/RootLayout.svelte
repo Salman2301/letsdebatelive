@@ -3,8 +3,8 @@
   import ModalAll from "$lib/components/modal/ModalAll.svelte";
   import Toast from "$lib/components/toast/Toast.svelte";
 
-  import { onMount } from "svelte";
 	import supabase from "$lib/supabase";
+  import { onMount } from "svelte";
 	import { authUserData } from "$lib/components/auth/auth.store";
 
   onMount(async ()=>{
