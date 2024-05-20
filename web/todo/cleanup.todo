@@ -1,4 +1,0 @@
-Code:
-  ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
-  ☐ Convert all the svg icons and move to `$lib/component/icon`
-

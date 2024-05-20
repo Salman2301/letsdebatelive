@@ -1,158 +1,164 @@
-DATABASE:
-  USER:
-    ☐ DISPLAY_NAME
-    ☐ EMAIL
-    ☐ FIRST_NAME
-    ☐ LAST_NAME
-    ☐ PHONE
-    ☐ USER_NAME
-    ☐ INITIALS
-    ☐ TAG
-    ☐ USER_EMAIL[]
-    ☐ USER_PHONE[]
-    ☐ INTITIALS
-    ☐ ONE_LINE_DESCRIPTION
-    ☐ SOCIAL_LINKS[]
+database:
+  user:
+    ☐ display_name
+    ☐ email
+    ☐ first_name
+    ☐ last_name
+    ☐ phone
+    ☐ user_name
+    ☐ initials
+    ☐ tag
+    ☐ user_email[]
+    ☐ user_phone[]
+    ☐ intitials
+    ☐ one_line_description
+    ☐ social_links[]
 
 
     debate mark
     team
   
-  USER_PHONE:
-    ☐ PHONE
-    ☐ VERIFIED
-    ☐ USER_ID
+  user_phone:
+    ☐ phone
+    ☐ verified
+    ☐ user_id
   
-  USER_EMAIL:
-    ☐ EMAIL
-    ☐ VERIFIED
-    ☐ USER_ID
+  user_email:
+    ☐ email
+    ☐ verified
+    ☐ user_id
 
-  LIVE_DEBATE:
-    ☐ TITLE
-    ☐ HOST_ID
-    ☐ DEBATE_TYPE
-    ☐ AUTO_FLAGGED_KEYWORDS
-<>    ☐ DESCRIPTION <>?
-    ☐ CHAT_RULES
-!    ☐ TEAMS[]
-    ☐ FOLLOWER_ONLY_CHAT
-    ☐ SUPPORT_ONLY_CHAT
-    ☐ TEAM_ONLY_CHAT ( SELECT ONE OR MORE TAGS )
-    ☐ ALLOW_BACK_STAGE
-      ☐ NONE
-      ☐ ANYONE
-      ☐ SELECTED_ONLY_FOR [TAG]
-      ☐ INVITE_ONLY
-    ☐ MAX_BACK_STAGE_PARTICIPANTS
-    ☐ VIEWER_TYPE
-      ☐ GUEST
-      ☐ LOGGED_IN
-      ☐ SUPPORTERS
-        ☐ ALL_TIER
-        ☐ TIER_1
-    ☐ ALLOW_WEBCAM
-    ☐ ALLOW_SCREENSHARE
-    ☐ ALLOW_MIC
-    ☐ STUDIO_MODE
-    ☐ SHOW_DEBATER_INFO
-      ☐ SHOW_SUPPORT_BUTTON
-    ☐ DROP_RESOURCE_SHARE?
-    ☐ VERSION
+  live_debate:
+    ☐ title
+    ☐ host_id
+    ☐ debate_type
+    ☐ auto_flagged_keywords
+<>    ☐ description <>?
+    ☐ chat_rules
+!    ☐ teams[]
+    ☐ follower_only_chat
+    ☐ support_only_chat
+    ☐ team_only_chat ( select one or more tags )
+    ☐ allow_back_stage
+      ☐ none
+      ☐ anyone
+      ☐ selected_only_for [tag]
+      ☐ invite_only
+    ☐ max_back_stage_participants
+    ☐ viewer_type
+      ☐ guest
+      ☐ logged_in
+      ☐ supporters
+        ☐ all_tier
+        ☐ tier_1
+    ☐ allow_webcam
+    ☐ allow_screenshare
+    ☐ allow_mic
+    ☐ studio_mode
+    ☐ show_debater_info
+      ☐ show_support_button
+    ☐ drop_resource_share?
+    ☐ version
 
-  HOST_TEAM:
-    ☐ HOST_ID
-    ☐ HOST_NAME
-    ☐ HOST_EMAIL
-    ☐ CHAT_RULES
-    ☐ CHAT_RULES_UPDATE_AS_PER_LAST_HOST
+  host_team:
+    ☐ host_id
+    ☐ host_name
+    ☐ host_email
+    ☐ chat_rules
+    ☐ chat_rules_update_as_per_last_host
 
-  LIVE_DEBATE_BACKROOM:
-    ☐ USER ( ANON )
-    ☐ DEBATE_ID
-    ☐ DISPLAY NAME
-    ☐ TAG
-    ☐ DESCRIPTION
-    ☐ VALID_MIC
-    ☐ VALID_CAMERA
-    ☐ TYPE ( SCREENSHARE | USER)
-    ☐ ALLOW_MIC
-    ☐ ALLOW_CAMERA
-    ☐ VOLUME
+  live_debate_backroom:
+    ☐ user ( anon )
+    ☐ debate_id
+    ☐ display name
+    ☐ tag
+    ☐ description
+    ☐ valid_mic
+    ☐ valid_camera
+    ☐ type ( screenshare | user)
+    ☐ allow_mic
+    ☐ allow_camera
+    ☐ volume
 
-  DEBATE_PARTICIPANTS:
-    ☐ DEBATE
-    ☐ USER_ID
+  debate_participants:
+    ☐ debate
+    ☐ user_id
     ☐ 
   
-  DEBATE_THUMBNAIL:
-    ☐ DEBATE_ID
-    ☐ THUMBNAIL_URL
+  debate_thumbnail:
+    ☐ debate_id
+    ☐ thumbnail_url
   
-  HOST: <>
-    ☐ USERNAME
-    ☐ SUPPORT_COUNT
-    ☐ DESCRIPTION
-    ☐ CONTACT_EMAIL
-    ☐ CONTACT_PHONE
-    ☐ CONTACT_ADDRESS
-    ☐ CONTACT_WEBSITE
-    ☐ SOCIAL_LINKS[]
-    ☐ HANDLER_ID
+  host: <>
+    ☐ username
+    ☐ support_count
+    ☐ description
+    ☐ contact_email
+    ☐ contact_phone
+    ☐ contact_address
+    ☐ contact_website
+    ☐ social_links[]
+    ☐ handler_id
 
-  SOCIAL_LINKS:
-    ☐ TYPE (GITHUB, TWITTER, INSTAGRAM, FACEBOOK, LINKEDIN, WEBSITE YOUTUBE, OTHER)
-    ☐ LINK
-    ☐ HANDLER
-  
-  ANALYSIS_DEBATE_LIVE_COUNT:
-    ☐ DEBATE_ID
-    ☐ VIEW
-    ☐ VIEW_NOTATION
-  
-  HOST_FOLLOWER:
-    ☐ HOST_ID
-    ☐ FOLLOWER_COUNT
-  
-  DEBATE_FOLLOWERS:
-    ☐ USER_ID (TYPE=DEBATER?)
-    ☐ USER_ID
+  live_debate_kick:
+    ☐ user_id
+    ☐ live_debate
+    ☐ kicked_by
+    ☐ reason
 
-  PAYMENT:
-    ☐ DEBATE_ID
-    ☐ PAYMENT_MODE_STRIPE
-
-  LIVE_CHAT:
-    ☐ DEBATE_ID
-    ☐ AUTHOR_ID
-    ☐ COMMENT_CONTENT
-    ☐ SUPPORT_CHAT
-    ☐ SUPPORT_CHAT_AMOUNT
-    ☐ IS_FLAGGED
-    ☐ IS_FLAGGED_RESOLVED
-    ☐ TYPE ( CHAT | QA )
-
-  BACKSTAGE_CHAT:
-    ☐ DEBATE_ID
-    ☐ COMMENT_CONTENT
-    ☐ AUTHOR_ID
+  social_links:
+    ☐ type (github, twitter, instagram, facebook, linkedin, website youtube, other)
+    ☐ link
+    ☐ handler
   
-  MODERATION_LOGS:
-    ☐ ACTION ( BAN / TIMEOUT / KICK / REPORT )
-    ☐ USER_ID
-    ☐ DEBATE_ID
-    ☐ LIVE_CHAT_ID
-    ☐ REASON
-    ☐ TIMEOUT?
+  analysis_debate_live_count:
+    ☐ debate_id
+    ☐ view
+    ☐ view_notation
+  
+  host_follower:
+    ☐ host_id
+    ☐ follower_count
+  
+  debate_followers:
+    ☐ user_id (type=debater?)
+    ☐ user_id
 
-  LIVE_DEBATE:
-    ☐ DEBATE_ID
-    ☐ HOST_ID[]
-    ☐ MODERATOR_ID[]
-    ☐ CONTROL_ROOM[]
-    ☐ DEBATERS_ID[]
+  payment:
+    ☐ debate_id
+    ☐ payment_mode_stripe
+
+  live_chat:
+    ☐ debate_id
+    ☐ author_id
+    ☐ comment_content
+    ☐ support_chat
+    ☐ support_chat_amount
+    ☐ is_flagged
+    ☐ is_flagged_resolved
+    ☐ type ( chat | qa )
+
+  backstage_chat:
+    ☐ debate_id
+    ☐ comment_content
+    ☐ author_id
   
-  REPORT_HOST:
+  moderation_logs:
+    ☐ action ( ban / timeout / kick / report )
+    ☐ user_id
+    ☐ debate_id
+    ☐ live_chat_id
+    ☐ reason
+    ☐ timeout?
+
+  live_debate:
+    ☐ debate_id
+    ☐ host_id[]
+    ☐ moderator_id[]
+    ☐ control_room[]
+    ☐ debaters_id[]
   
-  REPORT_DEBATER:
+  report_host:
+  
+  report_debater:
 

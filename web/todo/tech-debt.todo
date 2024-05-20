@@ -1,0 +1,14 @@
+Code:
+  ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
+  ☐ Convert all the svg icons and move to `$lib/component/icon`
+
+Design:
+  ☐ Update pixel perfect setup and design it in figma
+  ☐ Update the figma design with proper white space and universal font-size
+  ☐ Use that to remove duplicate buttons and input designs across the app
+
+Test:
+  ☐ Add full complete test using playwright
+  ☐ Setup database seed
+
+  
