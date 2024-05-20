@@ -113,12 +113,14 @@
 			<div class="description">Enable / disable all the backstager user devices</div>
 			<div class="icons">
 				<div class="left">
-					<DeviceCamera />
-					<DeviceMic />
-					<DeviceScreen />
-					<DeviceUserProfile />
+					<div class="icon"><DeviceCamera /></div>
+					<div class="icon"><DeviceMic /></div>
+					<div class="icon"><DeviceScreen /></div>
+					<div class="icon"><DeviceUserProfile /></div>
 				</div>
-				<UserBan />
+				<div class="icon">
+					<UserBan />
+				</div>
 			</div>
 		</div>
 	{/if}
@@ -181,6 +183,12 @@
 	.left {
 		@apply flex gap-4;
 		@apply text-primary;
+	}
+	.icon {
+		@apply cursor-pointer;
+	}
+	.icon:hover {
+		@apply text-primary-dark;
 	}
 	.header-center {
 		@apply w-full flex justify-between items-center px-4;

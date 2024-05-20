@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Button from "$lib/components/button/Button.svelte";
+	import type { Bindable } from "svelte";
 
   interface Props {
-    onclose?: () => void;
+    onclose?: Bindable<() => void>;
   }
   const { onclose }: Props = $props();
 </script>
@@ -16,13 +17,13 @@
   </Button>
 
   <div class="setting-item">
-    <div class="label">Min. number of user</div>
-    <input type="number" value="1" min="1" />
+    <label class="label" for="in-min-user">Min. number of user</label>
+    <input type="number" id="in-min-user" value="1" min="1" />
   </div>
 
   <div class="setting-item">
-    <div class="label">Backstage open for</div>
-    <select>
+    <label class="label" for="drop-allowed-member">Backstage open for</label>
+    <select id="drop-allowed-member">
       <option value="none">None</option>
       <option value="anyone">Anyone</option>
       <option value="logged">Logged In</option>
