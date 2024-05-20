@@ -120,7 +120,7 @@
 	
 	.toggle-devices {
 		@apply flex justify-evenly;
-		@apply text-secondary;
+		@apply text-secondary-dark;
 		@apply my-2;
 	}
 	.toggle-device {

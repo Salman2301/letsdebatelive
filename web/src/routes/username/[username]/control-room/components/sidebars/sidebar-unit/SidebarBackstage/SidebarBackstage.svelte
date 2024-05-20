@@ -18,7 +18,7 @@
 	let backstagers: Tables<'live_debate_participants'>[] = backstage_participants;
 
 	let showBulkDropdown = $state(false);
-	let showBackstageSetting = $state(true);
+	let showBackstageSetting = $state(false);
 
 	function toggleBulkAction() {
 		showBulkDropdown = !showBulkDropdown;
@@ -27,6 +27,7 @@
 	function toggleBackstageSetting() {
 		showBackstageSetting = !showBackstageSetting;
 	}
+
 </script>
 
 <div class="heading">
@@ -198,7 +199,7 @@
 	}
 
 	.backstager-card-container {
-		@apply my-2;
+		@apply my-2 mt-4;
 		@apply flex flex-wrap justify-between gap-2 px-4;
 	}
 </style>
