@@ -16,15 +16,49 @@
 	let backstagers: Tables<'live_debate_participants'>[] = backstage_participants;
 
 	let showBulkDropdow = $state(false);
+	let showBackstageSetting = $state(false);
 
 	function toggleBulkAction() {
 		showBulkDropdow = !showBulkDropdow;
+	}
+
+	function toggleBackstageSetting() {
+		showBackstageSetting = !showBackstageSetting;
 	}
 </script>
 
 <div class="heading">
 	<Heading2 content="Backstage" />
 	<div class="right-content">
+		{#if !showBackstageSetting}{/if}
+		<button class="icon-container" onclick={toggleBackstageSetting}>
+			{#if showBackstageSetting}
+				<svg
+					width="15"
+					height="15"
+					viewBox="0 0 15 15"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M2 13L13 2M2 2L13 13" stroke="currentcolor" stroke-width="3" stroke-linecap="round" />
+				</svg>
+			{:else}
+				<SettingIcon />
+			{/if}
+		</button>
+	</div>
+</div>
+
+{#if showBackstageSetting}
+	<div class="px-4">
+		<Button label="Back to Backstage" fillType="hover" >
+			<svg slot="icon-left" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M3.69226 7.30754H15.4615C18.3928 7.30754 20.7692 9.68388 20.7692 12.6152V12.6152C20.7692 15.5466 18.3928 17.9229 15.4615 17.9229H11.5384M3.69226 7.30754L7.84611 3.61523M3.69226 7.30754L7.84611 11.4614" stroke="white" stroke-width="2" stroke-linecap="round"/>
+			</svg>
+		</Button>
+	</div>
+{:else}
+	<div class="header-center">
 		<Button
 			color="primary"
 			fillType="outline-solid"
@@ -50,26 +84,9 @@
 				></svg
 			>
 		</Button>
-		<div class="icon-container">
-			<SettingIcon />
-		</div>
-	</div>
-</div>
 
-<div class="dropdown-end">
-	<button class="dropdown-container" onclick={toggleBulkAction}>
-		<div class="dropdown-label">Bulk Action</div>
-		<svg width="21" height="12" viewBox="0 0 21 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
-		</svg>
-	</button>
-</div>
-
-{#if showBulkDropdow}
-	<div class="backstage-bulkaction">
-		<button class="header" onclick={toggleBulkAction}>
-			<div class="title">Bulk Action</div>
-
+		<button class="dropdown-container" onclick={toggleBulkAction}>
+			<div class="dropdown-label">Bulk Action</div>
 			<svg
 				width="21"
 				height="12"
@@ -80,24 +97,40 @@
 				<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
 			</svg>
 		</button>
-		<div class="description">Enable / disable all the backstager user devices</div>
-		<div class="icons">
-			<div class="left">
-				<DeviceCamera />
-				<DeviceMic />
-				<DeviceScreen />
-				<DeviceUserProfile />
+	</div>
+
+	{#if showBulkDropdow}
+		<div class="backstage-bulkaction">
+			<button class="header" onclick={toggleBulkAction}>
+				<div class="title">Bulk Action</div>
+				<svg
+					width="21"
+					height="12"
+					viewBox="0 0 21 12"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
+				</svg>
+			</button>
+			<div class="description">Enable / disable all the backstager user devices</div>
+			<div class="icons">
+				<div class="left">
+					<DeviceCamera />
+					<DeviceMic />
+					<DeviceScreen />
+					<DeviceUserProfile />
+				</div>
+				<UserBan />
 			</div>
-			<UserBan />
 		</div>
+	{/if}
+	<div class="backstager-card-container">
+		{#each backstagers as backstager}
+			<BackstagerCard {backstager} />
+		{/each}
 	</div>
 {/if}
-
-<div class="backstager-card-container">
-	{#each backstagers as backstager}
-		<BackstagerCard {backstager} />
-	{/each}
-</div>
 
 <style lang="postcss">
 	.heading {
@@ -107,6 +140,10 @@
 	.icon-container {
 		padding: 4px;
 		cursor: pointer;
+
+		width: 40px;
+		height: 40px;
+		@apply flex items-center justify-center;
 	}
 	.icon-container:hover {
 		background-color: white;
@@ -148,8 +185,8 @@
 		@apply flex gap-4;
 		@apply text-primary;
 	}
-	.dropdown-end {
-		@apply w-full flex justify-end pr-4;
+	.header-center {
+		@apply w-full flex justify-between items-center px-4;
 	}
 	.dropdown-container {
 		background-color: #3a0e63;
