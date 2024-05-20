@@ -4,8 +4,9 @@
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
 		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark";
+		onclick?: ()=>void;
 	}
-	let { label = 'Button', color = 'primary', fillType = 'solid', width }: Props = $props();
+	let { label = 'Button', color = 'primary', fillType = 'solid', width, onclick=()=>{} }: Props = $props();
 </script>
 
 <button
@@ -13,7 +14,7 @@
 	style="--theme-color:rgb(var(--color-{color}));--theme-color-dark:rgba(var(--color-{color}-dark));width: {width
 		? `${width}px`
 		: 'fit-content'}"
-	on:click
+	onclick={onclick}
 >
 	<slot name="icon-left" />
 	{label}

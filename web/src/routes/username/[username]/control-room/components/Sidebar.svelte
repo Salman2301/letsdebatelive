@@ -160,9 +160,13 @@
 		@apply bg-secondary-dark;
 		width: 50px;
 		height: 100%;
+
+    position: fixed;
+    top: 76px;
+    height: calc(100vh - 76px);
+		z-index: 999;
 		/* Causing z-index issue with the sidebar name popup? */
 		/* position: sticky; */ 
-		top: 0px;
 
 		display: flex;
 		justify-content: space-evenly;
@@ -176,6 +180,9 @@
 		width: calc( 50vw - 180px );
 		height: 100%;
 		overflow: auto;
+		margin-left: 50px;
+		@apply relative;
+		z-index: 1;
 		/* @apply px-4; */
 	}
 
