@@ -14,6 +14,7 @@
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import SidebarBackstageSetting from './SidebarBackstageSetting.svelte';
+	import ParticipantCardList from './ParticipantCardList.svelte';
 
 	import supabase from '$lib/supabase';
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
@@ -30,6 +31,7 @@
 
 	let teamMapColor: Readable<Record<string, string>> = getContext('ctx$teamMapColor');
 
+	let viewMode: "list" | "grid" = $state("list");
 	let showBulkDropdown = $state(false);
 	let showBackstageSetting = $state(false);
 
@@ -64,7 +66,6 @@
 <div class="heading">
 	<Heading2 content="Backstage" />
 	<div class="right-content">
-		{#if !showBackstageSetting}{/if}
 		<button class="icon-container" onclick={toggleBackstageSetting}>
 			{#if showBackstageSetting}
 				<svg
@@ -184,14 +185,54 @@
 			</div>
 		</div>
 	{/if}
+	<div class="view-mode-container">
+		<button
+			class="view-mode grid"
+			class:active={viewMode==="grid"}
+			onclick={() => (viewMode = "grid")}
+		>
+		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M7.5 2.25H2.25V7.5H7.5V2.25Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M15.75 2.25H10.5V7.5H15.75V2.25Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M15.75 10.5H10.5V15.75H15.75V10.5Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M7.5 10.5H2.25V15.75H7.5V10.5Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+			
+		</button>
+		<button
+			class="view-mode list"
+			class:active={viewMode==="list"}
+			onclick={() => (viewMode = "list")}
+		>
+		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M6 4.5H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M6 9H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M6 13.5H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M2.25 4.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M2.25 9H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M2.25 13.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+f			</svg>
+			
+		</button>
+	</div>
 	<div class="backstager-card-container">
+		{#if viewMode === "grid"}
+			{#each $backstagers as backstager}
+				<ParticipantCard
+					participant={backstager}
+					live_debate={$liveDebate}
+					teamMapColor={$teamMapColor}
+				/>
+			{/each}
+		{:else}
 		{#each $backstagers as backstager}
-			<ParticipantCard
+			<ParticipantCardList
 				participant={backstager}
 				live_debate={$liveDebate}
 				teamMapColor={$teamMapColor}
 			/>
 		{/each}
+		{/if}
 	</div>
 {/if}
 
@@ -270,6 +311,26 @@
 		width: 150px;
 	}
 
+	.view-mode-container {
+		@apply flex w-full justify-end;
+		@apply pr-4;
+	}
+	.view-mode {
+		color: rgba(255,255,255, 0.6);
+		background-color: white;
+		@apply cursor-pointer;
+		@apply px-2 py-1;
+		@apply bg-secondary-dark/20;
+	}
+	.grid {
+		@apply rounded-l;
+	}
+	.list {
+		@apply rounded-r;
+	}
+	.view-mode.active {
+		color: rgba(255, 255, 255, 1);
+	}
 	.backstager-card-container {
 		@apply my-2 mt-4;
 		@apply flex flex-wrap justify-between gap-2 px-4;
