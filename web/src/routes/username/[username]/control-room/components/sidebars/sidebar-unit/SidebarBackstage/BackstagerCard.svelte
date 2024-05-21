@@ -38,6 +38,7 @@
 		.eq( "live_debate", live_debate.id)
 		.eq( "participant_id", backstager.participant_id);
 	}
+
 	async function onKeydownChange(event: KeyboardEvent ) {
 		await tick();
 		if( event.key === "Escape") {
@@ -52,6 +53,7 @@
 
 		showNameSubmitBtn = displayName !== backstager.display_name;
 	}
+
 	async	function updateName(name: string) {
 		if(name === "") {
 			newToast({
@@ -60,11 +62,27 @@
 			});
 			return;
 		}
-		await supabase.from("live_debate_participants").update({ display_name: name })
-		.eq( "live_debate", live_debate.id)
-		.eq( "participant_id", backstager.participant_id);
+		await updateLiveDebateParticipant({ display_name: name });
 		showNameSubmitBtn = false;
+	}
 
+	async function updateLiveDebateParticipant(row: Partial<Tables<"live_debate_participants">>) {
+		try {
+			await supabase.from("live_debate_participants").update(row)
+			.eq( "live_debate", live_debate.id)
+			.eq( "participant_id", backstager.participant_id);
+		}
+		catch(e) {
+			console.error(e);
+			newToast({
+				type: "error",
+				message: "Failed to update the databse"
+			})
+		}
+	}
+
+	async function moveToStage() {
+		await updateLiveDebateParticipant({ location: "stage" });
 	}
 
 </script>
@@ -147,7 +165,12 @@
   </div>
   <div class="footer">
     <div class="btn-action">
-      <button class="btn-stage">Add to stage</button>
+      <button
+				class="btn-stage"
+				onclick={()=>moveToStage()}
+			>
+			Add to stage
+			</button>
     </div>
   </div>
 </div>
