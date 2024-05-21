@@ -17,7 +17,7 @@
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
 		"db:reset": "echo \"This will delete the local db! run: \nsupabase db reset\" && exit 1",
-		"db:seed:dump": "supabase db dump -f supabase/seed.sql --data-only"
+		"db:seed:dump": "supabase db dump -f supabase/seed.sql --local"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",

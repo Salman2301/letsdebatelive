@@ -7,7 +7,7 @@
 
 
 ### Supabase
-- Install supabase locally
+- Install supabase locally,
 - Run `supabase link` to link the project with the remote supabase db
 
 ## Migration
@@ -34,3 +34,12 @@ supabase migration repair $id --status reverted --local
 ```sh
 suapabse db push
 ```
+
+## Seed
+User A
+email: TeamUser1-A@example.com
+password: TeamUser1-A
+
+> Dump the current data from local database to seed `.sql` file
+
+npm run db:seed:dump

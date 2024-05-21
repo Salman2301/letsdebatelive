@@ -2,7 +2,9 @@ TODO:
   ☐ Layout Changes and Share webCam and Screenshare
     ✔ Fix the selection of different layout @done(24-05-19 17:16)
     ☐ Write a layout store connect to supabase channel to the svelte store for the layout
-    Connect 
+    Connect
+    
+    ☐ add ended
       - mute
       - cam
       - screen
@@ -29,13 +31,4 @@ TODO:
     ☐ Abiltiy to toggle different user and screen from the panel
     ☐ Ability to disable from app.html showing screen for debug purpose
 
-
-
-    enum:
-      - backstage
-      - stage
-
-
-    Dummy data:
-      - add teams
       
