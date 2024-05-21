@@ -1,3 +1,11 @@
+SET session_replication_role = replica;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.1 (Ubuntu 15.1-1.pgdg20.04+1)
+-- Dumped by pg_dump version 15.6 (Ubuntu 15.6-1.pgdg20.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -10,501 +18,288 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-CREATE EXTENSION IF NOT EXISTS "pg_net" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
-
-COMMENT ON SCHEMA "public" IS 'standard public schema';
-
-CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
-
-CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "pgjwt" WITH SCHEMA "extensions";
-
-CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
-
-CREATE TYPE "public"."notification_service" AS ENUM (
-    'live_chat',
-    'backstage_chat',
-    'screen_share_new',
-    'backstage_new_participant',
-    'poll_result',
-    'question_answer',
-    'activity_feed'
-);
-
-ALTER TYPE "public"."notification_service" OWNER TO "postgres";
-
-CREATE TYPE "public"."participant_location" AS ENUM (
-    'stage',
-    'backstage'
-);
-
-ALTER TYPE "public"."participant_location" OWNER TO "postgres";
-
-SET default_tablespace = '';
-
-SET default_table_access_method = "heap";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "title" "text",
-    "host" "uuid" DEFAULT "auth"."uid"(),
-    "chat_rules" "text",
-    "debate_type" "text",
-    "chat_filter_words" "text",
-    "chat_follower_only" boolean,
-    "chat_support_only" boolean,
-    "chat_team_only" "uuid" DEFAULT "gen_random_uuid"(),
-    "backstage_allow_only" "text",
-    "backstage_max" integer,
-    "viewer_type" "text",
-    "studio_mode" boolean,
-    "debater_card_show" boolean,
-    "ended" boolean
-);
-
-ALTER TABLE "public"."live_debate" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_agenda" (
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid",
-    "title" "text",
-    "time" time without time zone,
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "completed" boolean,
-    "team" "uuid"
-);
-
-ALTER TABLE "public"."live_debate_agenda" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_backstage_chat" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "chat" "text" NOT NULL,
-    "live_debate_id" "uuid" NOT NULL,
-    "sender_id" "uuid" NOT NULL
-);
-
-ALTER TABLE "public"."live_debate_backstage_chat" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_chat" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "chat" "text" NOT NULL,
-    "live_debate" "uuid" NOT NULL,
-    "sender_id" "uuid" NOT NULL
-);
-
-ALTER TABLE "public"."live_debate_chat" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_kick" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "kicked_by" "uuid" NOT NULL,
-    "live_debate" "uuid" NOT NULL,
-    "user_id" "uuid" NOT NULL,
-    "reason" "text"
-);
-
-ALTER TABLE "public"."live_debate_kick" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_notification" (
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
-    "service" "public"."notification_service" NOT NULL,
-    "has_read" boolean NOT NULL,
-    "missed_count" integer
-);
-
-ALTER TABLE "public"."live_debate_notification" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_participants" (
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "speaker_id" "text",
-    "mic_id" "text",
-    "cam_id" "text",
-    "speaker_enable" boolean DEFAULT true,
-    "mic_enable" boolean DEFAULT true,
-    "cam_enable" boolean DEFAULT true,
-    "screenshare_available" boolean,
-    "speaker_available" boolean,
-    "mic_available" boolean,
-    "cam_available" boolean,
-    "current_stage" "text",
-    "is_kicked" boolean,
-    "display_name" "text" NOT NULL,
-    "team" "uuid" NOT NULL,
-    "hand_raised" boolean,
-    "is_host" boolean NOT NULL,
-    "live_debate" "uuid" NOT NULL,
-    "location" "public"."participant_location" NOT NULL,
-    "participant_id" "uuid" DEFAULT "auth"."uid"() NOT NULL
-);
-
-ALTER TABLE "public"."live_debate_participants" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_debate_team" (
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "color" "text",
-    "title" "text",
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
-    "slug" "text" NOT NULL
-);
-
-ALTER TABLE "public"."live_debate_team" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_host_ban" (
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid",
-    "user_id" "uuid" NOT NULL,
-    "live_host_id" "uuid" NOT NULL,
-    "reason_title" "text",
-    "reason" "text",
-    "banned_by" "uuid" NOT NULL
-);
-
-ALTER TABLE "public"."live_host_ban" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_host_follower" (
-    "id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "count" bigint
-);
-
-ALTER TABLE "public"."live_host_follower" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."live_host_support" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "count" bigint
-);
-
-ALTER TABLE "public"."live_host_support" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."social_links" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "link" "text",
-    "media" "text",
-    "user_id" "uuid" DEFAULT "auth"."uid"()
-);
-
-ALTER TABLE "public"."social_links" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."user_data" (
-    "id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "displayName" "text",
-    "email" "text",
-    "firstName" "text",
-    "lastName" "text",
-    "fullName" "text",
-    "username" "text" NOT NULL,
-    "initials" "text",
-    "oneLineDesc" "text"
-);
-
-ALTER TABLE "public"."user_data" OWNER TO "postgres";
-
-COMMENT ON TABLE "public"."user_data" IS 'User data extra info';
-
-CREATE TABLE IF NOT EXISTS "public"."user_email" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "user_id" "uuid",
-    "email" "text",
-    "verified" boolean
-);
-
-ALTER TABLE "public"."user_email" OWNER TO "postgres";
-
-CREATE TABLE IF NOT EXISTS "public"."user_phone" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "user_id" "uuid" DEFAULT "auth"."uid"(),
-    "phone" "text",
-    "country" "text",
-    "verified" boolean
-);
-
-ALTER TABLE "public"."user_phone" OWNER TO "postgres";
-
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_pkey" PRIMARY KEY ("id");
-
-ALTER TABLE ONLY "public"."live_debate_team"
-    ADD CONSTRAINT "debate_team_pkey" PRIMARY KEY ("id");
+--
+-- Data for Name: audit_log_entries; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_pkey" PRIMARY KEY ("id");
+INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
+	('00000000-0000-0000-0000-000000000000', 'aad55883-4e23-42e9-8322-1361be0d24bc', '{"action":"user_signedup","actor_id":"26d288ae-1bfa-4a01-8469-d694b52a8972","actor_username":"teamuser3-c@example.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-05-21 03:56:54.990949+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b20a663e-f6dd-4c70-bd54-d6f091fc3b98', '{"action":"login","actor_id":"26d288ae-1bfa-4a01-8469-d694b52a8972","actor_username":"teamuser3-c@example.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-05-21 03:56:54.993816+00', ''),
+	('00000000-0000-0000-0000-000000000000', '92de1ea0-088a-46cb-8001-75f9b650b5b8', '{"action":"logout","actor_id":"26d288ae-1bfa-4a01-8469-d694b52a8972","actor_username":"teamuser3-c@example.com","actor_via_sso":false,"log_type":"account"}', '2024-05-21 03:57:04.654413+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd0ccc657-08e7-447b-8473-22152fad1383', '{"action":"user_signedup","actor_id":"dc81fe33-706b-40eb-962b-14ebf3eadc58","actor_username":"teamuser1-a@example.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-05-21 03:57:14.809798+00', ''),
+	('00000000-0000-0000-0000-000000000000', '61306a7d-31b6-40ed-8f54-a3a3b16756f1', '{"action":"login","actor_id":"dc81fe33-706b-40eb-962b-14ebf3eadc58","actor_username":"teamuser1-a@example.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-05-21 03:57:14.811387+00', ''),
+	('00000000-0000-0000-0000-000000000000', '90ed04c7-e28b-4660-87c0-cea3c2b69245', '{"action":"logout","actor_id":"dc81fe33-706b-40eb-962b-14ebf3eadc58","actor_username":"teamuser1-a@example.com","actor_via_sso":false,"log_type":"account"}', '2024-05-21 03:57:19.065229+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'eceadf34-820e-43e7-965c-5b77fef4a9ff', '{"action":"user_signedup","actor_id":"28170dd2-8ad5-4752-95df-b4853cda2bfb","actor_username":"teamuser2-b@example.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-05-21 03:57:54.485729+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd3d511f1-0f82-4897-996c-b01bbf2d02e9', '{"action":"login","actor_id":"28170dd2-8ad5-4752-95df-b4853cda2bfb","actor_username":"teamuser2-b@example.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-05-21 03:57:54.487821+00', '');
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_pkey" PRIMARY KEY ("id");
+--
+-- Data for Name: flow_state; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_notification"
-    ADD CONSTRAINT "live_debate_notification_pkey" PRIMARY KEY ("live_debate", "service");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_pkey" PRIMARY KEY ("participant_id", "live_debate");
 
-ALTER TABLE ONLY "public"."live_debate"
-    ADD CONSTRAINT "live_debate_pkey" PRIMARY KEY ("id");
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_pkey" PRIMARY KEY ("user_id", "live_host_id");
+INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
+	('00000000-0000-0000-0000-000000000000', '26d288ae-1bfa-4a01-8469-d694b52a8972', 'authenticated', 'authenticated', 'teamuser3-c@example.com', '$2a$10$Loc3Uo6brgCHKXOFJwT2TeFzAi18YJxOng5knkN4copJNPz1y2tV2', '2024-05-21 03:56:54.992156+00', NULL, '', NULL, '', NULL, '', '', NULL, '2024-05-21 03:56:54.994011+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "26d288ae-1bfa-4a01-8469-d694b52a8972", "email": "teamuser3-c@example.com", "email_verified": false, "phone_verified": false}', NULL, '2024-05-21 03:56:54.970676+00', '2024-05-21 03:56:54.996297+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', 'dc81fe33-706b-40eb-962b-14ebf3eadc58', 'authenticated', 'authenticated', 'teamuser1-a@example.com', '$2a$10$kdcAumTjLvdiS//t5fKLjOywdzdC.wvNfS.2rBaREXw5rmp89BoV6', '2024-05-21 03:57:14.810281+00', NULL, '', NULL, '', NULL, '', '', NULL, '2024-05-21 03:57:14.811676+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "dc81fe33-706b-40eb-962b-14ebf3eadc58", "email": "teamuser1-a@example.com", "email_verified": false, "phone_verified": false}', NULL, '2024-05-21 03:57:14.80597+00', '2024-05-21 03:57:14.812809+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', '28170dd2-8ad5-4752-95df-b4853cda2bfb', 'authenticated', 'authenticated', 'teamuser2-b@example.com', '$2a$10$N8k09cWqYeMqpWnVxZ.Cgegssyd1pUF9Nwu1tBpfXmbL4j/7OPUZa', '2024-05-21 03:57:54.486055+00', NULL, '', NULL, '', NULL, '', '', NULL, '2024-05-21 03:57:54.488054+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "28170dd2-8ad5-4752-95df-b4853cda2bfb", "email": "teamuser2-b@example.com", "email_verified": false, "phone_verified": false}', NULL, '2024-05-21 03:57:54.480764+00', '2024-05-21 03:57:54.489031+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
-ALTER TABLE ONLY "public"."live_host_follower"
-    ADD CONSTRAINT "live_host_follower_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_host_support"
-    ADD CONSTRAINT "live_host_support_pkey" PRIMARY KEY ("id");
+--
+-- Data for Name: identities; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."social_links"
-    ADD CONSTRAINT "social_links_pkey" PRIMARY KEY ("id");
+INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
+	('26d288ae-1bfa-4a01-8469-d694b52a8972', '26d288ae-1bfa-4a01-8469-d694b52a8972', '{"sub": "26d288ae-1bfa-4a01-8469-d694b52a8972", "email": "teamuser3-c@example.com", "email_verified": false, "phone_verified": false}', 'email', '2024-05-21 03:56:54.988159+00', '2024-05-21 03:56:54.988196+00', '2024-05-21 03:56:54.988196+00', 'cdac8cf1-59cf-4e40-b9df-703cbdd994e5'),
+	('dc81fe33-706b-40eb-962b-14ebf3eadc58', 'dc81fe33-706b-40eb-962b-14ebf3eadc58', '{"sub": "dc81fe33-706b-40eb-962b-14ebf3eadc58", "email": "teamuser1-a@example.com", "email_verified": false, "phone_verified": false}', 'email', '2024-05-21 03:57:14.808216+00', '2024-05-21 03:57:14.808253+00', '2024-05-21 03:57:14.808253+00', '6cd18358-2bdb-45cd-8b9c-d834ea2f2cde'),
+	('28170dd2-8ad5-4752-95df-b4853cda2bfb', '28170dd2-8ad5-4752-95df-b4853cda2bfb', '{"sub": "28170dd2-8ad5-4752-95df-b4853cda2bfb", "email": "teamuser2-b@example.com", "email_verified": false, "phone_verified": false}', 'email', '2024-05-21 03:57:54.484336+00', '2024-05-21 03:57:54.484364+00', '2024-05-21 03:57:54.484364+00', '5256820c-da36-4014-b0cd-37db5906a9fc');
 
-ALTER TABLE ONLY "public"."user_data"
-    ADD CONSTRAINT "user_data_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."user_data"
-    ADD CONSTRAINT "user_data_username_key" UNIQUE ("username");
+--
+-- Data for Name: instances; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."user_email"
-    ADD CONSTRAINT "user_email_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."user_phone"
-    ADD CONSTRAINT "user_phone_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+--
+-- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id") ON DELETE CASCADE;
+INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag") VALUES
+	('6b5a007c-0d8c-4fc0-baf3-cd5984513671', '28170dd2-8ad5-4752-95df-b4853cda2bfb', '2024-05-21 03:57:54.488103+00', '2024-05-21 03:57:54.488103+00', NULL, 'aal1', NULL, NULL, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36', '192.168.65.1', NULL);
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_live_debate_id_fkey" FOREIGN KEY ("live_debate_id") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id");
+--
+-- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
+	('6b5a007c-0d8c-4fc0-baf3-cd5984513671', '2024-05-21 03:57:54.489145+00', '2024-05-21 03:57:54.489145+00', 'password', 'bcf9e182-76ce-4a89-bfe4-b82f64007ce8');
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_kicked_by_fkey" FOREIGN KEY ("kicked_by") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+--
+-- Data for Name: mfa_factors; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_notification"
-    ADD CONSTRAINT "live_debate_notification_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+--
+-- Data for Name: mfa_challenges; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_team"
-    ADD CONSTRAINT "live_debate_team_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+--
+-- Data for Name: one_time_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_banned_by_fkey" FOREIGN KEY ("banned_by") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_live_host_id_fkey" FOREIGN KEY ("live_host_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+--
+-- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") VALUES
+	('00000000-0000-0000-0000-000000000000', 3, 'sS-VcTSJ-QUvGk2vo6w5fQ', '28170dd2-8ad5-4752-95df-b4853cda2bfb', false, '2024-05-21 03:57:54.48848+00', '2024-05-21 03:57:54.48848+00', NULL, '6b5a007c-0d8c-4fc0-baf3-cd5984513671');
 
-ALTER TABLE ONLY "public"."live_host_follower"
-    ADD CONSTRAINT "live_host_follower_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_host_support"
-    ADD CONSTRAINT "live_host_support_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+--
+-- Data for Name: sso_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."live_debate"
-    ADD CONSTRAINT "public_live_debate_host_fkey" FOREIGN KEY ("host") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "public_live_debate_participants_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id") ON DELETE SET NULL;
 
-ALTER TABLE ONLY "public"."social_links"
-    ADD CONSTRAINT "social_links_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+--
+-- Data for Name: saml_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-ALTER TABLE ONLY "public"."user_data"
-    ADD CONSTRAINT "user_data_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."user_email"
-    ADD CONSTRAINT "user_email_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_debate" FOR INSERT TO "authenticated" WITH CHECK (true);
+--
+-- Data for Name: saml_relay_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_debate_participants" FOR INSERT TO "authenticated" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "participant_id"));
 
-CREATE POLICY "Enable insert for users based on user_id" ON "public"."user_data" FOR INSERT WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
-CREATE POLICY "Enable read access for all users" ON "public"."live_debate" FOR SELECT USING ((( SELECT "auth"."uid"() AS "uid") = "host"));
+--
+-- Data for Name: sso_domains; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
 
-CREATE POLICY "Enable read access for all users" ON "public"."live_debate_participants" FOR SELECT USING (true);
 
-CREATE POLICY "Enable update for users based on email" ON "public"."live_debate_participants" FOR UPDATE USING ((( SELECT "auth"."uid"() AS "uid") = "participant_id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "participant_id"));
 
-CREATE POLICY "Enable update for users based on id" ON "public"."user_data" FOR UPDATE USING ((( SELECT "auth"."uid"() AS "uid") = "id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
+--
+-- Data for Name: key; Type: TABLE DATA; Schema: pgsodium; Owner: supabase_admin
+--
 
-CREATE POLICY "Only user owner can view the content" ON "public"."user_data" FOR SELECT USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
-ALTER TABLE "public"."live_debate" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_agenda" ENABLE ROW LEVEL SECURITY;
+--
+-- Data for Name: user_data; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER TABLE "public"."live_debate_backstage_chat" ENABLE ROW LEVEL SECURITY;
+INSERT INTO "public"."user_data" ("id", "created_at", "displayName", "email", "firstName", "lastName", "fullName", "username", "initials", "oneLineDesc") VALUES
+	('26d288ae-1bfa-4a01-8469-d694b52a8972', '2024-05-21 03:57:00.174814+00', 'Jhon Doe', 'teamuser3-c@example.com', 'Jhon', 'Doe', 'Jhon Doe', 'teamuser3-c@example.com', NULL, NULL),
+	('dc81fe33-706b-40eb-962b-14ebf3eadc58', '2024-05-21 03:57:17.2026+00', 'Jane Doe', 'teamuser1-a@example.com', 'Jane', 'Doe', 'Jane Doe', 'teamuser1-a@example.com', NULL, NULL),
+	('28170dd2-8ad5-4752-95df-b4853cda2bfb', '2024-05-21 03:57:56.481485+00', 'Sarah smith', 'teamuser2-b@example.com', 'Sarah', 'Smith', 'Sarah Smith', 'teamuser2-b@example.com', NULL, NULL);
 
-ALTER TABLE "public"."live_debate_chat" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_kick" ENABLE ROW LEVEL SECURITY;
+--
+-- Data for Name: live_debate; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER TABLE "public"."live_debate_notification" ENABLE ROW LEVEL SECURITY;
+INSERT INTO "public"."live_debate" ("id", "created_at", "title", "host", "chat_rules", "debate_type", "chat_filter_words", "chat_follower_only", "chat_support_only", "chat_team_only", "backstage_allow_only", "backstage_max", "viewer_type", "studio_mode", "debater_card_show") VALUES
+	('4167bf11-dc10-46d3-9d32-e5b7ad9d3e67', '2024-05-21 04:02:18.994689+00', 'Test debate', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
-ALTER TABLE "public"."live_debate_participants" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_team" ENABLE ROW LEVEL SECURITY;
+--
+-- Data for Name: live_debate_team; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER TABLE "public"."live_host_ban" ENABLE ROW LEVEL SECURITY;
+INSERT INTO "public"."live_debate_team" ("created_at", "color", "title", "id", "slug", "live_debate") VALUES
+	('2024-05-21 04:06:53.917601+00', '#32DE8A', 'Team A', '5932f887-2683-4489-b659-2024f57fd80d', 'team-a', '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67'),
+	('2024-05-21 04:07:21.815976+00', '#EF7674', 'Team B', 'f64dab6d-0271-4a90-8deb-654dab220ce6', 'team-b', '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67'),
+	('2024-05-21 04:07:52.407531+00', '#F2AF29', 'Team C', '8dd04996-eddd-49ee-8e36-c459202e87e4', 'team-c', '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67');
 
-ALTER TABLE "public"."live_host_follower" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_host_support" ENABLE ROW LEVEL SECURITY;
+--
+-- Data for Name: live_debate_agenda; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER TABLE "public"."social_links" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."user_data" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."user_email" ENABLE ROW LEVEL SECURITY;
+--
+-- Data for Name: live_debate_backstage_chat; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER TABLE "public"."user_phone" ENABLE ROW LEVEL SECURITY;
 
-ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate";
+--
+-- Data for Name: live_debate_chat; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_agenda";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_backstage_chat";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_chat";
+--
+-- Data for Name: live_debate_kick; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_kick";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_notification";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_participants";
+--
+-- Data for Name: live_debate_notification; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_debate_team";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_host_ban";
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_host_follower";
+--
+-- Data for Name: live_debate_participants; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."live_host_support";
+INSERT INTO "public"."live_debate_participants" ("created_at", "speaker_id", "mic_id", "cam_id", "speaker_enable", "mic_enable", "cam_enable", "screenshare_available", "speaker_available", "mic_available", "cam_available", "current_stage", "is_kicked", "display_name", "team", "hand_raised", "is_host", "live_debate", "location", "participant_id") VALUES
+	('2024-05-21 04:12:07.360691+00', NULL, NULL, NULL, true, true, true, NULL, NULL, NULL, NULL, NULL, NULL, 'Jhonny', '5932f887-2683-4489-b659-2024f57fd80d', NULL, true, '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67', 'backstage', '26d288ae-1bfa-4a01-8469-d694b52a8972'),
+	('2024-05-21 04:13:06.013692+00', NULL, NULL, NULL, true, true, true, NULL, NULL, NULL, NULL, NULL, NULL, 'Smitty', 'f64dab6d-0271-4a90-8deb-654dab220ce6', NULL, false, '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67', 'backstage', '28170dd2-8ad5-4752-95df-b4853cda2bfb'),
+	('2024-05-21 04:13:56.177617+00', NULL, NULL, NULL, true, true, true, NULL, NULL, NULL, NULL, NULL, NULL, 'Test', '8dd04996-eddd-49ee-8e36-c459202e87e4', NULL, false, '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67', 'backstage', 'dc81fe33-706b-40eb-962b-14ebf3eadc58');
 
-GRANT USAGE ON SCHEMA "public" TO "postgres";
-GRANT USAGE ON SCHEMA "public" TO "anon";
-GRANT USAGE ON SCHEMA "public" TO "authenticated";
-GRANT USAGE ON SCHEMA "public" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate" TO "service_role";
+--
+-- Data for Name: live_host_ban; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "service_role";
+--
+-- Data for Name: live_host_follower; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "service_role";
+--
+-- Data for Name: live_host_support; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-GRANT ALL ON TABLE "public"."live_debate_team" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_team" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_team" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_host_ban" TO "anon";
-GRANT ALL ON TABLE "public"."live_host_ban" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_host_ban" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_host_follower" TO "anon";
-GRANT ALL ON TABLE "public"."live_host_follower" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_host_follower" TO "service_role";
+--
+-- Data for Name: social_links; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-GRANT ALL ON TABLE "public"."live_host_support" TO "anon";
-GRANT ALL ON TABLE "public"."live_host_support" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_host_support" TO "service_role";
 
-GRANT ALL ON TABLE "public"."social_links" TO "anon";
-GRANT ALL ON TABLE "public"."social_links" TO "authenticated";
-GRANT ALL ON TABLE "public"."social_links" TO "service_role";
 
-GRANT ALL ON TABLE "public"."user_data" TO "anon";
-GRANT ALL ON TABLE "public"."user_data" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_data" TO "service_role";
+--
+-- Data for Name: user_email; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-GRANT ALL ON TABLE "public"."user_email" TO "anon";
-GRANT ALL ON TABLE "public"."user_email" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_email" TO "service_role";
 
-GRANT ALL ON TABLE "public"."user_phone" TO "anon";
-GRANT ALL ON TABLE "public"."user_phone" TO "authenticated";
-GRANT ALL ON TABLE "public"."user_phone" TO "service_role";
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON SEQUENCES  TO "service_role";
+--
+-- Data for Name: user_phone; Type: TABLE DATA; Schema: public; Owner: postgres
+--
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON FUNCTIONS  TO "service_role";
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "postgres";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "anon";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "authenticated";
-ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "service_role";
+
+--
+-- Data for Name: buckets; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: s3_multipart_uploads; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: s3_multipart_uploads_parts; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: hooks; Type: TABLE DATA; Schema: supabase_functions; Owner: supabase_functions_admin
+--
+
+
+
+--
+-- Data for Name: secrets; Type: TABLE DATA; Schema: vault; Owner: supabase_admin
+--
+
+
+
+--
+-- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
+--
+
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 3, true);
+
+
+--
+-- Name: key_key_id_seq; Type: SEQUENCE SET; Schema: pgsodium; Owner: supabase_admin
+--
+
+SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 1, false);
+
+
+--
+-- Name: hooks_id_seq; Type: SEQUENCE SET; Schema: supabase_functions; Owner: supabase_functions_admin
+--
+
+SELECT pg_catalog.setval('"supabase_functions"."hooks_id_seq"', 1, false);
+
+
+--
+-- PostgreSQL database dump complete
+--
 
 RESET ALL;
