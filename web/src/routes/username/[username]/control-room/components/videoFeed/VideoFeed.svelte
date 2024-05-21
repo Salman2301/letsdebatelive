@@ -30,8 +30,8 @@
 		// Get participants list
 		const { data, error } = await supabase.from("live_debate_participants").select();
 		participantsList = data as Tables<"live_debate_participants">[];
-		participantsList.length = 2
-		console.log({ error, participantsList });
+		// participantsList.length = 2
+		// console.log({ error, participantsList });
 	});
 
 	function onSceneChange({ payload }: { payload: ScenePayload }) {

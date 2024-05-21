@@ -43,3 +43,6 @@ password: TeamUser1-A
 > Dump the current data from local database to seed `.sql` file
 
 npm run db:seed:dump
+
+Missing seeds:
+  - Supabase real time

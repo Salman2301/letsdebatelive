@@ -14,8 +14,11 @@
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { backstage_participants } from '$lib/dummy/backstage';
 	import type { Tables } from '$lib/schema/database.types';
+	import { getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
-	let backstagers: Tables<'live_debate_participants'>[] = backstage_participants;
+	let backstagers: Writable<Tables<'live_debate_participants'>[]> = getContext("ctx_table$participantsBackStage");
+	let liveDebate: Writable<Tables<'live_debate'>> = getContext("ctx_table$liveDebate");
 
 	let showBulkDropdown = $state(false);
 	let showBackstageSetting = $state(false);
@@ -125,8 +128,8 @@
 		</div>
 	{/if}
 	<div class="backstager-card-container">
-		{#each backstagers as backstager}
-			<BackstagerCard {backstager} />
+		{#each $backstagers as backstager}
+			<BackstagerCard {backstager} live_debate={$liveDebate} />
 		{/each}
 	</div>
 {/if}

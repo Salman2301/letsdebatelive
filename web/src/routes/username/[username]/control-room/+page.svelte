@@ -5,21 +5,13 @@
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
 
-  let hostId: string = getContext("HOST_ID");
+  let hostId: string = getContext("HOST_ID") || "123";
   onMount(async ()=>{
     
     emitSceneChange(hostId, {
       sceneType: "scene_content",
       layerId: "profile_multiple"
     });
-
-    // emitSceneChange(hostId, {
-    //   sceneType: "scene_start",
-    //   layerId: "layer_text",
-    //   metadata: {
-    //     text: "Starting soon..."
-    //   }
-    // });
 
     console.log("sent broadcast")
     handleLive();

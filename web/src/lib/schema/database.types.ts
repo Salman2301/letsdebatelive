@@ -63,6 +63,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "live_debate_chat_team_only_fkey"
+            columns: ["chat_team_only"]
+            isOneToOne: false
+            referencedRelation: "live_debate_team"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "public_live_debate_host_fkey"
             columns: ["host"]
             isOneToOne: false
@@ -284,6 +291,7 @@ export type Database = {
           current_stage: string | null
           display_name: string
           hand_raised: boolean | null
+          host_id: string | null
           is_host: boolean
           is_kicked: boolean | null
           live_debate: string
@@ -292,7 +300,9 @@ export type Database = {
           mic_enable: boolean | null
           mic_id: string | null
           participant_id: string
+          profile_image_enable: boolean | null
           screenshare_available: boolean | null
+          screenshare_enable: boolean | null
           speaker_available: boolean | null
           speaker_enable: boolean | null
           speaker_id: string | null
@@ -306,6 +316,7 @@ export type Database = {
           current_stage?: string | null
           display_name: string
           hand_raised?: boolean | null
+          host_id?: string | null
           is_host: boolean
           is_kicked?: boolean | null
           live_debate: string
@@ -314,7 +325,9 @@ export type Database = {
           mic_enable?: boolean | null
           mic_id?: string | null
           participant_id?: string
+          profile_image_enable?: boolean | null
           screenshare_available?: boolean | null
+          screenshare_enable?: boolean | null
           speaker_available?: boolean | null
           speaker_enable?: boolean | null
           speaker_id?: string | null
@@ -328,6 +341,7 @@ export type Database = {
           current_stage?: string | null
           display_name?: string
           hand_raised?: boolean | null
+          host_id?: string | null
           is_host?: boolean
           is_kicked?: boolean | null
           live_debate?: string
@@ -336,13 +350,22 @@ export type Database = {
           mic_enable?: boolean | null
           mic_id?: string | null
           participant_id?: string
+          profile_image_enable?: boolean | null
           screenshare_available?: boolean | null
+          screenshare_enable?: boolean | null
           speaker_available?: boolean | null
           speaker_enable?: boolean | null
           speaker_id?: string | null
           team?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "live_debate_participants_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "user_data"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "live_debate_participants_id_fkey"
             columns: ["participant_id"]
@@ -371,29 +394,32 @@ export type Database = {
           color: string | null
           created_at: string
           id: string
+          live_debate: string | null
+          slug: string | null
           title: string | null
-          user_id: string | null
         }
         Insert: {
           color?: string | null
           created_at?: string
           id?: string
+          live_debate?: string | null
+          slug?: string | null
           title?: string | null
-          user_id?: string | null
         }
         Update: {
           color?: string | null
           created_at?: string
           id?: string
+          live_debate?: string | null
+          slug?: string | null
           title?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "debate_team_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "live_debate_team_live_debate_fkey"
+            columns: ["live_debate"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "live_debate"
             referencedColumns: ["id"]
           },
         ]

@@ -2,17 +2,35 @@
 	import RaiseHand from '$lib/components/icon/RaiseHand.svelte';
 	import UserRemove from '$lib/components/icon/UserRemove.svelte';
 	import DeviceCamera from "$lib/components/icon/DeviceCamera.svelte";
+	import DeviceCameraDisabled from "$lib/components/icon/DeviceCameraDisabled.svelte";
 	import DeviceMic from "$lib/components/icon/DeviceMic.svelte";
+	import DeviceMicDisabled from "$lib/components/icon/DeviceMicDisabled.svelte";
 	import DeviceScreen from "$lib/components/icon/DeviceScreen.svelte";
+	import DeviceScreenDisabled from "$lib/components/icon/DeviceScreenDisabled.svelte";
 	import DeviceUserProfile from "$lib/components/icon/DeviceUserProfile.svelte";
+	import DeviceUserProfileDisabled from "$lib/components/icon/DeviceUserProfileDisabled.svelte";
 	import UserBan from "$lib/components/icon/UserBan.svelte";
 	import type { Tables } from '$lib/schema/database.types';
+	import supabase from '$lib/supabase';
 
   interface Props {
     backstager: Tables<"live_debate_participants">;
+		live_debate: Tables<"live_debate">;
   }
 
-  let { backstager }: Props = $props();
+  let { backstager, live_debate }: Props = $props();
+
+
+	async function toggleDevice(device: keyof typeof backstager) {
+		const toUpdate = {
+			[device]: !backstager[device]
+		}
+		// INFO: keep the `await`, on remove if removed it doesn't update
+		await supabase.from("live_debate_participants").update(toUpdate)
+		.eq( "live_debate", live_debate.id)
+		.eq( "participant_id", backstager.participant_id);
+	}
+
 </script>
 
 
@@ -38,18 +56,46 @@
     <input class="username-input" value={backstager.display_name} />
   </div>
   <div class="toggle-devices">
-    <div class="toggle-device">
-      <DeviceCamera />
-    </div>
-    <div class="toggle-device">
-      <DeviceMic />
-    </div>
-    <div class="toggle-device">
-      <DeviceScreen />
-    </div>
-    <div class="toggle-device">
-      <DeviceUserProfile />
-    </div>
+    <button
+			class="toggle-device"
+			onclick={()=>toggleDevice("cam_enable")}
+		>
+		{#if backstager.cam_enable}
+			<DeviceCamera />
+		{:else}
+			<DeviceCameraDisabled />
+		{/if}
+    </button>
+    <button
+			class="toggle-device"
+			onclick={()=>toggleDevice("mic_enable")}
+		>
+			{#if backstager.mic_enable}
+      	<DeviceMic />
+			{:else}
+				<DeviceMicDisabled />
+			{/if}
+    </button>
+    <button
+			class="toggle-device"
+			onclick={()=>toggleDevice("screenshare_enable")}
+		>
+			{#if backstager.screenshare_enable}
+				<DeviceScreen />
+			{:else}
+				<DeviceScreenDisabled />
+			{/if}
+    </button>
+    <button
+			class="toggle-device"
+			onclick={()=>toggleDevice("profile_image_enable")}
+		>
+			{#if backstager.profile_image_enable}
+      	<DeviceUserProfile />
+			{:else}
+	      <DeviceUserProfileDisabled />
+			{/if}
+    </button>
     <div class="toggle-device">
       <UserBan />
     </div>
@@ -126,6 +172,10 @@
 	.toggle-device {
 		@apply border border-transparent;
 		@apply rounded;
+	}
+
+	.active {
+		color: #ccc;
 	}
 
 	.toggle-device:hover {

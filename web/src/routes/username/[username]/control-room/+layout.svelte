@@ -1,45 +1,98 @@
 <script lang="ts">
 	import Sidebar from "./components/Sidebar.svelte";
-	import { setContext } from "svelte";
-  import { onMount } from "svelte";
-	import { writable, type Writable } from "svelte/store";
-  
-  import type { Tables } from "$lib/schema/database.types";
 	import supabase from "$lib/supabase";
+	import { onDestroy, setContext } from "svelte";
+  import { onMount } from "svelte";
+	import { derived, writable, type Readable, type Writable } from "svelte/store";
   
-  const liveDebateId: Writable<string> = writable();
+  import type { Database, Tables } from "$lib/schema/database.types";
+	import type { SubscriptionCB } from "$lib/schema/subcription.types";
+  
+  const liveDebate: Writable<Tables<"live_debate"> | null> = writable();
+
+  const teams: Writable<Tables<"live_debate_team">[]> = writable([]);
+
   const participants: Writable<Tables<"live_debate_participants">[]> = writable([]);
-  setContext("HOST_ID", "123-456-789");
+  const participantsOnStage: Readable<Tables<"live_debate_participants">[]> = derived(participants, ($participants)=> $participants.filter(e=>e.location === "stage"));
+  const participantsBackStage: Readable<Tables<"live_debate_participants">[]> = derived(participants, ($participants)=> $participants.filter(e=>e.location === "backstage"));
+
+  setContext("ctx_table$liveDebate", liveDebate);
+
+  setContext("ctx_table$participants", participants);
+  setContext("ctx_table$participantsOnStage", participantsOnStage);
+  setContext("ctx_table$participantsBackStage", participantsBackStage);
+
+  setContext("ctx_table$team", teams);
+
+  const liveDebateChannel = supabase
+    .channel('custom-all-channel')
+    
 
   onMount(async ()=>{
 
-    // const { data: liveDebate } = await supabase.from("live_debate").select();
-    // const liveDebateIdStr = liveDebate?.[0]?.id;
+    const { data: liveDebateData, error: liveDebateError } = await supabase.from("live_debate").select().eq("id", "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67").single();
 
-    // if(!liveDebateIdStr) throw new Error("Did you seed the database?");
+    liveDebate.set(liveDebateData);
+    const liveDebateIdStr = liveDebateData?.id;
 
+    if(!liveDebateIdStr) throw new Error("Did you seed the database?");
 
-    // const { data, error } = await supabase.from("live_debate_participants").select();
+    const [ { data: participantsData }, { data: teamsData } ] = await Promise.all([
+      supabase.from("live_debate_participants")  
+        .select()
+        .eq("live_debate", liveDebateIdStr),
+      supabase.from("live_debate_team")  
+        .select()
+        .eq("live_debate", liveDebateIdStr),
+    ]);
 
-    // if(!data || !data[0] ) throw new Error("No new participants")
-    // // get live debate based on the username
-    // // set the liveDebateId and liveDebateParticipants
-    // liveDebateId.set(liveDebateIdStr); // test seed live debate
-    // participants.set(data)
+    if(!participantsData || !participantsData[0] ) throw new Error("No new participants");
+    if(!teamsData || !teamsData[0] ) throw new Error("No team");
+
+    participants.set(participantsData);
+    teams.set(teamsData);
+
     
-    // Setup all the necessary stores
-    // Sync tables with the host ID  using supabase
+  
+    liveDebateChannel.on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'live_debate_participants',
+        filter: `live_debate=eq.${liveDebateIdStr}`
+      },
+      (payload) => {
+        syncLiveDebateParticipants(payload as any);
+      }
+    )
+    .subscribe();
+
+  function syncLiveDebateParticipants( { new: data, old, eventType }: SubscriptionCB<"live_debate_participants">) {
+    console.log("Event truigger", eventType)
+    switch(eventType) {
+      case "UPDATE": {
+        $participants = $participants.map(item=> item.participant_id === data.participant_id ? data : item );
+        return;
+      }
+      case "INSERT": {
+        $participants = [...$participants, data];
+        return;
+      }
+      case "DELETE": {
+        $participants = $participants.filter(item=> item.participant_id !== old.participant_id )
+        return;
+      }
+    }
+  }
+
     // On Destroy unsubs to all the subscriptions
-    // postgresql://postgres:postgres@127.0.0.1:54322/postgres
-    // get the live debate host.
-    // that is not ended
-    // get the live debate id
-    // get the participant list
     // get the live debate setting list
-    // sync that list to participant store
-
-
   });
+
+  onDestroy(()=>{
+    liveDebateChannel.unsubscribe();
+  })
  
 </script>
 
