@@ -14,9 +14,10 @@
 	import supabase from '$lib/supabase';
 
 	import type { Tables } from '$lib/schema/database.types';
-	import type { FormEventHandler } from 'svelte/elements';
 	import { tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
+	import type { KeyboardEventHandler } from 'svelte/elements';
+	import type { WithTarget } from '$lib/helper';
 
   interface Props {
     backstager: Tables<"live_debate_participants">;
@@ -39,15 +40,17 @@
 		.eq( "participant_id", backstager.participant_id);
 	}
 
-	async function onKeydownChange(event: KeyboardEvent ) {
+	async function onKeydownChange(event: KeyboardEvent) {
 		await tick();
 		if( event.key === "Escape") {
 			showNameSubmitBtn = false;
 			displayName = backstager.display_name;
+			(event.target as HTMLInputElement).blur?.();
 			return;
 		}
 		if( event.key === "Enter") {
 			updateName(displayName);
+			(event.target as HTMLInputElement).blur?.();
 			return;
 		}
 

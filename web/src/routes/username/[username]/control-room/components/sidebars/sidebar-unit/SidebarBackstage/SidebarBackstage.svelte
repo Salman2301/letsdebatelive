@@ -8,18 +8,27 @@
 	import DeviceCamera from '$lib/components/icon/DeviceCamera.svelte';
 	import DeviceMic from '$lib/components/icon/DeviceMic.svelte';
 	import DeviceScreen from '$lib/components/icon/DeviceScreen.svelte';
+	import DeviceMicDisabled from '$lib/components/icon/DeviceMicDisabled.svelte';
+	import DeviceCameraDisabled from '$lib/components/icon/DeviceCameraDisabled.svelte';
+	import DeviceScreenDisabled from '$lib/components/icon/DeviceScreenDisabled.svelte';
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
+	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import SidebarBackstageSetting from './SidebarBackstageSetting.svelte';
 
+	import supabase from '$lib/supabase';
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { getContext } from 'svelte';
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
 
-	let backstagers: Writable<Tables<'live_debate_participants'>[]> = getContext("ctx_table$participantsBackStage");
-	let liveDebate: Writable<Tables<'live_debate'>> = getContext("ctx_table$liveDebate");
-	let teamMapColor: Readable<Record<string, string>> = getContext("ctx$teamMapColor");
+	let backstagers: Writable<Tables<'live_debate_participants'>[]> = getContext(
+		'ctx_table$participantsBackStage'
+	);
+
+	let liveDebate: Writable<Tables<'live_debate'>> = getContext('ctx_table$liveDebate');
+
+	let teamMapColor: Readable<Record<string, string>> = getContext('ctx$teamMapColor');
 
 	let showBulkDropdown = $state(false);
 	let showBackstageSetting = $state(false);
@@ -32,6 +41,24 @@
 		showBackstageSetting = !showBackstageSetting;
 	}
 
+	let deviceEnable: Partial<Tables<'live_debate_participants'>> = $derived({
+		cam_enable: !$backstagers.some((backstager) => !backstager.cam_enable),
+		mic_enable: !$backstagers.some((backstager) => !backstager.mic_enable),
+		screenshare_enable: !$backstagers.some((backstager) => !backstager.screenshare_enable),
+		profile_image_enable: !$backstagers.some((backstager) => !backstager.profile_image_enable)
+	});
+
+	async function toggleDevice(device: keyof Tables<'live_debate_participants'>) {
+		const toUpdate = {
+			[device]: !deviceEnable[device]
+		};
+
+		// INFO: keep the `await`, on remove if removed it doesn't update
+		await supabase
+			.from('live_debate_participants')
+			.update(toUpdate)
+			.eq('live_debate', $liveDebate.id);
+	}
 </script>
 
 <div class="heading">
@@ -47,7 +74,12 @@
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
 				>
-					<path d="M2 13L13 2M2 2L13 13" stroke="currentcolor" stroke-width="3" stroke-linecap="round" />
+					<path
+						d="M2 13L13 2M2 2L13 13"
+						stroke="currentcolor"
+						stroke-width="3"
+						stroke-linecap="round"
+					/>
 				</svg>
 			{:else}
 				<SettingIcon />
@@ -57,7 +89,7 @@
 </div>
 
 {#if showBackstageSetting}
-	<SidebarBackstageSetting onclose={()=>(showBackstageSetting=false)} />
+	<SidebarBackstageSetting onclose={() => (showBackstageSetting = false)} />
 {:else}
 	<div class="header-center">
 		<Button
@@ -117,24 +149,44 @@
 			<div class="description">Enable / disable all the backstager user devices</div>
 			<div class="icons">
 				<div class="left">
-					<div class="icon"><DeviceCamera /></div>
-					<div class="icon"><DeviceMic /></div>
-					<div class="icon"><DeviceScreen /></div>
-					<div class="icon"><DeviceUserProfile /></div>
+					<button class="icon" onclick={() => toggleDevice('cam_enable')}>
+						{#if deviceEnable.cam_enable}
+							<DeviceCamera />
+						{:else}
+							<DeviceCameraDisabled />
+						{/if}
+					</button>
+					<button class="icon" onclick={() => toggleDevice('mic_enable')}>
+						{#if deviceEnable.mic_enable}
+							<DeviceMic />
+						{:else}
+							<DeviceMicDisabled />
+						{/if}
+					</button>
+					<button class="icon" onclick={() => toggleDevice('screenshare_enable')}>
+						{#if deviceEnable.screenshare_enable}
+							<DeviceScreen />
+						{:else}
+							<DeviceScreenDisabled />
+						{/if}
+					</button>
+					<button class="icon" onclick={() => toggleDevice('profile_image_enable')}>
+						{#if deviceEnable.profile_image_enable}
+							<DeviceUserProfile />
+						{:else}
+							<DeviceUserProfileDisabled />
+						{/if}
+					</button>
 				</div>
-				<div class="icon">
+				<button class="icon text-accent-red">
 					<UserBan />
-				</div>
+				</button>
 			</div>
 		</div>
 	{/if}
 	<div class="backstager-card-container">
 		{#each $backstagers as backstager}
-			<BackstagerCard
-				{backstager}
-				live_debate={$liveDebate}
-				teamMapColor={$teamMapColor}
-			/>
+			<BackstagerCard {backstager} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
 		{/each}
 	</div>
 {/if}
