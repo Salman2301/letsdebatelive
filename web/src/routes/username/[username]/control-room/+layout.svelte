@@ -5,18 +5,32 @@
 	import { writable, type Writable } from "svelte/store";
   
   import type { Tables } from "$lib/schema/database.types";
+	import supabase from "$lib/supabase";
   
   const liveDebateId: Writable<string> = writable();
   const participants: Writable<Tables<"live_debate_participants">[]> = writable([]);
   setContext("HOST_ID", "123-456-789");
 
-  onMount(()=>{
-    liveDebateId.set("55384d86-d9ca-4b6e-a12d-4c32e966e6b9"); // test seed live debate
+  onMount(async ()=>{
+
+    // const { data: liveDebate } = await supabase.from("live_debate").select();
+    // const liveDebateIdStr = liveDebate?.[0]?.id;
+
+    // if(!liveDebateIdStr) throw new Error("Did you seed the database?");
+
+
+    // const { data, error } = await supabase.from("live_debate_participants").select();
+
+    // if(!data || !data[0] ) throw new Error("No new participants")
+    // // get live debate based on the username
+    // // set the liveDebateId and liveDebateParticipants
+    // liveDebateId.set(liveDebateIdStr); // test seed live debate
+    // participants.set(data)
     
     // Setup all the necessary stores
     // Sync tables with the host ID  using supabase
     // On Destroy unsubs to all the subscriptions
-    postgresql://postgres:postgres@127.0.0.1:54322/postgres
+    // postgresql://postgres:postgres@127.0.0.1:54322/postgres
     // get the live debate host.
     // that is not ended
     // get the live debate id
