@@ -12,12 +12,25 @@
 
 ## Migration
 
-This will generate a migration file based on the local and remote DB
+### This will generate a migration file based on the local and remote DB
 ```sh
- supbase db diff --file migration-name
+ supabase db diff --file migration-name
 ```
 
-Push the migration changes to the remote db
+### To delete a migration run
+```sh
+supabase migration list
+```
+
+To get the list of migration and get the $id
+
+Use the $id to delete the record
+
+```sh
+supabase migration repair $id --status reverted --local
+```
+
+### Push the migration changes to the remote db
 ```sh
 suapabse db push
 ```

@@ -118,25 +118,25 @@ export type Database = {
       }
       live_debate_backstage_chat: {
         Row: {
-          chat: string | null
+          chat: string
           created_at: string
           id: string
-          live_debate_id: string | null
-          sender_id: string | null
+          live_debate_id: string
+          sender_id: string
         }
         Insert: {
-          chat?: string | null
+          chat: string
           created_at?: string
           id?: string
-          live_debate_id?: string | null
-          sender_id?: string | null
+          live_debate_id: string
+          sender_id: string
         }
         Update: {
-          chat?: string | null
+          chat?: string
           created_at?: string
           id?: string
-          live_debate_id?: string | null
-          sender_id?: string | null
+          live_debate_id?: string
+          sender_id?: string
         }
         Relationships: [
           {
@@ -150,37 +150,37 @@ export type Database = {
             foreignKeyName: "live_debate_backstage_chat_sender_id_fkey"
             columns: ["sender_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
         ]
       }
       live_debate_chat: {
         Row: {
-          chat: string | null
+          chat: string
           created_at: string
           id: string
-          live_debate_id: string | null
-          sender_id: string | null
+          live_debate: string
+          sender_id: string
         }
         Insert: {
-          chat?: string | null
+          chat: string
           created_at?: string
           id?: string
-          live_debate_id?: string | null
-          sender_id?: string | null
+          live_debate: string
+          sender_id: string
         }
         Update: {
-          chat?: string | null
+          chat?: string
           created_at?: string
           id?: string
-          live_debate_id?: string | null
-          sender_id?: string | null
+          live_debate?: string
+          sender_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "live_debate_chat_live_debate_id_fkey"
-            columns: ["live_debate_id"]
+            foreignKeyName: "live_debate_chat_live_debate_fkey"
+            columns: ["live_debate"]
             isOneToOne: false
             referencedRelation: "live_debate"
             referencedColumns: ["id"]
@@ -189,7 +189,7 @@ export type Database = {
             foreignKeyName: "live_debate_chat_sender_id_fkey"
             columns: ["sender_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
         ]
@@ -246,21 +246,21 @@ export type Database = {
       live_debate_notification: {
         Row: {
           created_at: string
-          has_read: boolean | null
+          has_read: boolean
           live_debate: string
           missed_count: number | null
           service: Database["public"]["Enums"]["notification_service"]
         }
         Insert: {
           created_at?: string
-          has_read?: boolean | null
+          has_read: boolean
           live_debate: string
           missed_count?: number | null
           service: Database["public"]["Enums"]["notification_service"]
         }
         Update: {
           created_at?: string
-          has_read?: boolean | null
+          has_read?: boolean
           live_debate?: string
           missed_count?: number | null
           service?: Database["public"]["Enums"]["notification_service"]
@@ -282,20 +282,21 @@ export type Database = {
           cam_id: string | null
           created_at: string
           current_stage: string | null
-          debate: string | null
-          display_name: string | null
+          display_name: string
           hand_raised: boolean | null
-          id: string
-          is_host: boolean | null
+          is_host: boolean
           is_kicked: boolean | null
+          live_debate: string
+          location: Database["public"]["Enums"]["participant_location"]
           mic_available: boolean | null
           mic_enable: boolean | null
           mic_id: string | null
+          participant_id: string
           screenshare_available: boolean | null
           speaker_available: boolean | null
           speaker_enable: boolean | null
           speaker_id: string | null
-          team: string | null
+          team: string
         }
         Insert: {
           cam_available?: boolean | null
@@ -303,20 +304,21 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
-          debate?: string | null
-          display_name?: string | null
+          display_name: string
           hand_raised?: boolean | null
-          id?: string
-          is_host?: boolean | null
+          is_host: boolean
           is_kicked?: boolean | null
+          live_debate: string
+          location: Database["public"]["Enums"]["participant_location"]
           mic_available?: boolean | null
           mic_enable?: boolean | null
           mic_id?: string | null
+          participant_id?: string
           screenshare_available?: boolean | null
           speaker_available?: boolean | null
           speaker_enable?: boolean | null
           speaker_id?: string | null
-          team?: string | null
+          team: string
         }
         Update: {
           cam_available?: boolean | null
@@ -324,25 +326,33 @@ export type Database = {
           cam_id?: string | null
           created_at?: string
           current_stage?: string | null
-          debate?: string | null
-          display_name?: string | null
+          display_name?: string
           hand_raised?: boolean | null
-          id?: string
-          is_host?: boolean | null
+          is_host?: boolean
           is_kicked?: boolean | null
+          live_debate?: string
+          location?: Database["public"]["Enums"]["participant_location"]
           mic_available?: boolean | null
           mic_enable?: boolean | null
           mic_id?: string | null
+          participant_id?: string
           screenshare_available?: boolean | null
           speaker_available?: boolean | null
           speaker_enable?: boolean | null
           speaker_id?: string | null
-          team?: string | null
+          team?: string
         }
         Relationships: [
           {
-            foreignKeyName: "public_live_debate_participants_debate_fkey"
-            columns: ["debate"]
+            foreignKeyName: "live_debate_participants_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "user_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_debate_participants_live_debate_fkey"
+            columns: ["live_debate"]
             isOneToOne: false
             referencedRelation: "live_debate"
             referencedColumns: ["id"]
@@ -647,13 +657,13 @@ export type Database = {
     Enums: {
       notification_service:
         | "live_chat"
-        | "question_answer"
-        | "audience"
-        | "acitivity_feed"
+        | "backstage_chat"
         | "screen_share_new"
         | "backstage_new_participant"
         | "poll_result"
-        | "backstage_chat"
+        | "question_answer"
+        | "activity_feed"
+      participant_location: "stage" | "backstage"
     }
     CompositeTypes: {
       [_ in never]: never
