@@ -85,6 +85,23 @@
 		await updateLiveDebateParticipant({ location: "stage" });
 	}
 
+	async function deleteParticipant() {
+		try {
+			const { error } = await supabase.from("live_debate_participants").delete()
+			.eq( "live_debate", live_debate.id)
+			.eq( "participant_id", backstager.participant_id).throwOnError();
+
+			console.log({ error });
+		}
+		catch(e) {
+			console.error(e);
+			newToast({
+				type: "error",
+				message: "Failed to remove the user"
+			})
+		}
+	}
+
 </script>
 
 
@@ -96,7 +113,7 @@
       {:else}
         <div></div>
       {/if}
-			<button>
+			<button onclick={deleteParticipant}>
 				<UserRemove />
 			</button>
     </div>
@@ -159,9 +176,9 @@
 	      <DeviceUserProfileDisabled />
 			{/if}
     </button>
-    <div class="toggle-device">
+    <button class="toggle-device">
       <UserBan />
-    </div>
+    </button>
   </div>
   <div class="footer">
     <div class="btn-action">
