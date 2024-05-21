@@ -2,7 +2,7 @@
 	import SettingIcon from '$lib/components/icon/SettingIcon.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Button from '$lib/components/button/Button.svelte';
-	import BackstagerCard from './BackstagerCard.svelte';
+	import ParticipantCard from './ParticipantCard.svelte';
 
 	import UserBan from '$lib/components/icon/UserBan.svelte';
 	import DeviceCamera from '$lib/components/icon/DeviceCamera.svelte';
@@ -186,7 +186,11 @@
 	{/if}
 	<div class="backstager-card-container">
 		{#each $backstagers as backstager}
-			<BackstagerCard {backstager} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
+			<ParticipantCard
+				participant={backstager}
+				live_debate={$liveDebate}
+				teamMapColor={$teamMapColor}
+			/>
 		{/each}
 	</div>
 {/if}
