@@ -17,7 +17,7 @@
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
 		"db:migration:new": "echo \" supabase db diff --file migration-name\"",
-		"db:reset": "echo \"This will delete the local db Please be cautious! run: \nsupabase db reset --local\" && exit 1",
+		"db:reset": "echo \"This will delete the local db Please be cautious! \n Also enable realtime using supabase dashboard run: \nsupabase db reset --local\" && exit 1",
 		"db:seed:dump": "supabase db dump -f supabase/seed.sql --local --data-only",
 		"db:diff": "supabase db diff"
 	},

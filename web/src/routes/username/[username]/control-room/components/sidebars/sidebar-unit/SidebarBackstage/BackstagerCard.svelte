@@ -260,10 +260,6 @@
 		@apply rounded;
 	}
 
-	.active {
-		color: #ccc;
-	}
-
 	.toggle-device:hover {
 		@apply text-secondary-dark;
 		@apply border border-light-gray;
