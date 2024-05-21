@@ -17,7 +17,7 @@
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
 		"db:migration:new": "node ./script/new-migration",
-		"db:reset": "supabase db reset --local && node ./script/turn-on-realtime",
+		"db:reset": "supabase db reset --local && node ./script/turn-on-realtime && supabase stop && supabase start",
 		"db:seed:dump": "supabase db dump -f supabase/seed.sql --local --data-only",
 		"db:diff": "supabase db diff"
 	},
