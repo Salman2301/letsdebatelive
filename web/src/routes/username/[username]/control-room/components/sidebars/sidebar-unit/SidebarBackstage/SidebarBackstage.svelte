@@ -12,13 +12,14 @@
 	import SidebarBackstageSetting from './SidebarBackstageSetting.svelte';
 
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
-	import { backstage_participants } from '$lib/dummy/backstage';
-	import type { Tables } from '$lib/schema/database.types';
 	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
+
+	import type { Tables } from '$lib/schema/database.types';
+	import type { Readable, Writable } from 'svelte/store';
 
 	let backstagers: Writable<Tables<'live_debate_participants'>[]> = getContext("ctx_table$participantsBackStage");
 	let liveDebate: Writable<Tables<'live_debate'>> = getContext("ctx_table$liveDebate");
+	let teamMapColor: Readable<Record<string, string>> = getContext("ctx$teamMapColor");
 
 	let showBulkDropdown = $state(false);
 	let showBackstageSetting = $state(false);
@@ -129,7 +130,11 @@
 	{/if}
 	<div class="backstager-card-container">
 		{#each $backstagers as backstager}
-			<BackstagerCard {backstager} live_debate={$liveDebate} />
+			<BackstagerCard
+				{backstager}
+				live_debate={$liveDebate}
+				teamMapColor={$teamMapColor}
+			/>
 		{/each}
 	</div>
 {/if}

@@ -16,6 +16,13 @@
   const participantsOnStage: Readable<Tables<"live_debate_participants">[]> = derived(participants, ($participants)=> $participants.filter(e=>e.location === "stage"));
   const participantsBackStage: Readable<Tables<"live_debate_participants">[]> = derived(participants, ($participants)=> $participants.filter(e=>e.location === "backstage"));
 
+  const teamMapColor: Readable<Record<string, string>> = derived(teams, ($teams)=>{
+    return $teams.reduce((obj: Record<string, string> , team)=>{
+      obj[team.id] = team.color;
+      return obj;
+    }, {});
+  })
+
   setContext("ctx_table$liveDebate", liveDebate);
 
   setContext("ctx_table$participants", participants);
@@ -23,9 +30,10 @@
   setContext("ctx_table$participantsBackStage", participantsBackStage);
 
   setContext("ctx_table$team", teams);
+  setContext("ctx$teamMapColor", teamMapColor);
 
   const liveDebateChannel = supabase
-    .channel('custom-all-channel')
+    .channel('custom-all-channel');
     
 
   onMount(async ()=>{
@@ -51,9 +59,7 @@
 
     participants.set(participantsData);
     teams.set(teamsData);
-
     
-  
     liveDebateChannel.on(
       'postgres_changes',
       {
@@ -69,7 +75,6 @@
     .subscribe();
 
   function syncLiveDebateParticipants( { new: data, old, eventType }: SubscriptionCB<"live_debate_participants">) {
-    console.log("Event truigger", eventType)
     switch(eventType) {
       case "UPDATE": {
         $participants = $participants.map(item=> item.participant_id === data.participant_id ? data : item );

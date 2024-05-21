@@ -391,28 +391,28 @@ export type Database = {
       }
       live_debate_team: {
         Row: {
-          color: string | null
+          color: string
           created_at: string
           id: string
-          live_debate: string | null
-          slug: string | null
-          title: string | null
+          live_debate: string
+          slug: string
+          title: string
         }
         Insert: {
-          color?: string | null
+          color: string
           created_at?: string
           id?: string
-          live_debate?: string | null
-          slug?: string | null
-          title?: string | null
+          live_debate: string
+          slug: string
+          title: string
         }
         Update: {
-          color?: string | null
+          color?: string
           created_at?: string
           id?: string
-          live_debate?: string | null
-          slug?: string | null
-          title?: string | null
+          live_debate?: string
+          slug?: string
+          title?: string
         }
         Relationships: [
           {

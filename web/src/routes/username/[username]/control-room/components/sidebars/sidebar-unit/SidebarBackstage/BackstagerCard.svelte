@@ -10,17 +10,25 @@
 	import DeviceUserProfile from "$lib/components/icon/DeviceUserProfile.svelte";
 	import DeviceUserProfileDisabled from "$lib/components/icon/DeviceUserProfileDisabled.svelte";
 	import UserBan from "$lib/components/icon/UserBan.svelte";
-	import type { Tables } from '$lib/schema/database.types';
+	
 	import supabase from '$lib/supabase';
+
+	import type { Tables } from '$lib/schema/database.types';
+	import type { FormEventHandler } from 'svelte/elements';
+	import { tick } from 'svelte';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
 
   interface Props {
     backstager: Tables<"live_debate_participants">;
 		live_debate: Tables<"live_debate">;
+		teamMapColor: Record<string, string>;
   }
 
-  let { backstager, live_debate }: Props = $props();
+  let { backstager, live_debate, teamMapColor }: Props = $props();
 
-
+	let displayName = $state(backstager.display_name);
+	let showNameSubmitBtn = $state(false);
+	
 	async function toggleDevice(device: keyof typeof backstager) {
 		const toUpdate = {
 			[device]: !backstager[device]
@@ -30,6 +38,34 @@
 		.eq( "live_debate", live_debate.id)
 		.eq( "participant_id", backstager.participant_id);
 	}
+	async function onKeydownChange(event: KeyboardEvent ) {
+		await tick();
+		if( event.key === "Escape") {
+			showNameSubmitBtn = false;
+			displayName = backstager.display_name;
+			return;
+		}
+		if( event.key === "Enter") {
+			updateName(displayName);
+			return;
+		}
+
+		showNameSubmitBtn = displayName !== backstager.display_name;
+	}
+	async	function updateName(name: string) {
+		if(name === "") {
+			newToast({
+				message: "Name can't be empty",
+				type: "error"
+			});
+			return;
+		}
+		await supabase.from("live_debate_participants").update({ display_name: name })
+		.eq( "live_debate", live_debate.id)
+		.eq( "participant_id", backstager.participant_id);
+		showNameSubmitBtn = false;
+
+	}
 
 </script>
 
@@ -37,7 +73,7 @@
 <div class="card-container">
   <div class="username-img-default">
     <div class="header-float">
-      {#if true}
+      {#if backstager.hand_raised}
         <RaiseHand />
       {:else}
         <div></div>
@@ -51,9 +87,18 @@
     </div>
   </div>
   <div class="username-text">
-    <div class="team-circle">
+    <div class="team-circle" style="background-color:{teamMapColor[backstager.team]}">
     </div>
-    <input class="username-input" value={backstager.display_name} />
+		<div class="input-container">
+			<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
+			{#if showNameSubmitBtn}
+				<button onclick={()=>updateName(displayName)}>
+					<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M0.914551 10C0.914551 7.34783 1.96812 4.8043 3.84348 2.92893C5.71885 1.05357 8.26239 0 10.9146 0C13.5667 0 16.1103 1.05357 17.9856 2.92893C19.861 4.8043 20.9146 7.34783 20.9146 10C20.9146 12.6522 19.861 15.1957 17.9856 17.0711C16.1103 18.9464 13.5667 20 10.9146 20C8.26239 20 5.71885 18.9464 3.84348 17.0711C1.96812 15.1957 0.914551 12.6522 0.914551 10ZM15.9746 6.662C16.1421 6.38108 16.1928 6.04569 16.1159 5.72777C16.039 5.40986 15.8405 5.13476 15.5631 4.9615C15.2857 4.78824 14.9514 4.73062 14.632 4.80101C14.3126 4.8714 14.0335 5.06418 13.8546 5.338L9.68655 12.006L7.79855 10.116C7.5641 9.88155 7.24611 9.74984 6.91455 9.74984C6.58299 9.74984 6.265 9.88155 6.03055 10.116C5.7961 10.3505 5.66439 10.6684 5.66439 11C5.66439 11.1642 5.69672 11.3267 5.75955 11.4784C5.82238 11.6301 5.91446 11.7679 6.03055 11.884L9.03055 14.884C9.16342 15.0171 9.3246 15.1184 9.50208 15.1805C9.67955 15.2427 9.86876 15.2639 10.0556 15.2428C10.2424 15.2216 10.4221 15.1586 10.5812 15.0584C10.7403 14.9582 10.8748 14.8234 10.9746 14.664L15.9746 6.664V6.662Z" fill="white"/>
+					</svg>
+				</button>
+			{/if}
+		</div>
   </div>
   <div class="toggle-devices">
     <button
@@ -125,6 +170,7 @@
 		@apply flex justify-between items-center;
 		@apply w-full pr-2;
 		@apply absolute top-0;
+		height: 24px;
 	}
 	.circle-icon {
 		width: 60px;
@@ -211,5 +257,16 @@
 	.btn-action {
 		@apply w-full flex justify-end;
 	}
+
+	.input-container {
+		@apply relative;
+	}
+
+	.input-container button {
+		@apply absolute;
+		top: 12px;
+		right: 14px;
+	}
+
 
 </style>

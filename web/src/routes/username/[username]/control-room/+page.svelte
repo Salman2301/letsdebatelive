@@ -13,7 +13,6 @@
       layerId: "profile_multiple"
     });
 
-    console.log("sent broadcast")
     handleLive();
 
   });
@@ -21,7 +20,6 @@
   async function handleLive() {
     // Create a live_debate
     emitBroadcastEvent("broadcast_start", hostId);
-    console.log("clicked!")
   }
 </script>
 
