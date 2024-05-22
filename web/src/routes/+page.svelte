@@ -1,13 +1,17 @@
 <script lang="ts">
+  export let data;
+  let { supabase } = data;
+  $: ({ supabase } = data);
 
-// Redirect to proper page?
-
-  import TestMic from "$lib/components/mic/TestMic.svelte";
-	import VolumeProgress from "$lib/components/mic/VolumeProgress.svelte";
-
+  
 </script>
 
-<TestMic />
+
+{#await supabase.auth.getSession()}
+{:then sess}
+<!-- {@debug sess} -->
+{JSON.stringify(sess,null, 4)}
+{/await}
 
 <style lang="postcss">
 

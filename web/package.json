@@ -49,6 +49,7 @@
 	"type": "module",
 	"dependencies": {
 		"@mux/mux-node": "^8.5.1",
+		"@supabase/ssr": "^0.3.0",
 		"@supabase/supabase-js": "^2.43.1",
 		"uuid": "^9.0.1"
 	}
