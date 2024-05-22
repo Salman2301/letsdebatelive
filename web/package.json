@@ -16,8 +16,8 @@
 		"db:schema": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts",
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
-		"db:migration:new": "node ./script/new-migration",
-		"db:reset": "supabase db reset --local && node ./script/turn-on-realtime && supabase stop && supabase start",
+		"db:migration:new": "node --env-file=.env ./script/new-migration",
+		"db:reset": "supabase db reset --local && node --env-file=.env ./script/turn-on-realtime && supabase stop && supabase start",
 		"db:seed:dump": "supabase db dump -f supabase/seed.sql --local --data-only",
 		"db:diff": "supabase db diff"
 	},
