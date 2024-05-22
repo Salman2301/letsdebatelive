@@ -38,6 +38,9 @@
 
   onMount(async ()=>{
 
+    // Check if the current user name match with the route
+    
+
     const { data: liveDebateData, error: liveDebateError } = await supabase.from("live_debate").select().eq("id", "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67").single();
 
     liveDebate.set(liveDebateData);

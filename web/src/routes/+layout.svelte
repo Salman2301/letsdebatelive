@@ -2,7 +2,7 @@
 	import RootLayout from './../lib/components/slots/RootLayout.svelte';
 	import { page } from '$app/stores';
 	import '../app.css';
-	import { isLessThanLg, screenWindowSize, screenWindowSizePx } from '$lib/stores/screen-size.store';
+	import { screenWindowSizePx } from '$lib/stores/screen-size.store';
 	import { onMount } from "svelte"
 	
 	onMount(()=>{

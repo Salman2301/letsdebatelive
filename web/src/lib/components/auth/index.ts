@@ -1,6 +1,13 @@
 import supabase from "$lib/supabase";
 import { authUserData } from "./auth.store";
 
+export async function getUsername() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  const { data: userData } = await supabase.from("user_data").select("username").eq("id", session?.user.id as string).single();
+
+  return userData?.username;
+}
 
 export async function getUserId() {
   const { data: { session } } = await supabase.auth.getSession();

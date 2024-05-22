@@ -1,10 +1,26 @@
 TODO:
   ☐ Layout Changes and Share webCam and Screenshare
+  
+  ☐ List of screen page 
+  ☐ Create a +layout store for the current user
+  ☐ Check for user sign in and continue to the layout
+  ☐ User able to join or leave backstage
+  ☐ Show join backstage
+  ☐ Create a Modal that show setup device settings and everything
+  ☐ Once user join show backstage chat
+  ☐ User can send chat
+  ☐ Create a auto chat to send chat every 10 secs to test the live chat
+    ☐ Memory leak handle max chat to 50
+  ☐ Connect the host title
+  ☐ Host DP
+  ☐ Host Support button
+  ☐ Number of support
+
     ✔ Fix the selection of different layout @done(24-05-19 17:16)
-    ☐ Write a layout store connect to supabase channel to the svelte store for the layout
+    ✔ Write a layout store connect to supabase channel to the svelte store for the layout @done(24-05-22 15:25)
     Connect
     
-    ☐ add ended
+   ✔ add ended @done(24-05-22 15:24)
       - mute
       - cam
       - screen

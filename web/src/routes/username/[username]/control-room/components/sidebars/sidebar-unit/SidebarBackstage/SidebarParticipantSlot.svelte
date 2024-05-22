@@ -21,6 +21,8 @@
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
+	import { getUserId, getUsername } from '$lib/components/auth';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -67,6 +69,16 @@
 			.update(toUpdate)
 			.eq('live_debate', $liveDebate.id);
 	}
+
+
+	async function handleCopyLink() {
+		const url = `${window.location.origin}/username/${await getUsername()}/live`;
+		navigator.clipboard.writeText(url);
+		newToast({
+			type: "info",
+			message: "Link copied to clipboard"
+		})
+	}
 </script>
 
 <div class="heading">
@@ -103,6 +115,7 @@
 			color="primary"
 			fillType="outline-solid"
 			label={$isLessThanLg ? `Copy ${title} link` : ''}
+			onclick={handleCopyLink}
 		>
 			<svg
 				slot="icon-left"
