@@ -1,16 +1,18 @@
 <script lang="ts">
-	import RaiseHand from '$lib/components/icon/RaiseHand.svelte';
-	import UserRemove from '$lib/components/icon/UserRemove.svelte';
-	import DeviceCamera from '$lib/components/icon/DeviceCamera.svelte';
-	import DeviceCameraDisabled from '$lib/components/icon/DeviceCameraDisabled.svelte';
-	import DeviceMic from '$lib/components/icon/DeviceMic.svelte';
-	import DeviceMicDisabled from '$lib/components/icon/DeviceMicDisabled.svelte';
-	import DeviceScreen from '$lib/components/icon/DeviceScreen.svelte';
-	import DeviceScreenDisabled from '$lib/components/icon/DeviceScreenDisabled.svelte';
-	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
-	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
-	import UserBan from '$lib/components/icon/UserBan.svelte';
-
+	import {
+		RaiseHand,
+		UserRemove,
+		DeviceCamera,
+		DeviceCameraDisabled,
+		DeviceMic,
+		DeviceMicDisabled,
+		DeviceScreen,
+		DeviceScreenDisabled,
+		DeviceUserProfile,
+		DeviceUserProfileDisabled,
+		UserBan,
+	} from '$lib/components/icon';
+	
 	import supabase from '$lib/supabase';
 
 	import { tick } from 'svelte';

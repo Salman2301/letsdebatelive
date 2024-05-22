@@ -209,9 +209,11 @@
 	}
 
 	.left {
-		@apply flex items-center justify-evenly;
+		@apply flex items-center ;
 		@apply w-full;
 		width: 360px;
+		gap: 10px;
+		padding-left: 10px;
 	}
 
 	.btn-remove {
