@@ -1,6 +1,13 @@
 TODO:
   ☐ Layout Changes and Share webCam and Screenshare
   
+  ☐ Check for auth for all the layouts
+  ☐ Get the user only from hook
+  ☐ Remove unwanted auth code and get all from hook
+
+  https://letsdebate.live/stage/{username}
+  https://letsdebate.live/stage/{username}
+
   ☐ List of screen page 
   ☐ Create a +layout store for the current user
   ☐ Check for user sign in and continue to the layout
