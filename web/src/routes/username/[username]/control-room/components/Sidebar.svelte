@@ -22,7 +22,7 @@
 		SidebarBackstageSetting,
 		SidebarChatLive,
 		SidebarChatModerator,
-		SidebarParticipants
+		SidebarParticipant
 	} from "./sidebars/sidebar-unit";
 
 	interface SidebarSmall {
@@ -45,7 +45,7 @@
 		participants: {
 			label: "Participants",
 			icon: ICON_PARTICIPANTS,
-			sidebar: SidebarParticipants
+			sidebar: SidebarParticipant
 		},
 		backstageSetting: {
 			label: "Backstage Setting",

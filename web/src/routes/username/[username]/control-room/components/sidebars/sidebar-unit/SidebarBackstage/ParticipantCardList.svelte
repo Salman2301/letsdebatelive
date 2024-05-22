@@ -72,6 +72,7 @@
 
 	async function updateLiveDebateParticipant(row: Partial<Tables<'live_debate_participants'>>) {
 		try {
+			console.log("updating", { row, participant, live_debate});
 			await supabase
 				.from('live_debate_participants')
 				.update(row)

@@ -13,7 +13,6 @@
 	import DeviceScreenDisabled from '$lib/components/icon/DeviceScreenDisabled.svelte';
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
-	import SidebarBackstageSetting from './SidebarBackstageSetting.svelte';
 	import ParticipantCardList from './ParticipantCardList.svelte';
 
 	import supabase from '$lib/supabase';
@@ -23,31 +22,38 @@
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
 
-	let backstagers: Writable<Tables<'live_debate_participants'>[]> = getContext(
-		'ctx_table$participantsBackStage'
+	interface Props {
+		type: 'backstage' | 'stage';
+		showSetting: boolean;
+		title: string;
+	}
+
+	let { type, showSetting=$bindable(false), title }: Props = $props();
+
+	let participants: Writable<Tables<'live_debate_participants'>[]> = getContext(
+		'ctx_table$participants'
 	);
-
 	let liveDebate: Writable<Tables<'live_debate'>> = getContext('ctx_table$liveDebate');
-
 	let teamMapColor: Readable<Record<string, string>> = getContext('ctx$teamMapColor');
+
+	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived($participants.filter(participant => participant.location === type));
 
 	let viewMode: "list" | "grid" = $state("list");
 	let showBulkDropdown = $state(false);
-	let showBackstageSetting = $state(false);
 
 	function toggleBulkAction() {
 		showBulkDropdown = !showBulkDropdown;
 	}
 
-	function toggleBackstageSetting() {
-		showBackstageSetting = !showBackstageSetting;
+	function toggleSetting() {
+		showSetting = !showSetting;
 	}
 
 	let deviceEnable: Partial<Tables<'live_debate_participants'>> = $derived({
-		cam_enable: !$backstagers.some((backstager) => !backstager.cam_enable),
-		mic_enable: !$backstagers.some((backstager) => !backstager.mic_enable),
-		screenshare_enable: !$backstagers.some((backstager) => !backstager.screenshare_enable),
-		profile_image_enable: !$backstagers.some((backstager) => !backstager.profile_image_enable)
+		cam_enable: !filteredParticipants.some(item => !item.cam_enable),
+		mic_enable: !filteredParticipants.some(item => !item.mic_enable),
+		screenshare_enable: !filteredParticipants.some(item => !item.screenshare_enable),
+		profile_image_enable: !filteredParticipants.some(item => !item.profile_image_enable)
 	});
 
 	async function toggleDevice(device: keyof Tables<'live_debate_participants'>) {
@@ -64,10 +70,10 @@
 </script>
 
 <div class="heading">
-	<Heading2 content="Backstage" />
+	<Heading2 content={title} />
 	<div class="right-content">
-		<button class="icon-container" onclick={toggleBackstageSetting}>
-			{#if showBackstageSetting}
+		<button class="icon-container" onclick={toggleSetting}>
+			{#if showSetting}
 				<svg
 					width="15"
 					height="15"
@@ -89,14 +95,14 @@
 	</div>
 </div>
 
-{#if showBackstageSetting}
-	<SidebarBackstageSetting onclose={() => (showBackstageSetting = false)} />
+{#if showSetting}
+	<slot name="setting"></slot>
 {:else}
 	<div class="header-center">
 		<Button
 			color="primary"
 			fillType="outline-solid"
-			label={$isLessThanLg ? 'Copy Backstage link' : ''}
+			label={$isLessThanLg ? `Copy ${title} link` : ''}
 		>
 			<svg
 				slot="icon-left"
@@ -134,7 +140,7 @@
 	</div>
 
 	{#if showBulkDropdown}
-		<div class="backstage-bulkaction">
+		<div class="bulkaction">
 			<button class="header" onclick={toggleBulkAction}>
 				<div class="title">Bulk Action</div>
 				<svg
@@ -147,7 +153,7 @@
 					<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
 				</svg>
 			</button>
-			<div class="description">Enable / disable all the backstager user devices</div>
+			<div class="description">Enable / disable all the user devices</div>
 			<div class="icons">
 				<div class="left">
 					<button class="icon" onclick={() => toggleDevice('cam_enable')}>
@@ -215,19 +221,19 @@ f			</svg>
 			
 		</button>
 	</div>
-	<div class="backstager-card-container">
+	<div class="participant-card-container">
 		{#if viewMode === "grid"}
-			{#each $backstagers as backstager}
+			{#each filteredParticipants as participant}
 				<ParticipantCard
-					participant={backstager}
+					participant={participant}
 					live_debate={$liveDebate}
 					teamMapColor={$teamMapColor}
 				/>
 			{/each}
 		{:else}
-		{#each $backstagers as backstager}
+		{#each filteredParticipants as participant}
 			<ParticipantCardList
-				participant={backstager}
+				participant={participant}
 				live_debate={$liveDebate}
 				teamMapColor={$teamMapColor}
 			/>
@@ -258,7 +264,7 @@ f			</svg>
 		@apply flex items-center justify-center gap-2;
 	}
 
-	.backstage-bulkaction {
+	.bulkaction {
 		background-color: #3a0e63;
 		@apply p-2 px-4;
 		@apply my-2;
@@ -331,7 +337,7 @@ f			</svg>
 	.view-mode.active {
 		color: rgba(255, 255, 255, 1);
 	}
-	.backstager-card-container {
+	.participant-card-container {
 		@apply my-2 mt-4;
 		@apply flex flex-wrap justify-between gap-2 px-4;
 	}
