@@ -6,10 +6,11 @@
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
-	import supabase from '$lib/supabase';
-	import { onMount } from 'svelte';
+	// import supabase from '$lib/supabase';
+	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	import { checkLoginSetStore } from '../auth';
+	import type { SupabaseClient } from '@supabase/supabase-js';
+	// import { checkLoginSetStore } from '../auth';
 
 	const form = {
 		email: ''
@@ -18,6 +19,7 @@
 	const forgotSchema = z.object({
 		email: z.string().email()
 	});
+	const supabase = getContext<SupabaseClient>("lib_supabase");
 
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
@@ -45,7 +47,7 @@
 				newToast({ type: 'error', message: error.message });
 				throw new Error(error.message);
 			}
-			await checkLoginSetStore();
+			// await checkLoginSetStore();
 
 			isLoading = false;
 			$currentModal = null;

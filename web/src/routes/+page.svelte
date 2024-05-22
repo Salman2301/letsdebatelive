@@ -1,17 +1,10 @@
 <script lang="ts">
-  export let data;
-  let { supabase } = data;
-  $: ({ supabase } = data);
+	import { authUserData } from "$lib/components/auth/auth.store";
 
   
 </script>
 
-
-{#await supabase.auth.getSession()}
-{:then sess}
-<!-- {@debug sess} -->
-{JSON.stringify(sess,null, 4)}
-{/await}
+{JSON.stringify($authUserData)}
 
 <style lang="postcss">
 

@@ -9,9 +9,10 @@
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
 	// import supabase from '$lib/supabase';
-	import { onMount } from 'svelte';
+	import { onMount, getContext } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	import { checkLoginSetStore } from '../auth';
+	// import { checkLoginSetStore } from '../auth';
+	import type { SupabaseClient } from '@supabase/supabase-js';
 
 	const form = {
 		email: '',
@@ -27,9 +28,7 @@
 	});
 
 	
-  // export let data;
-  // let { supabase } = data;
-
+	const supabase = getContext<SupabaseClient>("lib_supabase");
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;
@@ -55,7 +54,7 @@
 				newToast({ type: "error", message: error.message })
 				throw new Error(error.message);
 			}
-			await checkLoginSetStore();
+			// await checkLoginSetStore();
 
 			isLoading = false;
 			$currentModal = null;

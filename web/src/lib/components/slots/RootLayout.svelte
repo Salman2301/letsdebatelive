@@ -16,14 +16,6 @@
     if( userData && userData.length > 0) {
       authUserData.set(userData[0])
     }
-    else {
-      const email = session.user.email as string;
-      const { data, error} = await supabase.from("user_data").insert({
-        username: email,
-        email: email,
-      });
-      console.error({ error });
-    }
   })
 </script>
 

@@ -1,11 +1,12 @@
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
+import type { Database, Tables } from '$lib/schema/database.types'
 import type { LayoutLoad } from './$types'
 import { createBrowserClient, isBrowser, parse } from '@supabase/ssr'
 
 export const load: LayoutLoad = async ({ fetch, data, depends }) => {
   depends('supabase:auth')
 
-  const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+  const supabase = createBrowserClient<Database>(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     global: {
       fetch,
     },
@@ -30,5 +31,26 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
     data: { session },
   } = await supabase.auth.getSession()
 
-  return { supabase, session }
+  let userData: Tables<"user_data"> | null = null;
+
+  if (session?.user) {
+    const { data, error: userDataError } = await supabase.from("user_data").select().eq("id", session?.user?.id as string).single(); 
+    if (userDataError) {
+      
+      const email = session.user.email as string;
+      const { data } = await supabase.from("user_data").insert({
+        username: email,
+        email: email,
+      }).select().single();
+
+      userData = data;
+      
+
+    } else {
+      userData = data;
+    }
+    
+  }
+
+  return { supabase, session, userData }
 }

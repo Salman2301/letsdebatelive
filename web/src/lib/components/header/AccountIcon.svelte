@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { clickOutside } from "$lib/action/clickOutisde";
-	import { logoutUser } from "../auth";
+	import supabase from "$lib/supabase";
 	import { authUserData, isLoggedIn } from "../auth/auth.store";
 	import { currentModal } from "../modal/modal.store";
 
@@ -55,7 +55,11 @@
       </button>
       <button
         class="btn-popup logout"
-        on:click={logoutUser}
+        on:click={()=>{
+          supabase.auth.signOut();
+          $authUserData = null;
+          goto(`/profile/logout?${Date.now()}`);
+        }}
         class:hidden={!$isLoggedIn}
       >
         Logout

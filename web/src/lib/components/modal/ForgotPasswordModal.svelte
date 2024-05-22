@@ -9,7 +9,7 @@
 	import supabase from '$lib/supabase';
 	import { onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	import { checkLoginSetStore } from '../auth';
+	// import { checkLoginSetStore } from '../auth';
 
 	const form = {
 		email: ''
@@ -45,7 +45,7 @@
 				newToast({ type: 'error', message: error.message });
 				throw new Error(error.message);
 			}
-			await checkLoginSetStore();
+			// await checkLoginSetStore();
 
 			isLoading = false;
 			$currentModal = null;
