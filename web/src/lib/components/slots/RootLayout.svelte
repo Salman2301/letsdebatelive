@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '$lib/components/header/Header.svelte';
+	import Header from '$lib/components/navbar/NavBar.svelte';
 	import ModalAll from '$lib/components/modal/ModalAll.svelte';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import { getContext, onMount } from 'svelte';

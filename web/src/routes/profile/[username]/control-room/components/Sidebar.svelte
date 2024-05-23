@@ -1,4 +1,5 @@
-<script lang="ts">
+<script context="module">
+	import { writable, type Writable } from "svelte/store";
 	import {
 		ICON_BACKSTAGE_SETTINGS,
 		ICON_BROADCAST,
@@ -25,17 +26,18 @@
 		SidebarParticipant
 	} from "./sidebars/sidebar-unit";
 
-	interface SidebarSmall {
-		[name: string]: {
+	type SidebarKey = "setting" | "participants" | "backstageSetting" | "chatLive" | "agenda" | "poll" | "qa" | "banner" | "chatModerator" | "broadcast";
+
+	type SidebarSmall = {
+		[index in SidebarKey]: {
 			label: string;
 			icon: typeof ICON_SETTINGS;
 			sidebar: typeof ICON_SETTINGS;
 			divider?: true;
-		}
-	}
+		};
+	};
 
-	let currentSidebar: string = "backstageSetting";
-
+	
 	const sidebarSmall: SidebarSmall = {
 		setting: {
 			label: "Setting",
@@ -91,19 +93,30 @@
 			icon: ICON_BROADCAST,
 			sidebar: SidebarBroadcast
 		}
+	} as const;
+
+	export let currentSidebar: Writable<SidebarKey> = writable("backstageSetting");
+
+</script>
+
+<script lang="ts">
+	let sidebarKeys = $state(Object.keys(sidebarSmall) as Array<SidebarKey>);
+
+	function hasDivider(key: SidebarKey) {
+		return !!sidebarSmall[key].divider;
 	}
 </script>
 
 <div class="sidebar">
 	<div class="sidebar-small-icon">
     <!-- List of icons -->
-		{#each Object.keys(sidebarSmall) as sidebarKey}
+		{#each sidebarKeys as sidebarKey}
 			<div class="icon-item">
 				<button
 				class="icon-sidebar"
-				class:divider={sidebarSmall[sidebarKey].divider}
-				class:active={currentSidebar===sidebarKey}
-				on:click={()=>(currentSidebar=sidebarKey)}
+				class:divider={hasDivider(sidebarKey)}
+				class:active={$currentSidebar===sidebarKey}
+				onclick={()=>($currentSidebar=sidebarKey)}
 			>
 				<svelte:component this={sidebarSmall[sidebarKey].icon} />
 			</button>
@@ -114,7 +127,7 @@
 		{/each}
 	</div>
 	<div class="sidebar-content">
-		<svelte:component this={sidebarSmall[currentSidebar].sidebar} />
+		<svelte:component this={sidebarSmall[$currentSidebar].sidebar} />
 	</div>
 </div>
 

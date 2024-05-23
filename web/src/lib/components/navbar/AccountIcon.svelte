@@ -38,27 +38,41 @@
     <div class="popup">
       <button
         class="btn-popup"
-        on:click={handleCreateDebate}
+        onclick={handleCreateDebate}
       >
         Create Debate
       </button>
       <button
         class="btn-popup"
-        on:click={()=>($currentModal="login")}
+        onclick={()=>($currentModal="login")}
         class:hidden={$isLoggedIn}
       >
         Login
       </button>
       <button
         class="btn-popup"
-        on:click={()=>($currentModal="register")}
+        onclick={()=>($currentModal="register")}
         class:hidden={$isLoggedIn}
       >
         Create account
       </button>
       <button
+        class="btn-popup"
+        onclick={()=>(goto(`/profile/${$authUserData?.username}/control-room`))}
+        class:hidden={!$isLoggedIn}
+      >
+        Control room
+      </button>
+      <button
+        class="btn-popup"
+        onclick={()=>(goto(`/u/${$authUserData?.username}`))}
+        class:hidden={!$isLoggedIn}
+      >
+        Live page
+      </button>
+      <button
         class="btn-popup logout"
-        on:click={()=>{
+        onclick={()=>{
           supabase.auth.signOut();
           $authUserData = null;
           goto(`/profile/logout?${Date.now()}`);

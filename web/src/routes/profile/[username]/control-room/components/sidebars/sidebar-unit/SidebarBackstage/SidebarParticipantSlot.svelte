@@ -14,6 +14,7 @@
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import ParticipantCardList from './ParticipantCardList.svelte';
+	import NoParticipant from './NoParticipant.svelte';
 
 	import { getContext } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
@@ -111,6 +112,7 @@
 </div>
 
 {#if showSetting}
+	<!-- svelte-ignore deprecated_slot_element -->
 	<slot name="setting"></slot>
 {:else}
 	<div class="header-center">
@@ -245,6 +247,8 @@ f			</svg>
 					live_debate={$liveDebate}
 					teamMapColor={$teamMapColor}
 				/>
+			{:else}
+				<NoParticipant type={type}/>	
 			{/each}
 		{:else}
 		{#each filteredParticipants as participant (participant.participant_id)}
@@ -253,6 +257,8 @@ f			</svg>
 				live_debate={$liveDebate}
 				teamMapColor={$teamMapColor}
 			/>
+			{:else}
+				<NoParticipant type={type}/>	
 		{/each}
 		{/if}
 	</div>
