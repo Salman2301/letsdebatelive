@@ -248,7 +248,6 @@
 
 	.username-text {
 		@apply text-left;
-		/* height: 30px; */
 		@apply flex items-center justify-center gap-1;
 		@apply px-1;
 	}
@@ -313,7 +312,7 @@
 
 	.input-container button {
 		@apply absolute;
-		top: 12px;
-		right: 14px;
+		top: 5px;
+		right: -12px;
 	}
 </style>
