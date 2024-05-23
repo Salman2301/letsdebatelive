@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE } from './constant.ts';
+	import { CTX_KEY_LIVE_DEBATE } from './constant';
 	import VideoFeed from '$lib/components/video-feed/VideoFeed.svelte';
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
