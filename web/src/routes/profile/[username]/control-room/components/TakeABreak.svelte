@@ -1,9 +1,10 @@
 <script lang="ts">
-	import supabase from '$lib/supabase';
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
+	import { getSupabase } from '$lib/supabase';
 
 	let hostId: string = getContext("HOST_ID");
+	const supabase = getSupabase(getContext);
   
   let timeout = $state("5min");
   function handleLayoutShift() {
@@ -12,7 +13,7 @@
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
     breakEnd.setSeconds(breakEnd.getSeconds() +1);
 
-		emitSceneChange(hostId, {
+		emitSceneChange(supabase, hostId, {
 			sceneType: 'scene_break',
 			layerId: 'layer_break',
 			metadata: {
@@ -25,7 +26,7 @@
 </script>
 
 <div class="container">
-	<button on:click={handleLayoutShift}> Take a break </button>
+	<button onclick={handleLayoutShift}> Take a break </button>
 	<select bind:value={timeout} >
 		<option value="5min" selected>5 mins</option>
 		<option value="10min">10 mins</option>

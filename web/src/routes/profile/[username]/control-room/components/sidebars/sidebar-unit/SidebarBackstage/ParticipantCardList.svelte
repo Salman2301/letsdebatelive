@@ -11,12 +11,11 @@
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import UserBan from '$lib/components/icon/UserBan.svelte';
 
-	import supabase from '$lib/supabase';
-
-	import { tick } from 'svelte';
+	import { getContext, tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	
 	import type { Tables } from '$lib/schema/database.types';
+	import { getSupabase } from '$lib/supabase';
 
 	interface Props {
 		participant: Tables<'live_debate_participants'>;
@@ -29,12 +28,14 @@
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
 
+	const supabase = getSupabase(getContext);
+
 	async function toggleDevice(device: keyof typeof participant) {
 		const toUpdate = {
 			[device]: !participant[device]
 		};
 		// INFO: keep the `await`, on remove if removed it doesn't update
-		await supabase
+		const { data, error } = await supabase
 			.from('live_debate_participants')
 			.update(toUpdate)
 			.eq('live_debate', live_debate.id)
@@ -72,7 +73,6 @@
 
 	async function updateLiveDebateParticipant(row: Partial<Tables<'live_debate_participants'>>) {
 		try {
-			console.log("updating", { row, participant, live_debate});
 			await supabase
 				.from('live_debate_participants')
 				.update(row)
@@ -82,7 +82,7 @@
 			console.error(e);
 			newToast({
 				type: 'error',
-				message: 'Failed to update the databse'
+				message: 'Failed to update the database'
 			});
 		}
 	}
@@ -234,17 +234,6 @@
 		@apply w-full pr-2;
 		@apply absolute top-0;
 		height: 24px;
-	}
-	.circle-icon {
-		width: 60px;
-		height: 60px;
-		@apply my-2;
-		@apply rounded-full;
-		@apply flex items-center justify-center;
-		@apply text-center;
-		font-size: 32px;
-		background-color: white;
-		@apply text-secondary-dark;
 	}
 
 	.username-img-default {

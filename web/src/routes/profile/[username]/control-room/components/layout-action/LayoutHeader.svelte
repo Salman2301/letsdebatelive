@@ -8,20 +8,22 @@
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
 
-	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
 	import { lastScreenPayloadContent } from '../videoFeed/scenes/store/scene';
+	import { getSupabase } from '$lib/supabase';
+	
+	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
 
 	let layerIdContent: LayerIdContent;
-
 	let hostId: string = getContext('HOST_ID');
+	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
 	// made sense to use LayoutHeader for short
 
 	function handleStopBroadcast() {
-		emitBroadcastEvent('broadcast_end', hostId, { hostId });
+		emitBroadcastEvent(supabase, 'broadcast_end', hostId, { hostId });
 
-		emitSceneChange(hostId, {
+		emitSceneChange(supabase, hostId, {
 			sceneType: 'scene_end',
 			layerId: 'layer_text',
 			metadata: {
@@ -42,7 +44,7 @@
 			layerIdContent = newLayerIdContent;
 		}
 
-		emitSceneChange(hostId, {
+		emitSceneChange(supabase, hostId, {
 			sceneType: 'scene_content',
 			layerId: layerIdContent
 		});

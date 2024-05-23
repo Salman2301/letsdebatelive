@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getSupabase } from '$lib/supabase';
 	import {
 		RaiseHand,
 		UserRemove,
@@ -13,9 +14,8 @@
 		UserBan,
 	} from '$lib/components/icon';
 	
-	import supabase from '$lib/supabase';
 
-	import { tick } from 'svelte';
+	import { getContext, tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Tables } from '$lib/schema/database.types';
 
@@ -29,6 +29,8 @@
 
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
+
+	const supabase = getSupabase(getContext);
 
 	async function toggleDevice(device: keyof typeof participant) {
 		const toUpdate = {
@@ -99,8 +101,6 @@
 				.eq('live_debate', live_debate.id)
 				.eq('participant_id', participant.participant_id)
 				.throwOnError();
-
-			console.log({ error });
 		} catch (e) {
 			console.error(e);
 			newToast({

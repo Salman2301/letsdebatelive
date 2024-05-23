@@ -4,13 +4,12 @@
 	import BreakScene from './scenes/BreakScene.svelte';
 	import ContentScene from './scenes/ContentScene.svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
-	import supabase from '$lib/supabase';
+	import { getSupabase } from '$lib/supabase';
 	import { getContext, onMount } from 'svelte';
 	import { lastScreenPayloadContent } from './scenes/store/scene';
 
 	import type { ScenePayload, SceneType } from './video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';
-
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = {
 		sceneType: 'scene_loading',
@@ -18,6 +17,7 @@
 		metadata: { text: 'loading' }
 	};
 
+	const supabase = getSupabase(getContext);
 	let hostId = getContext('HOST_ID');
 	let participantsList: Tables<"live_debate_participants">[] = [];
 

@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { clickOutside } from "$lib/action/clickOutisde";
-	import supabase from "$lib/supabase";
+	import { clickOutside } from "$lib/action/clickOutside";
 	import { authUserData, isLoggedIn } from "../auth/auth.store";
 	import { currentModal } from "../modal/modal.store";
+	import { getContext } from "svelte";
+	import { getSupabase } from "$lib/supabase";
 
   let showPopup = false;
 
+	const supabase = getSupabase(getContext);
+
   async function handleCreateDebate() {
     if( !$authUserData ) return;
-  goto(`/username/${$authUserData.username}/new-debate`);    
+  goto(`/profile/${$authUserData.username}/new-debate`);    
   }
 </script>
 

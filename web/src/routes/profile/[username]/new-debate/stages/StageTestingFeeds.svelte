@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { authUserData } from '$lib/components/auth/auth.store';
 	import Button from '$lib/components/button/Button.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
 	import { getContext, onMount } from 'svelte';
@@ -7,9 +8,9 @@
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icons';
 	import NoFeedCard from '../components/NoFeedCard.svelte';
 	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE } from '../new-debate.constant';
-	import supabase from '$lib/supabase';
-	import { getUserId } from '$lib/components/auth';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
+	import { getSupabase } from '$lib/supabase';
+	
 	import type { Tables } from '$lib/schema/database.types';
 
 	let errorWebcamFeed: string = '';
@@ -31,6 +32,8 @@
 		label: string;
 		value: string;
 	}
+
+	const supabase = getSupabase(getContext)
 
 	async function getDevices(): Promise<SelectOptions[]> {
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -255,22 +258,18 @@
 			// Create a live debate If the debate didn't exist in the store
 			// 
 			if( !$liveDebate?.id ) {
-				console.log([{
-					host: await getUserId(),
-					studio_mode: true,
-				}])
 				const { data, error } = await supabase.from("live_debate").insert([{
-					host: await getUserId(),
+					host: $authUserData?.id as string,
 					studio_mode: true,
 				}]).select();
-				console.log({ data, error })
+
 				if( error || !data ) throw new Error("Failed create debate");
 				
 				$liveDebate = data[0] as Tables<"live_debate">;
 
 				const { data: hostData, error: hostError } = await supabase.from("live_debate_participants").insert([{
-					debate: $liveDebate.id as string,
-					is_debate_owner: true,
+					live_debate: $liveDebate.id as string,
+					is_host: true,
 
 					cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
 					mic_available: kindMapDevices.audioinput.length > 0,
@@ -285,6 +284,9 @@
 					speaker_id: speakerDeviceId,
 					mic_id: micDeviceId,
 
+					team: "",
+					display_name: "Host",
+					location: "stage",
 
 				}]).select();
 				

@@ -6,10 +6,9 @@
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
-	import supabase from '$lib/supabase';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	// import { checkLoginSetStore } from '../auth';
+	import { getSupabase } from '$lib/supabase';
 
 	const form = {
 		email: ''
@@ -19,6 +18,7 @@
 		email: z.string().email()
 	});
 
+	const supabase = getSupabase(getContext);
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;

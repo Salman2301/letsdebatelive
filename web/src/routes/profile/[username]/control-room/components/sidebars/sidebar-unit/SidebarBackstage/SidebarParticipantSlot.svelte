@@ -15,20 +15,23 @@
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import ParticipantCardList from './ParticipantCardList.svelte';
 
-	import supabase from '$lib/supabase';
-	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { getContext } from 'svelte';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
+	
+	import { isLessThanLg } from '$lib/stores/screen-size.store';
+	import { authUserData } from '$lib/components/auth/auth.store';
+	import { getSupabase } from '$lib/supabase';
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
-	import { getUserId, getUsername } from '$lib/components/auth';
-	import { newToast } from '$lib/components/toast/Toast.svelte';
 
 	interface Props {
 		type: 'backstage' | 'stage';
 		showSetting: boolean;
 		title: string;
 	}
+	
+	const supabase = getSupabase(getContext);
 
 	let { type, showSetting=$bindable(false), title }: Props = $props();
 
@@ -64,7 +67,7 @@
 		};
 
 		// INFO: keep the `await`, on remove if removed it doesn't update
-		await supabase
+		const {data, error } = await supabase
 			.from('live_debate_participants')
 			.update(toUpdate)
 			.eq('live_debate', $liveDebate.id);
@@ -72,7 +75,7 @@
 
 
 	async function handleCopyLink() {
-		const url = `${window.location.origin}/username/${await getUsername()}/live`;
+		const url = `${window.location.origin}/profile/${$authUserData?.username}/live`;
 		navigator.clipboard.writeText(url);
 		newToast({
 			type: "info",

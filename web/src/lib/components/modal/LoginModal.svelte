@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getSupabase } from '$lib/supabase';
 	import Input from '$lib/components/form/input/Input.svelte';
 	import Modal from './Modal.svelte';
 	import BigButton from '$lib/components/button/BigButton.svelte';
@@ -11,8 +12,6 @@
 	// import supabase from '$lib/supabase';
 	import { onMount, getContext } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	// import { checkLoginSetStore } from '../auth';
-	import type { SupabaseClient } from '@supabase/supabase-js';
 
 	const form = {
 		email: '',
@@ -27,8 +26,7 @@
 		})
 	});
 
-	
-	const supabase = getContext<SupabaseClient>("lib_supabase");
+	const supabase = getSupabase(getContext);
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;

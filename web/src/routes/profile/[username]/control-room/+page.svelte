@@ -4,11 +4,13 @@
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
+	import { getSupabase } from '$lib/supabase';
 
+  const supabase = getSupabase(getContext)
   let hostId: string = getContext("HOST_ID") || "123";
   onMount(async ()=>{
     
-    emitSceneChange(hostId, {
+    emitSceneChange(supabase, hostId, {
       sceneType: "scene_content",
       layerId: "profile_multiple"
     });
@@ -19,7 +21,7 @@
 
   async function handleLive() {
     // Create a live_debate
-    emitBroadcastEvent("broadcast_start", hostId);
+    emitBroadcastEvent(supabase, "broadcast_start", hostId);
   }
 </script>
 

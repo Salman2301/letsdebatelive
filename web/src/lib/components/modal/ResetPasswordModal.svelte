@@ -6,11 +6,9 @@
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
-	// import supabase from '$lib/supabase';
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	import type { SupabaseClient } from '@supabase/supabase-js';
-	// import { checkLoginSetStore } from '../auth';
+	import { getSupabase } from '$lib/supabase';
 
 	const form = {
 		email: ''
@@ -19,7 +17,8 @@
 	const forgotSchema = z.object({
 		email: z.string().email()
 	});
-	const supabase = getContext<SupabaseClient>("lib_supabase");
+
+	const supabase = getSupabase(getContext);
 
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;

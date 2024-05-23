@@ -9,13 +9,13 @@ type EventInsert<T extends TableList> = BaseSubscriptionResult & {
   table: T;
   eventType: "INSERT";
   new: Tables<T>;
-  old: {};
+  old: object;
 };
 
 type EventDelete<T extends TableList> = BaseSubscriptionResult & {
   table: T;
   eventType: "DELETE";
-  new: {};
+  new: object;
   old: Partial<Tables<T>>;
 };
 

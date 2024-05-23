@@ -8,11 +8,9 @@
 	import ZodError from '../form/ZodError.svelte';
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
-	// import supabase from '$lib/supabase';
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
-	import type { SupabaseClient } from '@supabase/supabase-js';
-	// import { checkLoginSetStore } from '../auth';
+	import { getSupabase } from '$lib/supabase';
 
 	const form = {
 		email: '',
@@ -27,7 +25,7 @@
 		})
 	});
 
-	const supabase = getContext<SupabaseClient>("lib_supabase");
+	const supabase = getSupabase(getContext);
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;

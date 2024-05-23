@@ -1,12 +1,10 @@
 <script lang="ts">
-	import RootLayout from './../lib/components/slots/RootLayout.svelte';
+	import RootLayout from '$lib/components/slots/RootLayout.svelte';
 	import { page } from '$app/stores';
 	import '../app.css';
 	import { screenWindowSizePx } from '$lib/stores/screen-size.store';
 	import { onMount, setContext } from "svelte";
 	import { authUserData } from '$lib/components/auth/auth.store';
-	import supabase from '$lib/supabase';
-	// import { setAuthStore } from '$lib/components/auth';
 
 	export let data;
 	setContext("lib_supabase", data.supabase);
