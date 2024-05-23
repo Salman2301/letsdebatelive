@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { CTX_KEY_LIVE_DEBATE } from './../constant.ts';
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';
 	import type { Tables } from '$lib/schema/database.types';
 
 	const supabase = getSupabase(getContext);
-	let live_debate: Tables<"live_debate"> = getContext('ctx_table$liveDebate');
+	let live_debate: Tables<"live_debate"> = getContext(CTX_KEY_LIVE_DEBATE);
   
   let timeout = $state("5min");
   function handleLayoutShift() {

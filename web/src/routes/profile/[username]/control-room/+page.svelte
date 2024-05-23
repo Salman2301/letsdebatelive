@@ -1,18 +1,14 @@
 <script lang="ts">
-	import VideoFeed from '../../../../lib/components/video-feed/VideoFeed.svelte';
+	import { CTX_KEY_LIVE_DEBATE } from './constant.ts';
+	import VideoFeed from '$lib/components/video-feed/VideoFeed.svelte';
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
 	import { getSupabase } from '$lib/supabase';
 
-  const supabase = getSupabase(getContext)
-
-  interface Props {
-    live_debate: string;
-  }
-
-  let { live_debate }: Props = $props();
+  const supabase = getSupabase(getContext);
+  const live_debate = getContext(CTX_KEY_LIVE_DEBATE);
 
   onMount(async ()=>{
     emitSceneChange(supabase, live_debate, {

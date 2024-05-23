@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_MAP_TEAM_COLOR, CTX_KEY_LIVE_PARTICIPANT } from './../../../../constant.ts';
 	import SettingIcon from '$lib/components/icon/SettingIcon.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Button from '$lib/components/button/Button.svelte';
@@ -37,12 +38,12 @@
 	let { type, showSetting=$bindable(false), title }: Props = $props();
 
 	let participants: Writable<Tables<'live_debate_participants'>[]> = getContext(
-		'ctx_table$participants'
+		CTX_KEY_LIVE_PARTICIPANT
 	);
-	let liveDebate: Writable<Tables<'live_debate'>> = getContext('ctx_table$liveDebate');
-	let teamMapColor: Readable<Record<string, string>> = getContext('ctx$teamMapColor');
+	let liveDebate: Writable<Tables<'live_debate'>> = getContext(CTX_KEY_LIVE_DEBATE);
+	let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
 
-	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived($participants.filter(participant => participant.location === type));
+	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived($participants?.filter(participant => participant.location === type) || []);
 
 	let viewMode: "list" | "grid" = $state("list");
 	let showBulkDropdown = $state(false);

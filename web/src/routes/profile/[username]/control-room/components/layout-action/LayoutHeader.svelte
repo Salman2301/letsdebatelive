@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { type Tables } from '$lib/schema/database.types';
 	import TakeABreak from '../TakeABreak.svelte';
 	import LayoutProfileMain from './layout-setting-icon/LayoutProfileMain.svelte';
 	import LayoutScreenProfile from './layout-setting-icon/LayoutScreenProfile.svelte';
@@ -8,22 +9,24 @@
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
 
-	import { lastScreenPayloadContent } from '../../../../../../lib/components/video-feed/scenes/store/scene';
+	import { lastScreenPayloadContent } from '$lib/components/video-feed/scenes/store/scene';
 	import { getSupabase } from '$lib/supabase';
+	import { CTX_KEY_LIVE_DEBATE } from "../../constant";
 	
-	import type { LayerIdContent, SceneType } from '../../../../../../lib/components/video-feed/video-feed.types';
+	import type { LayerIdContent } from '$lib/components/video-feed/video-feed.types';
+	import type { Writable } from 'svelte/store';
 
 	let layerIdContent: LayerIdContent;
-	let hostId: string = getContext('HOST_ID');
+	let liveDebate: Writable<Tables<"live_debate">> = getContext(CTX_KEY_LIVE_DEBATE);
 	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
 	// made sense to use LayoutHeader for short
 
 	function handleStopBroadcast() {
-		emitBroadcastEvent(supabase, 'broadcast_end', hostId, { hostId });
+		emitBroadcastEvent(supabase, 'broadcast_end', $liveDebate?.id, { liveDebateId: $liveDebate.id });
 
-		emitSceneChange(supabase, hostId, {
+		emitSceneChange(supabase, $liveDebate?.id, {
 			sceneType: 'scene_end',
 			layerId: 'layer_text',
 			metadata: {
@@ -44,7 +47,7 @@
 			layerIdContent = newLayerIdContent;
 		}
 
-		emitSceneChange(supabase, hostId, {
+		emitSceneChange(supabase, $liveDebate?.id, {
 			sceneType: 'scene_content',
 			layerId: layerIdContent
 		});

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from './constant.ts';
 	import Sidebar from './components/Sidebar.svelte';
 	import { getContext, onDestroy, setContext } from 'svelte';
 	import { onMount } from 'svelte';
@@ -31,14 +32,14 @@
 		}, {});
 	});
 
-	setContext('ctx_table$liveDebate', liveDebate);
+	setContext(CTX_KEY_LIVE_DEBATE, liveDebate);
 
-	setContext('ctx_table$participants', participants);
-	setContext('ctx_table$participantsOnStage', participantsOnStage);
-	setContext('ctx_table$participantsBackStage', participantsBackStage);
+	setContext(CTX_KEY_LIVE_PARTICIPANT, participants);
+	setContext(CTX_KEY_LIVE_PARTICIPANT_STAGE, participantsOnStage);
+	setContext(CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, participantsBackStage);
 
-	setContext('ctx_table$team', teams);
-	setContext('ctx$teamMapColor', teamMapColor);
+	setContext(CTX_KEY_LIVE_TEAM, teams);
+	setContext(CTX_KEY_MAP_TEAM_COLOR, teamMapColor);
 
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 

@@ -1,5 +1,6 @@
-<script context="module">
-	import { writable, type Writable } from "svelte/store";
+<script context="module" lang="ts">
+	import { writable } from "svelte/store";
+	import type { Writable } from "svelte/store";
 	import {
 		ICON_BACKSTAGE_SETTINGS,
 		ICON_BROADCAST,

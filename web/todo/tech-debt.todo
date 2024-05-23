@@ -2,7 +2,7 @@ Code:
   ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
   ☐ Convert all the svg icons and move to `$lib/component/icon`
   ☐ Remove empty files
-
+  ☐ Remove too many relative parent folder in import statement `../../../../../Component`
 Design:
   ☐ Update pixel perfect setup and design it in figma
   ☐ Update the figma design with proper white space and universal font-size

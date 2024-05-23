@@ -4,6 +4,7 @@
 	import BreakScene from './scenes/BreakScene.svelte';
 	import ContentScene from './scenes/ContentScene.svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
+	
 	import { getSupabase } from '$lib/supabase';
 	import { getContext, onMount } from 'svelte';
 	import { lastScreenPayloadContent } from './scenes/store/scene';
@@ -11,11 +12,11 @@
 	import type { ScenePayload, SceneType } from './video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';
 	// let sceneType: SceneType;
-	let payloadData: ScenePayload = {
+	let payloadData: ScenePayload = $state({
 		sceneType: 'scene_loading',
 		layerId: 'layer_text',
 		metadata: { text: 'loading' }
-	};
+	});
 
 	interface Props {
 		live_debate_id: string;
@@ -25,7 +26,7 @@
 
 
 	const supabase = getSupabase(getContext);
-	let participantsList: Tables<"live_debate_participants">[] = [];
+	let participantsList: Tables<"live_debate_participants">[] = $state([]);
 
 	onMount(async () => {
 		supabase
@@ -34,6 +35,7 @@
 			.subscribe();
 
 		const { data, error } = await supabase.from("live_debate_participants").select();
+		console.log({ data, error })
 		participantsList = data as Tables<"live_debate_participants">[];
 	});
 

@@ -14,30 +14,6 @@
 
 		$authUserData = data.userData;
 
-		data.supabase.auth.onAuthStateChange(async (event, session) => {
-			console.log("state_change", { event, session });
-			if (session) {
-				// setAuthStore( session );
-				const userId = session.user.id;
-				$authUserData = (await data.supabase.from("user_data").select("*").eq("id", userId).single()).data;
-			}
-			else {
-				$authUserData = null;
-				localStorage.clear();
-				// supabase.auth.signOut();
-			}
-		});
-		// console.log({ $userAuthData})
-		// data.supabase.auth.getUser().then(async ({ data: d})=>{
-		// 	if(d && d.user ) {
-		// 		const { data:userData, error }= await data.supabase.from("user_data").select();
-		// 		// $authUserData = userData?.[0];
-		// 		console.log({ userData, error })
-		// 	} else {
-		// 		$authUserData = null;
-		// 	}
-
-		// })
 		handleScreenResize();
 	});
 
