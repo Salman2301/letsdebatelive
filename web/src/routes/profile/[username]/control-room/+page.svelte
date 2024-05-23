@@ -1,5 +1,5 @@
 <script lang="ts">
-	import VideoFeed from './components/videoFeed/VideoFeed.svelte';
+	import VideoFeed from '../../../../lib/components/video-feed/VideoFeed.svelte';
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 	import { getContext, onMount } from 'svelte';
@@ -7,10 +7,15 @@
 	import { getSupabase } from '$lib/supabase';
 
   const supabase = getSupabase(getContext)
-  let hostId: string = getContext("HOST_ID") || "123";
+
+  interface Props {
+    live_debate: string;
+  }
+
+  let { live_debate }: Props = $props();
+
   onMount(async ()=>{
-    
-    emitSceneChange(supabase, hostId, {
+    emitSceneChange(supabase, live_debate, {
       sceneType: "scene_content",
       layerId: "profile_multiple"
     });
@@ -21,7 +26,7 @@
 
   async function handleLive() {
     // Create a live_debate
-    emitBroadcastEvent(supabase, "broadcast_start", hostId);
+    emitBroadcastEvent(supabase, "broadcast_start", live_debate);
   }
 </script>
 

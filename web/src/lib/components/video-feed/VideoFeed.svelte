@@ -17,21 +17,24 @@
 		metadata: { text: 'loading' }
 	};
 
+	interface Props {
+		live_debate_id: string;
+	}
+
+	let { live_debate_id }: Props = $props();
+
+
 	const supabase = getSupabase(getContext);
-	let hostId = getContext('HOST_ID');
 	let participantsList: Tables<"live_debate_participants">[] = [];
 
 	onMount(async () => {
 		supabase
-			.channel(`scene_${hostId}`)
+			.channel(`scene_${live_debate_id}`)
 			.on('broadcast', { event: 'scene_change' }, onSceneChange)
 			.subscribe();
 
-		// Get participants list
 		const { data, error } = await supabase.from("live_debate_participants").select();
 		participantsList = data as Tables<"live_debate_participants">[];
-		// participantsList.length = 2
-		// console.log({ error, participantsList });
 	});
 
 	function onSceneChange({ payload }: { payload: ScenePayload }) {

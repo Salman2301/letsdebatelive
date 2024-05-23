@@ -8,10 +8,10 @@
 	import { getContext, onMount } from 'svelte';
 	import { emitBroadcastEvent, emitSceneChange } from '../../channel';
 
-	import { lastScreenPayloadContent } from '../videoFeed/scenes/store/scene';
+	import { lastScreenPayloadContent } from '../../../../../../lib/components/video-feed/scenes/store/scene';
 	import { getSupabase } from '$lib/supabase';
 	
-	import type { LayerIdContent, SceneType } from '../videoFeed/video-feed.types';
+	import type { LayerIdContent, SceneType } from '../../../../../../lib/components/video-feed/video-feed.types';
 
 	let layerIdContent: LayerIdContent;
 	let hostId: string = getContext('HOST_ID');

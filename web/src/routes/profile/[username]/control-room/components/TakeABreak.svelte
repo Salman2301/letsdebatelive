@@ -2,18 +2,18 @@
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';
+	import type { Tables } from '$lib/schema/database.types';
 
-	let hostId: string = getContext("HOST_ID");
 	const supabase = getSupabase(getContext);
+	let live_debate: Tables<"live_debate"> = getContext('ctx_table$liveDebate');
   
   let timeout = $state("5min");
   function handleLayoutShift() {
-
     const breakEnd = new Date();
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
     breakEnd.setSeconds(breakEnd.getSeconds() +1);
 
-		emitSceneChange(supabase, hostId, {
+		emitSceneChange(supabase, live_debate.id, {
 			sceneType: 'scene_break',
 			layerId: 'layer_break',
 			metadata: {

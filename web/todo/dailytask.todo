@@ -1,16 +1,16 @@
 TODO:
 
-  https://letsdebate.live/{username}
-  https://letsdebate.live/profile/{username}
-  ☐ Layout Changes and Share webCam and Screenshare
-  ☐ List of screen page 
+  ☐ move host_id to live_debate_scene
+    ☐ Remove all the host_id
   ✔ Create a +layout store for the current user @done(24-05-23 16:15)
-  ☐ Check for user sign in and continue to the layout
+  ✔ Check for user sign in and continue to the layout @done(24-05-23 18:11)
   ☐ Show join backstage
   ☐ User able to join or leave backstage
   ☐ Create a Modal that show setup device settings and everything
   ☐ Once user join show backstage chat
   ☐ User can send chat
+  ☐ Layout Changes and Share webCam and Screenshare
+  ☐ List of screen page 
   ☐ Create a auto chat to send chat every 10 secs to test the live chat
     ☐ Memory leak handle max chat to 50
   ☐ Connect the host title
