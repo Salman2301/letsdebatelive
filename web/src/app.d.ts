@@ -18,9 +18,11 @@ declare global {
 			safeGetSession: () => Promise<{
 				session: Session;
 				user: User | null;
+				userData: Tables<"user_data"> | null;
 			} | {
 				session: null;
 				user: null;
+				userData: null;
 			}>
 		}
 	}

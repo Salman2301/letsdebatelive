@@ -10,3 +10,9 @@
 
 ✔ List all channel with type @done(24-05-19 07:18)
 ✔ Re-write the pubsub channel based on the current channel type @done(24-05-19 08:24)
+
+  
+✔ Check for auth for all the layouts @done(24-05-23 14:53)
+✔ control room can only access by the username owner @done(24-05-23 13:47)
+✔ Get the user only from hook @done(24-05-23 14:53)
+✔ Remove unwanted auth code and get all from hook @done(24-05-23 14:53)

@@ -1,6 +1,6 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 import { createServerClient } from '@supabase/ssr'
-import type { Handle } from '@sveltejs/kit'
+import { redirect, type Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
@@ -31,7 +31,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       data: { session },
     } = await event.locals.supabase.auth.getSession()
     if (!session) {
-      return { session: null, user: null }
+      return { session: null, user: null, userData: null }
     }
 
     const {
@@ -39,13 +39,29 @@ export const handle: Handle = async ({ event, resolve }) => {
       error,
     } = await event.locals.supabase.auth.getUser();
 
+    if (!user) {
+      await event.locals.supabase.auth.signOut();
+      return { session: null, user: null, userData: null };
+    }
+
     const { data: userData, error: userDataError } = await event.locals.supabase.from("user_data").select().eq("id", user?.id as string).single();
     if (error || userDataError) {
       // JWT validation has failed
-      return { session: null, user: null }
+      return { session: null, user: null, userData: null }
     }
 
     return { session, user, userData }
+  }
+
+
+  const { session, user, userData } = await event.locals.safeGetSession();
+
+  if (event.url.pathname.startsWith("/profile") &&  !event.url.pathname.startsWith("/profile/logout")) {
+    if (!session || !session.user || !user || !userData ) throw redirect(303, "/");
+
+    if (event.params.username !== userData.username) {
+      throw redirect(303, "/");
+    } 
   }
 
   return resolve(event, {

@@ -34,10 +34,10 @@
 				throw new Error("Failed to get the live debate");
 			}
 
-			$liveDebate.initiated = true;
-			$liveDebate.initiatedTime = new Date().toISOString();
+			$liveDebate.published = true;
+			$liveDebate.publishedTz = new Date().toISOString();
 
-			goto(`/username/${$page.params.username}/control-room`);
+			goto(`/profile/${$page.params.username}/control-room`);
 
 		}
 		currentState += 1;

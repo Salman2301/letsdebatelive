@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
-	import { getUserId } from "$lib/components/auth";
 	import type { Tables } from "$lib/schema/database.types";
 	import TeamCard from "../components/TeamCard.svelte";
 
@@ -16,7 +15,7 @@
       {
         color: "#ccc",
         title: "Neutral",
-        user_id: await getUserId() as string
+        user_id: "123"
       }
     ]
   }

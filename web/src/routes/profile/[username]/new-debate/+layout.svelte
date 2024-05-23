@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { getSupabase } from '$lib/supabase';
 	import { setContext } from "svelte";
 	import { writable, type Writable } from "svelte/store";
 	import { CTX_KEY_NEW_DEBATE, CTX_KEY_HOST_PARTICIPANT, type CTX_KEY_NEW_DEBATE_TYPE, type CTX_KEY_HOST_PARTICIPANT_TYPE, CTX_KEY_TITLE, type CTX_KEY_TITLE_TYPE } from "./new-debate.constant";
 	import { browser } from "$app/environment";
-	import supabase from "$lib/supabase";
-	import { onMount } from "svelte"
+	import { onMount, getContext } from "svelte"
 	import Loader from "$lib/components/icon/Loader.svelte";
 	 
 
@@ -13,6 +13,8 @@
   let newDebate: CTX_KEY_NEW_DEBATE_TYPE= writable({});
   let hostParticipant: CTX_KEY_HOST_PARTICIPANT_TYPE = writable({});
   let title: CTX_KEY_TITLE_TYPE = writable("New debate");
+
+	const supabase = getSupabase(getContext);
 	
 	setContext(CTX_KEY_NEW_DEBATE, newDebate);
 	setContext(CTX_KEY_HOST_PARTICIPANT, hostParticipant);

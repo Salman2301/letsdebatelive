@@ -6,18 +6,18 @@
 	import { getContext } from "svelte";
 	import { getSupabase } from "$lib/supabase";
 
-  let showPopup = false;
+  let showPopup = $state(false);
 
 	const supabase = getSupabase(getContext);
 
   async function handleCreateDebate() {
     if( !$authUserData ) return;
-  goto(`/profile/${$authUserData.username}/new-debate`);    
+    goto(`/profile/${$authUserData.username}/new-debate`);    
   }
 </script>
 
 <div class="icon-container" use:clickOutside={()=>(showPopup = false)}>
-	<button on:click={() => (showPopup = !showPopup)}>
+	<button onclick={() => (showPopup = !showPopup)}>
     <svg
     width="34"
     height="34"

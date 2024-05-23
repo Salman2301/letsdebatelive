@@ -239,7 +239,7 @@ f			</svg>
 	</div>
 	<div class="participant-card-container">
 		{#if viewMode === "grid"}
-			{#each filteredParticipants as participant}
+			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCard
 					participant={participant}
 					live_debate={$liveDebate}
@@ -247,7 +247,7 @@ f			</svg>
 				/>
 			{/each}
 		{:else}
-		{#each filteredParticipants as participant}
+		{#each filteredParticipants as participant (participant.participant_id)}
 			<ParticipantCardList
 				participant={participant}
 				live_debate={$liveDebate}

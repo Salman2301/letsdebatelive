@@ -23,6 +23,8 @@ export type Database = {
           debater_card_show: boolean | null
           host: string | null
           id: string
+          published: boolean | null
+          publishedTz: string | null
           studio_mode: boolean | null
           title: string | null
           viewer_type: string | null
@@ -40,6 +42,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          published?: boolean | null
+          publishedTz?: string | null
           studio_mode?: boolean | null
           title?: string | null
           viewer_type?: string | null
@@ -57,6 +61,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          published?: boolean | null
+          publishedTz?: string | null
           studio_mode?: boolean | null
           title?: string | null
           viewer_type?: string | null
@@ -291,6 +297,7 @@ export type Database = {
           current_stage: string | null
           display_name: string
           hand_raised: boolean | null
+          hand_raised_at: string | null
           host_id: string | null
           is_host: boolean
           is_kicked: boolean | null
@@ -316,6 +323,7 @@ export type Database = {
           current_stage?: string | null
           display_name: string
           hand_raised?: boolean | null
+          hand_raised_at?: string | null
           host_id?: string | null
           is_host: boolean
           is_kicked?: boolean | null
@@ -341,6 +349,7 @@ export type Database = {
           current_stage?: string | null
           display_name?: string
           hand_raised?: boolean | null
+          hand_raised_at?: string | null
           host_id?: string | null
           is_host?: boolean
           is_kicked?: boolean | null
@@ -678,7 +687,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      turn_on_realtime: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       notification_service:

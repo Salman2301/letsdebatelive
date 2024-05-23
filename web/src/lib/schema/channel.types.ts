@@ -1,5 +1,4 @@
 // Supabase Channel and types
-import supabase from "$lib/supabase";
 
 /**
  * DOCS
@@ -40,11 +39,10 @@ interface InfoAndPayload {
   description: string;
   trigger: string;
   role: { write: string[], read:string[]}; // Role are min. roles that required see role-hierarchy
-  payload: {
-    
-  }
+  payload: object
 }
-const channelPayload: Record<typeof channelList[number], InfoAndPayload> = {
+
+export const channelPayload: Record<typeof channelList[number], InfoAndPayload> = {
   "host:video_activity:$sec_channel_id": {
     description: "Host and the Video feed setting used between control and record room, Consumed by ghost user",
     trigger: "host",

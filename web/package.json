@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"db:schema": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts",
+		"db:types": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts",
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
 		"db:migration:new": "node --env-file=.env ./script/new-migration",

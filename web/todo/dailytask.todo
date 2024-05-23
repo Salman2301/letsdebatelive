@@ -1,12 +1,7 @@
 TODO:
-  
-  ☐ Check for auth for all the layouts
-  ☐ Get the user only from hook
-  ☐ Remove unwanted auth code and get all from hook
 
   https://letsdebate.live/{username}
   https://letsdebate.live/profile/{username}
-  
   ☐ Layout Changes and Share webCam and Screenshare
   ☐ List of screen page 
   ☐ Create a +layout store for the current user
