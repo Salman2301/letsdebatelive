@@ -5,8 +5,14 @@
 	import { screenWindowSizePx } from '$lib/stores/screen-size.store';
 	import { onMount, setContext } from "svelte";
 	import { authUserData } from '$lib/components/auth/auth.store';
+	import type { PageData } from './$types';
 
-	export let data;
+	interface Props {
+		data: PageData
+	}
+
+	const { data } : Props = $props();
+
 	setContext("lib_supabase", data.supabase);
 
 	onMount(async ()=>{

@@ -18,8 +18,43 @@
 ✔ Make the video thing work @done(24-05-24 08:44)
 ✔ Update the display text @done(24-05-24 08:44)
 
+Clean up:
+  ✔ Check and remove all the `export let data` and use `$props()` @done(24-05-24 18:33)
+
+
+✔ Fix the selection of different layout @done(24-05-19 17:16)
+✔ Write a layout store connect to supabase channel to the svelte store for the layout @done(24-05-22 15:25)
+Connect
+
+✔ add ended @done(24-05-22 15:24)
+  - mute
+  - cam
+  - screen
+  - profile
+  - hands
+  - display name get the first letter and caps it as a default profile
+  - team color
+  - Add to stage
+  - Move to backstage
+- and connect the bulk action
+- to the backstager card
+
+
+✔ Basi flow @done(24-05-24 18:29)
+This section is focus on basic flow for participant join / leave stage and backstage. Basic setu
+✔ Show join backstage from the live page @done(24-05-24 18:28)
+  ✔ Basic UI @done(24-05-24 18:28)
+  ✔ Connect the button to the backend form action @done(24-05-24 18:28)
+  ✔ On Action success show other panel @done(24-05-24 18:28)
+  ✔ Check if the current user is login @done(24-05-24 18:28)
+  ✔ This should also check if the current user have ability to join backstage @done(24-05-24 18:28)
+  ✔ Show a backstage panel banner @done(24-05-24 18:28)
+    ✔ Once join add the user to the participant_list for backstage @done(24-05-24 18:28)
+ ✔ User able to join or leave backstage @done(24-05-24 18:29)
+
 Cleanup:
   ✔ Remove profile check @done(24-05-24 16:36)
+
 
   
 ✔ Check for auth for all the layouts @done(24-05-23 14:53)

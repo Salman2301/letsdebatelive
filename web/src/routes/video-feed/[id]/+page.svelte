@@ -1,7 +1,15 @@
 <script lang="ts">
 	import VideoFeed from "$lib/components/video-feed/VideoFeed.svelte";
+	import type { Tables } from "$lib/schema/database.types.js";
 	
-	export let data;
+
+	interface Props {
+		data: {
+			live_debate_id: string;
+		}
+	}
+
+	let { data }: Props = $props();
 
 </script>
 

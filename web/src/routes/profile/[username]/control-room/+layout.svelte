@@ -11,7 +11,11 @@
 	import type { SubscriptionCB } from '$lib/schema/subscription.types';
 
 	const supabase = getSupabase(getContext);
-	export let data: PageData;
+
+	interface Props {
+		data: PageData
+	}
+	let { data }: Props = $props();
 
 	const liveDebate: Writable<Tables<'live_debate'> | null> = writable(data.live_debate);
 
