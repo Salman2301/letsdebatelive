@@ -11,6 +11,13 @@
 ✔ List all channel with type @done(24-05-19 07:18)
 ✔ Re-write the pubsub channel based on the current channel type @done(24-05-19 08:24)
 
+✔ move host_id to live_debate_scene @done(24-05-24 06:24)
+✔ Remove all the host_id @done(24-05-24 06:24)
+✔ Create a +layout store for the current user @done(24-05-23 16:15)
+✔ Check for user sign in and continue to the layout @done(24-05-23 18:11)
+✔ Make the video thing work @done(24-05-24 08:44)
+✔ Update the display text @done(24-05-24 08:44)
+
   
 ✔ Check for auth for all the layouts @done(24-05-23 14:53)
 ✔ control room can only access by the username owner @done(24-05-23 13:47)

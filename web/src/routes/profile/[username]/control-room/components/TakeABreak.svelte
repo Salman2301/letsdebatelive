@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE } from './../constant.ts';
+	import { CTX_KEY_LIVE_DEBATE } from './../constant';
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';

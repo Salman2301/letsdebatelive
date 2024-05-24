@@ -1,17 +1,21 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE } from './constant';
 	import VideoFeed from '$lib/components/video-feed/VideoFeed.svelte';
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
+
+	import { CTX_KEY_LIVE_DEBATE } from './constant';
 	import { getContext, onMount } from 'svelte';
-	import { emitBroadcastEvent, emitSceneChange } from './channel';
 	import { getSupabase } from '$lib/supabase';
+	import { emitBroadcastEvent, emitSceneChange } from './channel';
+
+	import type { Tables } from '$lib/schema/database.types';
+	import type { Writable } from 'svelte/store';
 
   const supabase = getSupabase(getContext);
-  const live_debate = getContext(CTX_KEY_LIVE_DEBATE);
+  const live_debate: Writable<Tables<"live_debate">> = getContext(CTX_KEY_LIVE_DEBATE);
 
   onMount(async ()=>{
-    emitSceneChange(supabase, live_debate, {
+    emitSceneChange(supabase, $live_debate?.id, {
       sceneType: "scene_content",
       layerId: "profile_multiple"
     });
@@ -22,12 +26,12 @@
 
   async function handleLive() {
     // Create a live_debate
-    emitBroadcastEvent(supabase, "broadcast_start", live_debate);
+    emitBroadcastEvent(supabase, "broadcast_start", $live_debate?.id);
   }
 </script>
 
 <div class="control-room-container hidden">
-  <VideoFeed />
+  <VideoFeed live_debate_id={$live_debate?.id}/>
   <LayoutHeader />
   <div class="small-panel-container">
     <div class="small-panel small-panel-1">

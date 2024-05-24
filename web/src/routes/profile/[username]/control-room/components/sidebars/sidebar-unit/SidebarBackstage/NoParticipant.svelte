@@ -26,7 +26,13 @@
     </p>
   {/if}
 {:else}
-  <p>No user(s) Error: 500</p>
+  {#if type === "backstage"}
+    <p>No user(s) in backstage</p>
+  {:else}
+    <p>
+      <button onclick={()=>$currentSidebar="backstageSetting"}>Add user from backstage.</button>
+    </p>
+  {/if}
 {/if}
 
 <style lang="postcss">

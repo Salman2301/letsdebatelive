@@ -16,6 +16,7 @@
 	// let participantsList: Tables<'live_debate_participants'>[] = [ ];
 
 	function filterParticipants(layoutId: LayerIdContent): Tables<'live_debate_participants'>[] {
+		console.log({ participantsList });
 		return participantsList;
 	}
 
@@ -33,12 +34,12 @@
 	<div class="layer">
 		<!-- {payload.layerId} -->
 		{#if payload.layerId === 'profile_multiple'}
-			{#each filterParticipants(payload.layerId) as participant}
+			{#each filterParticipants(payload.layerId) as participant (participant.participant_id)}
 				<ProfileVideoCard {participant} />
 			{/each}
 		{:else if payload.layerId === 'profile_main'}
 			<div class="layer">
-				{#each filterParticipants(payload.layerId) as participant}
+				{#each filterParticipants(payload.layerId) as participant (participant.participant_id)}
 					<ProfileVideoCard {participant} />
 				{/each}
 			</div>
@@ -50,7 +51,7 @@
 		{:else if payload.layerId === 'screen_profile'}
 			<div class="m-4 flex items-center justify-between">
 				<div class="flex flex-col h-full">
-					{#each filterParticipants(payload.layerId) as participant}
+					{#each filterParticipants(payload.layerId) as participant (participant.participant_id)}
 						<ProfileVideoCard {participant} />
 					{/each}
 				</div>

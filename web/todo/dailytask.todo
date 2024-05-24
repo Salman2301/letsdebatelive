@@ -1,10 +1,5 @@
 TODO:
-
-  ☐ move host_id to live_debate_scene
-    ☐ Remove all the host_id
-  ✔ Create a +layout store for the current user @done(24-05-23 16:15)
-  ✔ Check for user sign in and continue to the layout @done(24-05-23 18:11)
-  ☐ Show join backstage
+  ☐ Show join backstage on the live page
   ☐ User able to join or leave backstage
   ☐ Create a Modal that show setup device settings and everything
   ☐ Once user join show backstage chat

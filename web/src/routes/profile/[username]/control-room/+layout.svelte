@@ -1,21 +1,23 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from './constant.ts';
+	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from './constant';
 	import Sidebar from './components/Sidebar.svelte';
 	import { getContext, onDestroy, setContext } from 'svelte';
 	import { onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { derived, writable, type Readable, type Writable } from 'svelte/store';
+	import type { PageData } from "./$types";
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { SubscriptionCB } from '$lib/schema/subscription.types';
 
 	const supabase = getSupabase(getContext);
+	export let data: PageData;
 
-	const liveDebate: Writable<Tables<'live_debate'> | null> = writable();
+	const liveDebate: Writable<Tables<'live_debate'> | null> = writable(data.live_debate);
 
-	const teams: Writable<Tables<'live_debate_team'>[]> = writable([]);
+	const teams: Writable<Tables<'live_debate_team'>[]> = writable(data.teamData);
 
-	const participants: Writable<Tables<'live_debate_participants'>[]> = writable([]);
+	const participants: Writable<Tables<'live_debate_participants'>[]> = writable(data.participantsData);
 	const participantsOnStage: Readable<Tables<'live_debate_participants'>[]> = derived(
 		participants,
 		($participants) => $participants.filter((e) => e.location === 'stage')

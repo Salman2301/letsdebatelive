@@ -12,37 +12,37 @@
 </script>
 
 <div class="card">
-	{#if !profileImage}
-		<svg
-			width="140"
-			height="140"
-			viewBox="0 0 140 140"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				fill-rule="evenodd"
-				clip-rule="evenodd"
-				d="M0 70C0 51.4348 7.37498 33.6301 20.5025 20.5025C33.6301 7.37498 51.4348 0 70 0C88.5652 0 106.37 7.37498 119.497 20.5025C132.625 33.6301 140 51.4348 140 70C140 88.5652 132.625 106.37 119.497 119.497C106.37 132.625 88.5652 140 70 140C51.4348 140 33.6301 132.625 20.5025 119.497C7.37498 106.37 0 88.5652 0 70ZM97.16 94.346C101.878 96.992 106.148 100.296 109.872 104.146C104.949 109.907 98.8346 114.531 91.9509 117.7C85.0672 120.869 77.578 122.507 70 122.5C54.04 122.5 39.76 115.388 30.128 104.16C38.6492 95.347 49.8492 89.6043 61.9788 87.8289C74.1083 86.0534 86.4704 88.3451 97.16 94.346ZM70 73.234C72.7578 73.234 75.4885 72.6908 78.0364 71.6355C80.5842 70.5801 82.8992 69.0333 84.8492 67.0832C86.7993 65.1332 88.3461 62.8182 89.4015 60.2704C90.4568 57.7225 91 54.9918 91 52.234C91 49.4762 90.4568 46.7455 89.4015 44.1977C88.3461 41.6498 86.7993 39.3348 84.8492 37.3848C82.8992 35.4347 80.5842 33.8879 78.0364 32.8325C75.4885 31.7772 72.7578 31.234 70 31.234C64.4305 31.234 59.089 33.4465 55.1508 37.3848C51.2125 41.323 49 46.6645 49 52.234C49 57.8035 51.2125 63.145 55.1508 67.0832C59.089 71.0215 64.4305 73.234 70 73.234Z"
-				fill="#CCCCCC"
-			/>
-		</svg>
-	{/if}
-
+	<div class="image-container">
+		<div class="circle-icon">
+			{participant.display_name?.[0].toUpperCase() || 'A'}
+		</div>
+	</div>
   <div class="profile-name">
-    USERNAME
+    { participant?.display_name }
   </div>
 </div>
 
 <style lang="postcss">
 	.card {
-		aspect-ratio: 4 / 3;
 		border: 1px solid white;
 		@apply flex flex-col items-center justify-center;
 		@apply m-1 p-1;
 	}
-	svg {
-		width: 140px;
-		height: 140px;
+	.image-container {
+		aspect-ratio: 4 / 3;
+		width: 200px;
+		@apply flex items-center justify-center;
+
+	}
+	.circle-icon {
+		width: 60px;
+		height: 60px;
+		@apply my-2;
+		@apply rounded-full;
+		@apply flex items-center justify-center;
+		@apply text-center;
+		font-size: 32px;
+		background-color: white;
+		@apply text-secondary-dark;
 	}
 </style>
