@@ -1,11 +1,19 @@
 TODO:
-  ☐ Show join backstage on the live page
-  ☐ User able to join or leave backstage
-  ☐ Create a Modal that show setup device settings and everything
-  ☐ Once user join show backstage chat
-  ☐ User can send chat
+  ☐ Basic flow
+    This section is focus on basic flow for participant join / leave stage and backstage. Basic setu
+    ☐ Show join backstage from the live page
+    ☐ User able to join or leave backstage
+    ☐ Create a Modal that show setup device settings and everything
+    ☐ Once user join show backstage chat
+    ☐ User can send chat
+    ☐ Control room host can send the chat
+    ☐ Backstage user can send the chat
+
+  Sidebar:
+    ☐ Add screenshare for the sidebar
+    ☐ Add a overlay / background / scene setup
+
   ☐ Layout Changes and Share webCam and Screenshare
-  ☐ List of screen page 
   ☐ Create a auto chat to send chat every 10 secs to test the live chat
     ☐ Memory leak handle max chat to 50
   ☐ Connect the host title
@@ -43,5 +51,3 @@ TODO:
     ☐ On page reload, request for the screen and webcam share
     ☐ Abiltiy to toggle different user and screen from the panel
     ☐ Ability to disable from app.html showing screen for debug purpose
-
-      

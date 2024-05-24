@@ -4,9 +4,10 @@
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';
 	import type { Tables } from '$lib/schema/database.types';
+	import type { Writable } from 'svelte/store';
 
 	const supabase = getSupabase(getContext);
-	let live_debate: Tables<"live_debate"> = getContext(CTX_KEY_LIVE_DEBATE);
+	let live_debate: Writable<Tables<"live_debate">> = getContext(CTX_KEY_LIVE_DEBATE);
   
   let timeout = $state("5min");
   function handleLayoutShift() {
@@ -14,7 +15,7 @@
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
     breakEnd.setSeconds(breakEnd.getSeconds() +1);
 
-		emitSceneChange(supabase, live_debate.id, {
+		emitSceneChange(supabase, $live_debate.id, {
 			sceneType: 'scene_break',
 			layerId: 'layer_break',
 			metadata: {
