@@ -16,7 +16,6 @@
 	// let participantsList: Tables<'live_debate_participants'>[] = [ ];
 
 	function filterParticipants(layoutId: LayerIdContent): Tables<'live_debate_participants'>[] {
-		console.log({ participantsList });
 		return participantsList;
 	}
 

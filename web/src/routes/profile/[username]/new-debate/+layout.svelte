@@ -29,8 +29,6 @@
 
 	
 	onMount(async ()=>{
-		
-		console.log({ isLoading })
 		const stored$newDebateId = sessionStorage.getItem("store$newDebateId");
 
 		if(stored$newDebateId && typeof stored$newDebateId === "string") {

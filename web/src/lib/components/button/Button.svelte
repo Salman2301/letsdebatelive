@@ -3,7 +3,7 @@
 		label: string;
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
-		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark";
+		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark" | "solid-white";
 		onclick?: ()=>void;
 	}
 	let { label = 'Button', color = 'primary', fillType = 'solid', width, onclick=()=>{} }: Props = $props();
@@ -22,7 +22,8 @@
 
 <style lang="postcss">
 	button {
-		@apply bg-primary;
+		/* @apply bg-primary; */
+
 		@apply flex justify-between items-center;
 		height: 40px;
 		@apply px-2;
@@ -35,15 +36,16 @@
 		justify-content: center;
 	}
 
+
 	button {
-		&.fill-type-solid* {
+		&.fill-type-solid {
 			background-color: var(--theme-color);
 			&:hover {
 				background-color: var(--theme-color-dark);
 			}
 		}
 
-		&.fill-type-outline* {
+		&.fill-type-outline {
 			@apply bg-transparent;
 			@apply border;
 			border-color: var(--theme-color);
@@ -68,6 +70,14 @@
 
 			&:hover {
 				@apply bg-transparent;
+			}
+		}
+		
+		&.fill-type-solid-white {
+			background-color: var(--theme-color);
+			&:hover {
+				@apply bg-white;
+				color: var(--theme-color);
 			}
 		}
 		&.fill-type-outline-solid {

@@ -29,7 +29,6 @@ export class AudioDeviceManager {
     }
 
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    console.log(this.ctx);
     this.outputNode = this.ctx.createGain();
     this.outputNode.connect(this.ctx.destination);
 

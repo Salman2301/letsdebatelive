@@ -68,8 +68,6 @@
 		if (payload.sceneType === 'scene_content') {
 			lastScreenPayloadContent.set(payload);
 		}
-
-		console.log({ payload });
 	}
 </script>
 

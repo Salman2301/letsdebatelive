@@ -18,6 +18,9 @@
 ✔ Make the video thing work @done(24-05-24 08:44)
 ✔ Update the display text @done(24-05-24 08:44)
 
+Cleanup:
+  ✔ Remove profile check @done(24-05-24 16:36)
+
   
 ✔ Check for auth for all the layouts @done(24-05-23 14:53)
 ✔ control room can only access by the username owner @done(24-05-23 13:47)

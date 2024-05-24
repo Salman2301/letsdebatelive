@@ -27,7 +27,6 @@
      
       const padZero = (num: number)=> num <=9 ? `0${num}`: num;
       timerStr = padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds);
-      console.log("timer");
     }, 100);
 
   })

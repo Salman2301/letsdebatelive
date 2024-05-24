@@ -33,8 +33,6 @@
 				text: 'Broadcast has ended!'
 			}
 		});
-
-		console.log('stop broadcast');
 	}
 
 	onMount(()=>{

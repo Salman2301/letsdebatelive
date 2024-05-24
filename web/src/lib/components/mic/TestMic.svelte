@@ -30,8 +30,6 @@
     audioDeviceManager.setInputDevice(inputDevices[0].deviceId);
     audioDeviceManager.setOutputDevice(outputDevices[0].deviceId);
 
-    console.log({ inputDevices, outputDevices });
-
     function updateValue () {
       volume = audioDeviceManager?.getAnalyserLevel() || 0;
 
@@ -52,7 +50,6 @@
 
   function handleDeviceOutputChange() {
     audioDeviceManager.setOutputDevice(currentOutputDeviceId);
-    console.log("audio output set to : ", currentOutputDeviceId);
   }
   function handleDeviceInputChange() {
     audioDeviceManager.setInputDevice(currentInputDeviceId);
