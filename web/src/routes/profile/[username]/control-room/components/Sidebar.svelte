@@ -112,10 +112,9 @@
 	<div class="sidebar-small-icon">
     <!-- List of icons -->
 		{#each sidebarKeys as sidebarKey}
-			<div class="icon-item">
+			<div class="icon-item" class:active={$currentSidebar === sidebarKey}>
 				<button
 				class="icon-sidebar"
-				class:divider={hasDivider(sidebarKey)}
 				class:active={$currentSidebar===sidebarKey}
 				onclick={()=>($currentSidebar=sidebarKey)}
 			>
@@ -125,6 +124,9 @@
 				{sidebarSmall[sidebarKey].label}
 			</div>
 			</div>
+			{#if hasDivider(sidebarKey)}
+				<div class="divider"></div>
+			{/if}
 		{/each}
 	</div>
 	<div class="sidebar-content">
@@ -160,11 +162,27 @@
 		display: flex;
 	}
 
+	.icon-item {
+		@apply pt-1;
+		@apply flex items-center justify-center;
+		padding-bottom: 2px;
+	}
+	.icon-item.active {
+		@apply bg-white/20;
+	}
+
 	.icon-sidebar {
 		color: #A8A8A8;
 		display: flex;
 		justify-content: center;
 		height: 40px;
+		scale: 0.9;
+	}
+
+	.icon-sidebar:focus,
+	.icon-sidebar:active
+	 {
+		outline: none;
 	}
 
 	.active {
