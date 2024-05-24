@@ -1,5 +1,3 @@
-import type { Tables } from "$lib/schema/database.types.js";
-import type { User } from "@supabase/supabase-js";
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageData } from "./page.types";
 
@@ -50,6 +48,10 @@ export async function load({ locals, params }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
   join_backstage: async ({ locals, request, params }) => {
+
+    // TODO: CHECK IF THE USER IS BANNED FROM PLATFORM
+    // TODO: CHECK IF THE USER IS KICKED FROM THE LIVE DEBATE
+    //  TODO: CHECK IF THE USER IS BANNED FROM HOST
 
     const data = await request.formData();
 

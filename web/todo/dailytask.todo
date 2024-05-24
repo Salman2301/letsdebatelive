@@ -1,7 +1,49 @@
 TODO:
+  Backstage Feature:
+    ☐ Subscribe to backstage panel
+      ☐ Rest of the user leave, enter update the panel
+      ☐ Also check if the user kicked, if so update panel
+      ☐ Connect user device to tha database
+      ☐ Show the user image in the backstage panel
+      ☐ Show hands icon the backstage panel
+      ☐ Check if the the, backstage is full
+      ☐ Check if the backstage panel is open only for selected team
+      ☐ Check if the username is enable, speaker enable, screenshare enable, mic enable, 
+      ☐ Display the team
+      ☐ Update the backstage panel border with the team color
 
-    
-    ☐ Create a Modal that show setup device settings and everything
+
+      ☐ On mic input, show the sound wave on the icon @low 
+
+    ☐ On backstage complete 
+      ☐ Write the integration test
+      ☐ 
+
+  Live Page:
+    ☐ Connect title
+    ☐ Connect host nane
+    ☐ Setup image
+      ☐ Update the seed to upload the image in the storage?
+      ☐ Get the follower count
+        ☐ Setup database trigger and function to setup the follower count
+
+    Test:
+      Live:
+        ☐ Check if the channel is live
+        ☐ Check if the user can access the channel from the live site
+        ☐ Check if the channel unpublish it update the channel
+      Follower:
+        ☐ Add test for follow
+        ☐ Update the count
+        ☐ Leave
+        ☐ Check the count is updated
+
+  Modal:
+    ☐ Show the list of team
+    ☐ User device setup and test
+
+
+  ☐ Chat system
     ☐ Once user focus on backstage chat
     ☐ Create a basic chat system between control-room / user / backstage
     ☐ User can send chat
@@ -11,7 +53,12 @@ TODO:
   Sidebar:
     ☐ Add screenshare for the sidebar
     ☐ Add a overlay / background / scene setup
-    ☐ Runner banner
+
+    ☐ Media file uploader
+    ☐ Upload Background
+    ☐ Running banner
+      ☐ Footer
+      ☐ Header
     ☐ Automod
       ☐ Add auto chat every interval
     ☐ Poll
