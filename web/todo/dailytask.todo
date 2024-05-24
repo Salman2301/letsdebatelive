@@ -12,6 +12,11 @@ TODO:
   Sidebar:
     ☐ Add screenshare for the sidebar
     ☐ Add a overlay / background / scene setup
+    ☐ Runner banner
+    ☐ Automod
+      ☐ Add auto chat every interval
+    ☐ Poll
+    ☐ QA
 
   ☐ Layout Changes and Share webCam and Screenshare
   ☐ Create a auto chat to send chat every 10 secs to test the live chat

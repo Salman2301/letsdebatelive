@@ -14,6 +14,11 @@
     if( !$authUserData ) return;
     goto(`/profile/${$authUserData.username}/new-debate`);    
   }
+
+  function gotoClosePopup(link: string) {
+    showPopup = false;
+    goto(link);
+  }
 </script>
 
 <div class="icon-container" use:clickOutside={()=>(showPopup = false)}>
@@ -58,14 +63,14 @@
       </button>
       <button
         class="btn-popup"
-        onclick={()=>(goto(`/profile/${$authUserData?.username}/control-room`))}
+        onclick={()=>(gotoClosePopup(`/profile/${$authUserData?.username}/control-room`))}
         class:hidden={!$isLoggedIn}
       >
         Control room
       </button>
       <button
         class="btn-popup"
-        onclick={()=>(goto(`/u/${$authUserData?.username}`))}
+        onclick={()=>(gotoClosePopup(`/u/${$authUserData?.username}`))}
         class:hidden={!$isLoggedIn}
       >
         Live page
@@ -75,7 +80,7 @@
         onclick={()=>{
           supabase.auth.signOut();
           $authUserData = null;
-          goto(`/profile/logout?${Date.now()}`);
+          gotoClosePopup(`/profile/logout?${Date.now()}`);
         }}
         class:hidden={!$isLoggedIn}
       >
