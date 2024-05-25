@@ -289,7 +289,7 @@ f			</svg>
 
 	.bulkaction {
 		background-color: #3a0e63;
-		@apply p-2 px-4;
+		@apply p-2 pl-4 pr-6;
 		@apply my-2;
 		/* opacity: 0.6; */
 		margin-top: -52px;

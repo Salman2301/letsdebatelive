@@ -398,6 +398,42 @@ export type Database = {
           },
         ]
       }
+      live_debate_roles: {
+        Row: {
+          created_at: string
+          live_debate: string
+          role: Database["public"]["Enums"]["roles"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          live_debate: string
+          role: Database["public"]["Enums"]["roles"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          live_debate?: string
+          role?: Database["public"]["Enums"]["roles"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_debate_roles_live_debate_fkey"
+            columns: ["live_debate"]
+            isOneToOne: false
+            referencedRelation: "live_debate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_debate_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_data"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       live_debate_team: {
         Row: {
           color: string
@@ -437,17 +473,15 @@ export type Database = {
         Row: {
           banned_by: string
           created_at: string
-          live_debate: string | null
-          live_host_id: string
+          live_debate: string
           reason: string | null
           reason_title: string | null
           user_id: string
         }
         Insert: {
-          banned_by: string
+          banned_by?: string
           created_at?: string
-          live_debate?: string | null
-          live_host_id: string
+          live_debate: string
           reason?: string | null
           reason_title?: string | null
           user_id: string
@@ -455,8 +489,7 @@ export type Database = {
         Update: {
           banned_by?: string
           created_at?: string
-          live_debate?: string | null
-          live_host_id?: string
+          live_debate?: string
           reason?: string | null
           reason_title?: string | null
           user_id?: string
@@ -474,13 +507,6 @@ export type Database = {
             columns: ["live_debate"]
             isOneToOne: false
             referencedRelation: "live_debate"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "live_host_ban_live_host_id_fkey"
-            columns: ["live_host_id"]
-            isOneToOne: false
-            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
           {
@@ -540,6 +566,41 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_user_ban: {
+        Row: {
+          banned_until: string | null
+          created_at: string
+          description: string | null
+          id: string
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          banned_until?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          banned_until?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_user_ban_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_data"
             referencedColumns: ["id"]
           },
         ]
@@ -691,6 +752,22 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      user_atleast_co_host: {
+        Args: {
+          live_debate_id: string
+        }
+        Returns: boolean
+      }
+      user_atleast_mod: {
+        Args: {
+          live_debate_id: string
+        }
+        Returns: boolean
+      }
+      user_not_banned: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       notification_service:
@@ -702,6 +779,7 @@ export type Database = {
         | "question_answer"
         | "activity_feed"
       participant_location: "stage" | "backstage"
+      roles: "host" | "co-host" | "mods"
     }
     CompositeTypes: {
       [_ in never]: never

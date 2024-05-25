@@ -12,6 +12,8 @@ Test:
   ☐ Add full complete test using playwright
   ☐ Setup database seed
 
+Security:
+  ☐ 
 
 Optimization:
   ☐ Have a field `username` in the `live_debate` table. so, we don't need to keep looking for `*, host(*)` in the select statement
@@ -22,4 +24,6 @@ Optimization:
       
       const { data, error } = await supabase.from("live_debate").select(", host(*)").eq("host.username", username)
   ```
+
+  ☐ Add Index optimization for all the slow query
   

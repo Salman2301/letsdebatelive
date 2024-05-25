@@ -1,8 +1,11 @@
 TODO:
   Backstage Feature:
     ☐ Subscribe to backstage panel
+      ☐ Save the user device and action
       ✔ Rest of the user leave, enter update the panel @done(24-05-25 08:15)
-      ☐ Also check if the user kicked, if so update panel
+      ✔ Also check if the user kicked, before adding to participant @done(24-05-25 15:15)
+        ☐ Add after trigger for moderation logs ?
+        ☐ Add before trigger to check if the user ?
       ☐ Connect user device to tha database
       ☐ Show the user image in the backstage panel
       ☐ Show hands icon the backstage panel
