@@ -6,16 +6,18 @@
 
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { authUserData } from '$lib/components/auth/auth.store';
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
-	import type { PageServerData } from './$types';
-	import { type Readable } from 'svelte/store';
+	import type { ActionData, PageServerData } from './$types';
 
 	interface Props {
 		data: PageServerData;
+    form: ActionData;
 	}
-	let { data }: Props = $props();
+
+	let { data, form }: Props = $props();
 
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 	let userJoined = $state(data.isJoined);
@@ -73,6 +75,13 @@
 		if (!isJoined) backstageChannel.unsubscribe();
 	}
 
+  if(form && form.error_code && form.error_code === "MAX_PARTICIPANT") {
+    newToast({
+      type: "error",
+      message: form.message
+    });
+  }
+	
 	onDestroy(() => {
 		backstageChannel?.unsubscribe();
 	});

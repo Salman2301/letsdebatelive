@@ -23,6 +23,8 @@ export type Database = {
           debater_card_show: boolean | null
           host: string | null
           id: string
+          max_participants: number
+          max_stage: number
           published: boolean | null
           publishedTz: string | null
           studio_mode: boolean | null
@@ -42,6 +44,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          max_participants?: number
+          max_stage?: number
           published?: boolean | null
           publishedTz?: string | null
           studio_mode?: boolean | null
@@ -61,6 +65,8 @@ export type Database = {
           debater_card_show?: boolean | null
           host?: string | null
           id?: string
+          max_participants?: number
+          max_stage?: number
           published?: boolean | null
           publishedTz?: string | null
           studio_mode?: boolean | null

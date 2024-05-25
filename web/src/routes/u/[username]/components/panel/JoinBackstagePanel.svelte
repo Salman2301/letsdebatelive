@@ -1,18 +1,13 @@
 <script lang="ts">
 	import Button from "$lib/components/button/Button.svelte";
   import Heading3 from "$lib/components/form/Heading3.svelte";
-  import { enhance } from '$app/forms';
-
-  import { invalidateAll } from '$app/navigation';
-
-
 </script>
 
 <form
   method="POST"
   action="?/join_backstage"
   class="join-backstage-panel"
->
+  >
   <Heading3 content="Join the backstage panel and chat with the host and audience!"/>
   <div class="button-container">
     <Button

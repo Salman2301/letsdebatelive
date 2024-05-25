@@ -1,6 +1,5 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { fail, redirect, type ActionFailure } from "@sveltejs/kit";
 import type { PageData } from "./page.types";
-import { string } from "zod";
 
 export async function load({ locals, params }) {
 
@@ -60,13 +59,20 @@ export async function load({ locals, params }) {
 }
 
 
+type FormResponse = Promise<ActionFailure<{
+  message: string;
+  error_code?: string;
+}> | {
+  success: boolean;
+}>
+
 /** @type {import('./$types').Actions} */
 export const actions = {
-  join_backstage: async ({ locals, request, params }) => {
+  join_backstage: async ({ locals, request, params }): FormResponse => {
 
     // TODO: CHECK IF THE USER IS BANNED FROM PLATFORM
     // TODO: CHECK IF THE USER IS KICKED FROM THE LIVE DEBATE
-    //  TODO: CHECK IF THE USER IS BANNED FROM HOST
+    // TODO: CHECK IF THE USER IS BANNED FROM HOST
 
     const data = await request.formData();
 
@@ -85,10 +91,11 @@ export const actions = {
       
     const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username)
 
-    const liveDebateId = live_debates?.[0]?.id;
+    const live_debate = live_debates?.[0]
+    const liveDebateId = live_debate?.id;
 
-    if (error || live_debates.length === 0 || typeof liveDebateId !== "string" ) {
-      return fail(404, { messagae: "Failed to get the live_debate info from db"} );
+    if (error || !live_debate|| live_debates.length === 0 || typeof liveDebateId !== "string" ) {
+      return fail(404, { message: "Failed to get the live_debate info from db"} );
     }
 
     const toInsert = {
@@ -97,14 +104,21 @@ export const actions = {
       is_host: liveDebateId === live_debates[0].host,
       location: "backstage",
       display_name: userData?.username as string,
-      team: "5932f887-2683-4489-b659-2024f57fd80d", // must get from the formdata
+      team: "29712a40-20b2-4bcf-9e92-7b26e2d13a3a", // must get from the formdata
     } as const;
     const { data: insert, error: errorInsert } = await supabase.from("live_debate_participants")
       .insert(toInsert)
       .select("*");
     
     if (errorInsert) {
-      return fail(404, { message: "Bad request sent", errorInsert });
+      // Check if the partocipant is full and update the error
+      const { count, error } = await supabase.from("live_debate_participants").select('*', { count: 'exact' })
+        .eq("live_debate", liveDebateId);
+      
+      if (typeof count === "number" && count >= live_debate.max_participants) {
+        return fail(400, { message: "Max. Participants reached!", error_code: "MAX_PARTICIPANT" });
+      }
+      return fail(400, { message: "Bad request sent", errorInsert });
     }
 
     return { success: true }
@@ -131,7 +145,7 @@ export const actions = {
     const liveDebateId = live_debates?.[0]?.id;
 
     if (error || live_debates.length === 0 || typeof liveDebateId !== "string" ) {
-      return fail(404, { messagae: "Failed to get the live_debate info from db"} );
+      return fail(404, { message: "Failed to get the live_debate info from db"} );
     }
 
     const { data: removed, error: errorRemoved } = await supabase.from("live_debate_participants")
