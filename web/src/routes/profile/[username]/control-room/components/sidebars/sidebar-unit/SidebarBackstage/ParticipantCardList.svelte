@@ -17,17 +17,18 @@
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 
-
-	import type { Tables } from '$lib/schema/database.types';
 	import CheckMark from '$lib/components/icon/CheckMark.svelte';
+	import type { Tables } from '$lib/schema/database.types';
 
 	interface Props {
 		participant: Tables<'live_debate_participants'>;
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
+		isStageFull: boolean;
+		type: "stage" | "backstage";
 	}
 
-	let { participant, live_debate, teamMapColor }: Props = $props();
+	let { participant, live_debate, teamMapColor, isStageFull, type }: Props = $props();
 
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
@@ -175,7 +176,11 @@
 			<RaiseHand />
 		{/if}
 		<div class="btn-action">
-			<button class="btn-stage" onclick={() => toggleLocation()}>
+			<button
+				class="btn-stage"
+				onclick={() => toggleLocation()}
+				disabled={type==="backstage" && isStageFull}
+			>
 				{participant?.location === 'stage' ? 'Move to Backstage' : 'Add to Stage'}
 			</button>
 		</div>
@@ -282,6 +287,11 @@
 		@apply bg-primary-dark;
 	}
 
+	.btn-stage:disabled {
+		@apply bg-light-gray;
+		@apply cursor-not-allowed;
+	}
+	
 	.btn-action {
 		@apply w-full flex justify-end;
 	}

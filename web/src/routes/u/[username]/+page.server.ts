@@ -98,13 +98,22 @@ export const actions = {
       return fail(404, { message: "Failed to get the live_debate info from db"} );
     }
 
+    // temp fnc to get the team id, This should be sent from the current user
+    // or under live_debate_team
+    async function getAnyTeamId(liveDebateId: string): Promise<string> {
+      const { data, error } = await supabase.from("live_debate_team").select("id")
+        .eq("live_debate", liveDebateId);
+      
+      return data?.[0]?.id || "invalid";
+    }
+
     const toInsert = {
       live_debate: liveDebateId,
       participant_id: userData?.id,
       is_host: liveDebateId === live_debates[0].host,
       location: "backstage",
       display_name: userData?.username as string,
-      team: "29712a40-20b2-4bcf-9e92-7b26e2d13a3a", // must get from the formdata
+      team: await getAnyTeamId(liveDebateId), // must get from the formdata
     } as const;
     const { data: insert, error: errorInsert } = await supabase.from("live_debate_participants")
       .insert(toInsert)

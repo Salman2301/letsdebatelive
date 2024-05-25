@@ -46,12 +46,21 @@
 
 	let participants: Writable<Tables<'live_debate_participants'>[]> =
 		getContext(CTX_KEY_LIVE_PARTICIPANT);
+	
 	let liveDebate: Writable<Tables<'live_debate'>> = getContext(CTX_KEY_LIVE_DEBATE);
 	let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []
 	);
+	
+	let isStageFull: boolean = $state(false);
+
+	$effect(()=>{
+		const currentStageCount = $participants.filter(e=>e.location==="stage").length;
+
+		isStageFull = currentStageCount >= $liveDebate.max_stage
+	});
 
 	let viewMode: 'list' | 'grid' = $state('list');
 	let showBulkDropdown = $state(false);
@@ -186,16 +195,34 @@
 			<ListMode />
 		</button>
 	</div>
+	{#if type==="backstage" && isStageFull}
+		<button
+			onclick={()=>$currentSidebar = "participants"}
+			class="w-full text-center flex items-center justify-center"
+		>The stage is full! remove some user</button>
+	{/if}
 	<div class="participant-card-container">
 		{#if viewMode === 'grid'}
 			{#each filteredParticipants as participant (participant.participant_id)}
-				<ParticipantCard {participant} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
+				<ParticipantCard
+					{participant}
+					{isStageFull}
+					live_debate={$liveDebate}
+					teamMapColor={$teamMapColor}
+					type={type}
+				/>
 			{:else}
 				<NoParticipant {type} />
 			{/each}
 		{:else}
 			{#each filteredParticipants as participant (participant.participant_id)}
-				<ParticipantCardList {participant} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
+				<ParticipantCardList
+					{isStageFull}
+					{participant}
+					live_debate={$liveDebate}
+					teamMapColor={$teamMapColor}
+					type={type}
+				/>
 			{:else}
 				<NoParticipant {type} />
 			{/each}

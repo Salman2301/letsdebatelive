@@ -24,9 +24,11 @@
 		participant: Tables<'live_debate_participants'>;
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
+		isStageFull: boolean;
+		type: "backstage" | "stage";
 	}
 
-	let { participant, live_debate, teamMapColor }: Props = $props();
+	let { participant, live_debate, teamMapColor, isStageFull, type }: Props = $props();
 
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
@@ -174,7 +176,11 @@
 	</div>
 	<div class="footer">
 		<div class="btn-action">
-			<button class="btn-stage" onclick={() => toggleLocation()}>
+			<button
+				class="btn-stage"
+				onclick={() => toggleLocation()}
+				disabled={type==="backstage" && isStageFull}
+			>
 				{participant?.location === 'stage' ? 'Move to backstage' : 'Move to stage'}
 			</button>
 		</div>
@@ -278,7 +284,10 @@
 	.btn-stage:hover {
 		@apply bg-primary-dark;
 	}
-
+	.btn-stage:disabled {
+		@apply bg-light-gray;
+		@apply cursor-not-allowed;
+	}
 	.btn-action {
 		@apply w-full flex justify-end;
 	}

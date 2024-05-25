@@ -41,9 +41,6 @@
 		devicesEnable
 	}: Props = $props();
 
-  // let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
-
-
 	let audienceSetting = $state({
 		hand_raised: myBackstageInfo?.hand_raised,
 		mic_available: myBackstageInfo?.mic_available,
