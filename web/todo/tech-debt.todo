@@ -3,6 +3,7 @@ Code:
   ☐ Convert all the svg icons and move to `$lib/component/icon`
   ☐ Remove empty files
   ☐ Remove too many relative parent folder in import statement `../../../../../Component`
+
 Design:
   ☐ Update pixel perfect setup and design it in figma
   ☐ Update the figma design with proper white space and universal font-size
@@ -10,7 +11,12 @@ Design:
 
 Test:
   ☐ Add full complete test using playwright
-  ☐ Setup database seed
+  ☐ Setup database test seed
+
+Re-Write:
+  ☐ Auth flow use backend-form
+    One issue, I dont want the password to be sent through network. That is not something i like,
+    I am fine at the current setup
 
 Security:
   ☐ 

@@ -12,6 +12,7 @@
 	import { newToast } from '../toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { authUserData } from '../auth/auth.store';
+	import { invalidateAll } from '$app/navigation';
 
 	const form = {
 		email: '',
@@ -55,7 +56,7 @@
 
 			const { data: userData, error: errorData } = await supabase.from("user_data").select();
 			if(userData?.[0]) $authUserData = userData?.[0];
-
+			invalidateAll();
 			isLoading = false;
 			$currentModal = null;
 		}
