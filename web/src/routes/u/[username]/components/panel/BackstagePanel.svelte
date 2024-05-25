@@ -11,25 +11,38 @@
 		DeviceMic
 	} from '$lib/components/icon';
 	import type { Tables } from '$lib/schema/database.types';
+	import { getSupabase } from '$lib/supabase';
+	import { getContext } from 'svelte';
 	import type { PageData } from '../../page.types';
 
-  
-	let audienceSetting = $state({
-		mic: true,
-		cam: true,
-		screenshare: true,
-		raise_hand: true,
-		speaker: true
-	});
 
   interface Props {
-    // pageData: PageData | null;
+    pageData: PageData | null;
     participants: Tables<"live_debate_participants">[];
   }
 
-  let { participants = $bindable([]) }: Props = $props();
+  let { participants = $bindable([]), pageData }: Props = $props();
 
-	function toggleDevice(device: keyof typeof audienceSetting) {
+	let audienceSetting = $state({
+		hand_raised: pageData?.myBackstageInfo?.hand_raised,
+		mic_available: pageData?.myBackstageInfo?.mic_available,
+		cam_available: pageData?.myBackstageInfo?.cam_available,
+		speaker_available: pageData?.myBackstageInfo?.speaker_available,
+		screenshare_available: pageData?.myBackstageInfo?.screenshare_available,
+	});
+
+
+  const supabase = getSupabase(getContext);
+
+	async function toggleDevice(device: keyof typeof audienceSetting) {
+    if( !(pageData?.live_debate?.id && pageData?.user?.id) ) return;
+
+    await supabase.from("live_debate_participants").update({
+      [device]: !audienceSetting[device],
+    })
+    .eq("live_debate", pageData.live_debate.id)
+    .eq("participant_id", pageData.user.id).throwOnError().select();
+
 		audienceSetting[device] = !audienceSetting[device];
 	}
  
@@ -46,35 +59,51 @@
     <div class="toggle-action">
       <button
         class="raise-hands-btn"
-        class:active={audienceSetting.raise_hand}
-        onclick={() => toggleDevice('raise_hand')}
+        class:active={audienceSetting.hand_raised}
+        onclick={() => toggleDevice('hand_raised')}
       >
         <RaiseHand />
       </button>
       <div class="toggle-device">
-        <button class="btn-device" onclick={() => toggleDevice('speaker')}>
-          {#if audienceSetting.speaker}
+        <button
+          class="btn-device"
+          onclick={() => toggleDevice('speaker_available')}
+          class:disabled={!pageData?.myBackstageInfo?.speaker_enable}
+        >
+          {#if audienceSetting.speaker_available}
             <DeviceSpeaker />
           {:else}
             <DeviceSpeakerDisabled />
           {/if}
         </button>
-        <button class="btn-device" onclick={() => toggleDevice('mic')}>
-          {#if audienceSetting.mic}
+        <button
+          class="btn-device"
+          onclick={() => toggleDevice('mic_available')}
+          class:disabled={!pageData?.myBackstageInfo?.mic_enable}
+        >
+          {#if audienceSetting.mic_available}
             <DeviceMic />
           {:else}
             <DeviceMicDisabled />
           {/if}
         </button>
-        <button class="btn-device" onclick={() => toggleDevice('screenshare')}>
-          {#if audienceSetting.screenshare}
+        <button
+          class="btn-device"
+          onclick={() => toggleDevice('screenshare_available')}
+          class:disabled={!pageData?.myBackstageInfo?.screenshare_enable}
+        >
+          {#if audienceSetting.screenshare_available}
             <DeviceScreen />
           {:else}
             <DeviceScreenDisabled />
           {/if}
         </button>
-        <button class="btn-device" onclick={() => toggleDevice('cam')}>
-          {#if audienceSetting.cam}
+        <button
+          class="btn-device"
+          onclick={() => toggleDevice('cam_available')}
+          class:disabled={!pageData?.myBackstageInfo?.cam_enable}
+        >
+          {#if audienceSetting.cam_available}
             <DeviceCamera />
           {:else}
             <DeviceCameraDisabled />
@@ -140,6 +169,10 @@
 		button:hover  {
 			@apply  text-secondary;
 		}
+
+    button.disabled {
+      @apply text-light-gray;
+    }
   }
   .action-exit-setting {
     @apply w-8 h-full;

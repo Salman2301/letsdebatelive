@@ -68,7 +68,10 @@
 	<div class="live-video-content">
 		<div class="video-container"></div>
 		{#if userJoined}
-			<BackstagePanel bind:participants={participants}/>
+			<BackstagePanel
+				bind:participants={participants}
+				pageData={data}
+			/>
 		{:else}
 			<JoinBackstagePanel />
 		{/if}
