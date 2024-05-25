@@ -2,8 +2,11 @@ TODO:
 
   Backstage Feature:
     ☐ Subscribe to backstage panel
-      ☐ Check if the the, backstage is full before insert
+      ✔ Check if the the, backstage is full before insert @done(24-05-26 01:43)
       ☐ Check if the user in stage, is max before inserting?
+        ☐ For now let's just check it in server action
+          ☐ Re-write move to stage using server function.
+          ☐ Check if the max stage is less than current stage participants
       ☐ Check if the backstage panel is open only for selected team
       ☐ Display the team modal
         ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)

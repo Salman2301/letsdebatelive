@@ -23,15 +23,9 @@
 		CTX_KEY_MAP_TEAM_COLOR,
 		CTX_KEY_LIVE_PARTICIPANT
 	} from '$lib/constant/context_key';
-	
-	import {
-		CloseX,
-		DownArrow,
-		Link,
-		ListMode,
-		GridMode
-	} from '$lib/components/icon';
-	
+
+	import { CloseX, DownArrow, Link, ListMode, GridMode } from '$lib/components/icon';
+
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { authUserData } from '$lib/components/auth/auth.store';
 	import { currentSidebar } from '$lib/stores/sidebar.store';
@@ -45,20 +39,21 @@
 		showSetting: boolean;
 		title: string;
 	}
-	
+
 	const supabase = getSupabase(getContext);
 
-	let { type, showSetting=$bindable(false), title }: Props = $props();
+	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants: Writable<Tables<'live_debate_participants'>[]> = getContext(
-		CTX_KEY_LIVE_PARTICIPANT
-	);
+	let participants: Writable<Tables<'live_debate_participants'>[]> =
+		getContext(CTX_KEY_LIVE_PARTICIPANT);
 	let liveDebate: Writable<Tables<'live_debate'>> = getContext(CTX_KEY_LIVE_DEBATE);
 	let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
 
-	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived($participants?.filter(participant => participant.location === type) || []);
+	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
+		$participants?.filter((participant) => participant.location === type) || []
+	);
 
-	let viewMode: "list" | "grid" = $state("list");
+	let viewMode: 'list' | 'grid' = $state('list');
 	let showBulkDropdown = $state(false);
 
 	function toggleBulkAction() {
@@ -70,10 +65,10 @@
 	}
 
 	let deviceEnable: Partial<Tables<'live_debate_participants'>> = $derived({
-		cam_enable: !filteredParticipants.some(item => !item.cam_enable),
-		mic_enable: !filteredParticipants.some(item => !item.mic_enable),
-		screenshare_enable: !filteredParticipants.some(item => !item.screenshare_enable),
-		profile_image_enable: !filteredParticipants.some(item => !item.profile_image_enable)
+		cam_enable: !filteredParticipants.some((item) => !item.cam_enable),
+		mic_enable: !filteredParticipants.some((item) => !item.mic_enable),
+		screenshare_enable: !filteredParticipants.some((item) => !item.screenshare_enable),
+		profile_image_enable: !filteredParticipants.some((item) => !item.profile_image_enable)
 	});
 
 	async function toggleDevice(device: keyof Tables<'live_debate_participants'>) {
@@ -82,20 +77,19 @@
 		};
 
 		// INFO: keep the `await`, on remove if removed it doesn't update
-		const {data, error } = await supabase
+		const { data, error } = await supabase
 			.from('live_debate_participants')
 			.update(toUpdate)
 			.eq('live_debate', $liveDebate.id);
 	}
 
-
 	async function handleCopyLink() {
 		const url = `${window.location.origin}/u/${$authUserData?.username}`;
 		navigator.clipboard.writeText(url);
 		newToast({
-			type: "info",
-			message: "Link copied to clipboard"
-		})
+			type: 'info',
+			message: 'Link copied to clipboard'
+		});
 	}
 </script>
 
@@ -123,7 +117,7 @@
 			label={$isLessThanLg ? `Copy ${title} link` : ''}
 			onclick={handleCopyLink}
 		>
-			<Link slot="icon-left"/>
+			<Link slot="icon-left" />
 		</Button>
 
 		<button class="dropdown-container" onclick={toggleBulkAction}>
@@ -179,52 +173,43 @@
 	<div class="view-mode-container">
 		<button
 			class="view-mode grid"
-			class:active={viewMode==="grid"}
-			onclick={() => (viewMode = "grid")}
+			class:active={viewMode === 'grid'}
+			onclick={() => (viewMode = 'grid')}
 		>
-		<GridMode />
-			
+			<GridMode />
 		</button>
 		<button
 			class="view-mode list"
-			class:active={viewMode==="list"}
-			onclick={() => (viewMode = "list")}
+			class:active={viewMode === 'list'}
+			onclick={() => (viewMode = 'list')}
 		>
 			<ListMode />
 		</button>
 	</div>
 	<div class="participant-card-container">
-		{#if viewMode === "grid"}
+		{#if viewMode === 'grid'}
 			{#each filteredParticipants as participant (participant.participant_id)}
-				<ParticipantCard
-					participant={participant}
-					live_debate={$liveDebate}
-					teamMapColor={$teamMapColor}
-				/>
+				<ParticipantCard {participant} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
 			{:else}
-				<NoParticipant type={type}/>	
+				<NoParticipant {type} />
 			{/each}
 		{:else}
 			{#each filteredParticipants as participant (participant.participant_id)}
-				<ParticipantCardList
-					participant={participant}
-					live_debate={$liveDebate}
-					teamMapColor={$teamMapColor}
-				/>
-				{:else}
-					<NoParticipant type={type}/>	
+				<ParticipantCardList {participant} live_debate={$liveDebate} teamMapColor={$teamMapColor} />
+			{:else}
+				<NoParticipant {type} />
 			{/each}
 		{/if}
 	</div>
 	<div class="px-28 mt-12 mb-6">
-		<hr class="mx-4 border-light-gray">
+		<hr class="mx-4 border-light-gray" />
 	</div>
 	<div class="flex items-center justify-center">
 		<Button
-			onclick={()=>{
-				$currentSidebar = type === "backstage" ? "participants": "backstage"; 
+			onclick={() => {
+				$currentSidebar = type === 'backstage' ? 'participants' : 'backstage';
 			}}
-			label={type === "stage"? "Goto Backstage panel": "Show current stage member?"}
+			label={type === 'stage' ? 'Goto Backstage panel' : 'Show current stage member?'}
 			fillType="dark"
 			fontType="normal"
 		/>
@@ -301,7 +286,7 @@
 		@apply flex items-center justify-end;
 		@apply rounded;
 	}
-	
+
 	.dropdown-container:hover {
 		@apply bg-primary;
 	}
@@ -315,7 +300,7 @@
 		@apply pr-4;
 	}
 	.view-mode {
-		color: rgba(255,255,255, 0.6);
+		color: rgba(255, 255, 255, 0.6);
 		background-color: white;
 		@apply cursor-pointer;
 		@apply px-2 py-1;
