@@ -185,7 +185,7 @@
 		{/if}
 		<div class="btn-action">
 			<button class="btn-stage" onclick={() => toggleLocation()}>
-				{participant?.location === 'stage' ? '-' : '+'}
+				{participant?.location === 'stage' ? 'Move to Backstage' : 'Add to Stage'}
 			</button>
 		</div>
 	</div>
@@ -200,6 +200,7 @@
 		width: 100%;
 		height: 82px;
 		@apply px-1;
+		@apply mt-1;
 	}
 
 	.left {
@@ -278,12 +279,13 @@
 	}
 
 	.btn-stage {
-		@apply bg-primary;
-		width: 38px;
+		@apply bg-secondary;
+		width: 140px;
 		@apply rounded;
-		font-size: 28px;
+		font-size: 12px;
 		height: 38px;
 		@apply align-middle leading-none;
+		@apply border border-light-gray;
 	}
 	.btn-stage:hover {
 		@apply bg-primary-dark;

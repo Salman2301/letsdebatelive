@@ -23,6 +23,7 @@
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { authUserData } from '$lib/components/auth/auth.store';
 	import { getSupabase } from '$lib/supabase';
+	import { currentSidebar } from '../../../Sidebar.svelte';
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
@@ -77,7 +78,7 @@
 
 
 	async function handleCopyLink() {
-		const url = `${window.location.origin}/profile/${$authUserData?.username}/live`;
+		const url = `${window.location.origin}/u/${$authUserData?.username}`;
 		navigator.clipboard.writeText(url);
 		newToast({
 			type: "info",
@@ -130,6 +131,7 @@
 				id="Hyperlink-3--Streamline-Ultimate"
 				height="24"
 				width="24"
+				style="scale:{0.65}"
 				><g
 					><path
 						d="m10.46 18.37 -2.74 2.74a2.86 2.86 0 0 1 -3.94 0l-0.89 -0.89a2.77 2.77 0 0 1 -0.82 -2 2.74 2.74 0 0 1 0.82 -2l5.8 -5.81a2.8 2.8 0 0 1 3.94 0l0.89 0.9A1 1 0 1 0 14.94 10l-0.89 -0.89a4.79 4.79 0 0 0 -6.77 0l-5.81 5.8a4.79 4.79 0 0 0 0 6.77l0.89 0.89a4.78 4.78 0 0 0 6.78 0l2.73 -2.73a1 1 0 0 0 0 -1.42 1 1 0 0 0 -1.41 -0.05Z"
@@ -236,7 +238,7 @@
 			<path d="M2.25 4.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 			<path d="M2.25 9H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 			<path d="M2.25 13.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-f			</svg>
+			</svg>
 			
 		</button>
 	</div>
@@ -252,16 +254,29 @@ f			</svg>
 				<NoParticipant type={type}/>	
 			{/each}
 		{:else}
-		{#each filteredParticipants as participant (participant.participant_id)}
-			<ParticipantCardList
-				participant={participant}
-				live_debate={$liveDebate}
-				teamMapColor={$teamMapColor}
-			/>
-			{:else}
-				<NoParticipant type={type}/>	
-		{/each}
+			{#each filteredParticipants as participant (participant.participant_id)}
+				<ParticipantCardList
+					participant={participant}
+					live_debate={$liveDebate}
+					teamMapColor={$teamMapColor}
+				/>
+				{:else}
+					<NoParticipant type={type}/>	
+			{/each}
 		{/if}
+	</div>
+	<div class="px-28 mt-12 mb-6">
+		<hr class="mx-4 border-light-gray">
+	</div>
+	<div class="flex items-center justify-center">
+		<Button
+			onclick={()=>{
+				$currentSidebar = type === "backstage" ? "participants": "backstageSetting"; 
+			}}
+			label={type === "stage"? "Goto Backstage panel": "Goto Stage panel"}
+			fillType="dark"
+			fontType="normal"
+		/>
 	</div>
 {/if}
 
@@ -328,12 +343,16 @@ f			</svg>
 		@apply w-full flex justify-between items-center px-4;
 	}
 	.dropdown-container {
-		background-color: #3a0e63;
+		@apply bg-primary/50;
 		@apply p-2;
 		@apply my-2;
 		width: 140px;
 		@apply flex items-center justify-end;
 		@apply rounded;
+	}
+	
+	.dropdown-container:hover {
+		@apply bg-primary;
 	}
 
 	.dropdown-label {
@@ -349,19 +368,22 @@ f			</svg>
 		background-color: white;
 		@apply cursor-pointer;
 		@apply px-2 py-1;
-		@apply bg-secondary-dark/20;
+		@apply bg-secondary-dark/0;
+		@apply border border-light-gray;
 	}
 	.grid {
 		@apply rounded-l;
+		@apply border-r-0;
 	}
 	.list {
 		@apply rounded-r;
 	}
 	.view-mode.active {
 		color: rgba(255, 255, 255, 1);
+		@apply bg-secondary-dark/60;
 	}
 	.participant-card-container {
-		@apply my-2 mt-4;
+		@apply my-6 mt-4;
 		@apply flex flex-wrap justify-between gap-2 px-4;
 	}
 </style>

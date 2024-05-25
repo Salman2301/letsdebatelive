@@ -280,7 +280,7 @@
 	}
 
 	.btn-stage {
-		@apply bg-primary;
+		@apply bg-secondary;
 		width: 120px;
 		@apply rounded;
 		font-size: 12px;

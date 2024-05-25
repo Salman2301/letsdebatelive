@@ -60,7 +60,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     if (!session || !session.user || !user || !userData ) throw redirect(303, "/");
 
     if (event.params.username !== userData.username) {
-      throw redirect(303, "/");
+      throw redirect(303, "/?ERROR=USERNAME_MISMATCH");
     } 
   }
 

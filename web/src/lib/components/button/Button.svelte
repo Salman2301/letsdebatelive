@@ -5,15 +5,22 @@
 		width?: number;
 		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark" | "solid-white";
 		onclick?: ()=>void;
+		fontType?: "bold" | "semibold" | "normal";
 	}
-	let { label = 'Button', color = 'primary', fillType = 'solid', width, onclick=()=>{} }: Props = $props();
+	let {
+		label = 'Button',
+		color = 'primary',
+		fillType = 'solid',
+		width, onclick=()=>{},
+		fontType = "bold"
+	}: Props = $props();
 </script>
 
 <button
 	class="fill-type-{fillType}"
 	style="--theme-color:rgb(var(--color-{color}));--theme-color-dark:rgba(var(--color-{color}-dark));width: {width
 		? `${width}px`
-		: 'fit-content'}"
+		: 'fit-content'};font-weight:{fontType}"
 	onclick={onclick}
 >
 	<slot name="icon-left" />
@@ -30,7 +37,6 @@
 		gap: 4px;
 		border-radius: 4px;
 		font-size: 12px;
-		font-weight: bold;
 
 		display: flex;
 		justify-content: center;

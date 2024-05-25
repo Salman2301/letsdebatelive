@@ -22,7 +22,7 @@
     <p>No user(s) in backstage</p>
   {:else}
     <p>
-      <button onclick={()=>$currentSidebar="backstageSetting"}>Add user from backstage.</button>
+      <button onclick={()=>$currentSidebar="backstageSetting"}>Stage is empty!</button>
     </p>
   {/if}
 {:else}
@@ -30,7 +30,7 @@
     <p>No user(s) in backstage</p>
   {:else}
     <p>
-      <button onclick={()=>$currentSidebar="backstageSetting"}>Add user from backstage.</button>
+      <button onclick={()=>$currentSidebar="backstageSetting"}>Stage is empty!</button>
     </p>
   {/if}
 {/if}
@@ -40,11 +40,10 @@
     @apply w-full flex justify-center;
   }
   p button {
-    @apply border-b border-white;
     @apply text-center ;
   }
   button:hover {
-    @apply text-secondary border-secondary;
+    @apply text-white;
   }
 </style>
 

@@ -8,15 +8,21 @@ Design:
   ☐ Update pixel perfect setup and design it in figma
   ☐ Update the figma design with proper white space and universal font-size
   ☐ Use that to remove duplicate buttons and input designs across the app
+  ☐ Sidebar
+    ☐ Remove unwanted sidebar, keep only sidebar that we will release before the prototype
+    ☐ Rethink the sidebar so, backstage / stage area is easy to use.
 
 Test:
   ☐ Add full complete test using playwright
   ☐ Setup database test seed
 
+GOOD PRACTICE:
+  ☐ Make sure all the `throw redirect(300, "/")` contains the unique error message `throw redirect(300, '/error=ERROR_UNIQUE')`
+
 Re-Write:
   ☐ Auth flow use backend-form
     One issue, I dont want the password to be sent through network. That is not something i like,
-    I am fine at the current setup
+    I am fine with the current setup, Will need to rethink this later
 
 Security:
   ☐ 
