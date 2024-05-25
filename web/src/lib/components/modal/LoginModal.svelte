@@ -9,9 +9,10 @@
 	import ZodError from '../form/ZodError.svelte';
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
-	// import supabase from '$lib/supabase';
 	import { onMount, getContext } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { authUserData } from '../auth/auth.store';
 
 	const form = {
 		email: '',
@@ -47,12 +48,17 @@
 				email: form.email,
 				password: form.password
 			});
-			
+
+			invalidateAll();
+			console.log("invalidated")
+			reloadPage();
 			if( error ) {
 				newToast({ type: "error", message: error.message })
 				throw new Error(error.message);
 			}
-			// await checkLoginSetStore();
+
+			const { data: userData, error: errorData } = await supabase.from("user_data").select();
+			if(userData?.[0]) $authUserData = userData?.[0];
 
 			isLoading = false;
 			$currentModal = null;
@@ -61,6 +67,16 @@
 			isLoading = false;
 			console.error(e);
 		}
+	}
+
+	function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		console.log('goto ' + thisPage);
+
+		goto('/', { invalidateAll: true }).then(
+			() => goto(thisPage)
+		);
 	}
 
 	onMount(async ()=>{
@@ -123,6 +139,4 @@
 		text-decoration: underline;
 		cursor: pointer;
 	}
-
-
 </style>

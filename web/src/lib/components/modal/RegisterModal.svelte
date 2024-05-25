@@ -11,6 +11,7 @@
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
+	import { authUserData } from '../auth/auth.store';
 
 	const form = {
 		email: '',
@@ -52,7 +53,8 @@
 				throw new Error(error.message);
 			}
 
-			// await checkLoginSetStore()
+			const { data: userData, error: errorData } = await supabase.from("user_data").select();
+			if(userData?.[0]) $authUserData = userData?.[0];
 
 			isLoading = false;
 			$currentModal = null;
@@ -98,7 +100,7 @@
 				Forgot password?
 			</button>
 		</div>
-		<BigButton color="secondary" label="Login" {isLoading} />
+		<BigButton color="secondary" label="Register" {isLoading} />
 		<div class="text-content">
 			<ZodError {parsed} />
 		</div>
@@ -123,6 +125,4 @@
 		text-decoration: underline;
 		cursor: pointer;
 	}
-
-
 </style>
