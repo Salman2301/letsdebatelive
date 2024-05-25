@@ -1,25 +1,23 @@
 TODO:
   Backstage Feature:
     ☐ Subscribe to backstage panel
-      ☐ Save the user device and action
+      ✔ Save the user device and action @done(24-05-25 16:05)
       ✔ Rest of the user leave, enter update the panel @done(24-05-25 08:15)
       ✔ Also check if the user kicked, before adding to participant @done(24-05-25 15:15)
-        ☐ Add after trigger for moderation logs ?
-        ☐ Add before trigger to check if the user ?
-      ☐ Connect user device to tha database
-      ☐ Show the user image in the backstage panel
+      ✔ Connect user device to tha database @done(24-05-25 16:05)
+      ✔ Check if the username is enable, speaker enable, screenshare enable, mic enable, @done(24-05-25 16:50)
+      ☐ Show the user default icon in the backstage panel
       ☐ Show hands icon the backstage panel
       ☐ Check if the the, backstage is full
       ☐ Check if the backstage panel is open only for selected team
-      ☐ Check if the username is enable, speaker enable, screenshare enable, mic enable, 
       ☐ Display the team
-      ☐ Update the backstage panel border with the team color
+        ☐ Update the backstage panel border with the team color
 
+      ☐ Show the user image in the backstage panel @low
       ☐ On mic input, show the sound wave on the icon @low 
 
     ☐ On backstage complete 
       ☐ Write the integration test
-      ☐ 
 
 
   Debate Create:
@@ -45,6 +43,11 @@ TODO:
         ☐ Update the count
         ☐ Leave
         ☐ Check the count is updated
+
+
+  LOGS:
+    ☐ Add after trigger for moderation logs ?
+    ☐ Add before trigger to check if the user ?
 
   Modal:
     ☐ Show the list of team

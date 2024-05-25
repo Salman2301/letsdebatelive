@@ -1,9 +1,9 @@
 <script lang="ts">
 	import SupportButton from '$lib/components/button/SupportButton.svelte';
 	import FollowButton from '$lib/components/button/FollowButton.svelte';
-	import BackstagePanel from './components/panel/BackstagePanel.svelte';
+	import BackstagePanel, { type DevicesEnable } from './components/panel/BackstagePanel.svelte';
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
-	
+
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { authUserData } from '$lib/components/auth/auth.store';
@@ -14,7 +14,7 @@
 	interface Props {
 		data: PageServerData;
 	}
-	let { data } : Props = $props();
+	let { data }: Props = $props();
 
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 	let userJoined = $state(data.isJoined);
@@ -22,56 +22,65 @@
 	const supabase = getSupabase(getContext);
 	let backstageChannel: RealtimeChannel;
 
+	let myBackstageInfo = $state(data.myBackstageInfo);
 	let participants = $state(data.participants || []);
 	let isJoined = $state(data.isJoined);
-	
-	onMount(()=>{
-		if( data.isJoined && data?.live_debate?.id) {
+
+	let devicesEnable: DevicesEnable = $derived({
+		cam_enable: !!myBackstageInfo?.cam_enable,
+		mic_enable: !!myBackstageInfo?.mic_enable,
+		screenshare_enable: !!myBackstageInfo?.screenshare_enable,
+		speaker_enable: !!myBackstageInfo?.speaker_enable
+	});
+
+	onMount(() => {
+		if (data.isJoined && data?.live_debate?.id) {
 			backstageChannel = supabase.channel(`backstage_${data.live_debate.id}`);
 
-			backstageChannel.on("postgres_changes",
+			backstageChannel.on(
+				'postgres_changes',
 				{
 					event: '*',
 					schema: 'public',
 					table: 'live_debate_participants',
-					filter: `live_debate=eq.${data.live_debate.id}`		
+					filter: `live_debate=eq.${data.live_debate.id}`
 				},
-				payload=>syncBackstage()
-			)
+				(payload) => syncBackstage()
+			);
 
 			backstageChannel.subscribe();
 		}
 	});
 
 	async function syncBackstage() {
-		if( !data?.live_debate?.id) return;
-		if( !$authUserData ) {
+		if (!data?.live_debate?.id) return;
+		if (!$authUserData) {
 			return;
 		}
-		const { data: participantsData, error  } = await supabase.from("live_debate_participants")
-			.select().eq("live_debate", data.live_debate.id);
+		const { data: participantsData, error } = await supabase
+			.from('live_debate_participants')
+			.select()
+			.eq('live_debate', data.live_debate.id);
 
 		participants = participantsData || [];
 
-		isJoined = !!participants.find(item=>item.participant_id === $authUserData.id )
+		myBackstageInfo = participants.find((item) => item.participant_id === $authUserData.id) || null;
 
-		if(!isJoined) backstageChannel.unsubscribe();
+		console.log({ cam: myBackstageInfo?.cam_enable });
+		isJoined = !!myBackstageInfo;
+		if (!isJoined) backstageChannel.unsubscribe();
 	}
 
-	onDestroy(()=>{
+	onDestroy(() => {
 		backstageChannel?.unsubscribe();
-	})
-
+	});
 </script>
 
 <div class="page-container">
 	<div class="live-video-content">
 		<div class="video-container"></div>
 		{#if userJoined}
-			<BackstagePanel
-				bind:participants={participants}
-				pageData={data}
-			/>
+			<BackstagePanel bind:participants {myBackstageInfo} pageData={data} {devicesEnable} />
 		{:else}
 			<JoinBackstagePanel />
 		{/if}
