@@ -1,5 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageData } from "./page.types";
+import { string } from "zod";
 
 export async function load({ locals, params }) {
 
@@ -10,7 +11,8 @@ export async function load({ locals, params }) {
     participants: [],
     isJoined: false,
     live_debate: null,
-    myBackstageInfo: null
+    myBackstageInfo: null,
+    teamMapColor: {}
   }
   const supabase = locals.supabase;
   
@@ -37,7 +39,18 @@ export async function load({ locals, params }) {
     throw redirect(303, "/?error=FAILED_LIVE_DEBATE_INFO" );
   }
 
-  const { data: live_debate_participants, error: participantsError } = await supabase.from("live_debate_participants").select("*").eq("live_debate", liveDebateId);
+  const [
+    { data: live_debate_participants, error: participantsError },
+    { data: live_debate_team, error: teamError },
+  ]= await Promise.all([
+    supabase.from("live_debate_participants").select("*").eq("live_debate", liveDebateId),
+    supabase.from("live_debate_team").select("*").eq("live_debate", liveDebateId)
+  ]) 
+ 
+  PAGE_DATA.teamMapColor = (live_debate_team||[]).reduce((obj: Record<string, string>, team) => {
+    obj[team.id] = team.color;
+    return obj;
+  }, {});
 
   PAGE_DATA.participants = live_debate_participants || [];
   PAGE_DATA.myBackstageInfo = live_debate_participants?.find(item => item.participant_id === userId) || null;

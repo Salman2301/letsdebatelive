@@ -117,13 +117,7 @@
 		</button>
 	
 		<div class="username-img-default">
-			<div class="header-float">
-				{#if participant.hand_raised}
-					<RaiseHand />
-				{:else}
-					<div></div>
-				{/if}
-			</div>
+			
 		</div>
 		<div>
 			<div class="username-text">
@@ -229,13 +223,6 @@
 		width: 48px;
 		@apply relative;
 	}
-	.header-float {
-		@apply flex justify-between items-center;
-		@apply w-full pr-2;
-		@apply absolute top-0;
-		height: 24px;
-	}
-
 	.username-img-default {
 		aspect-ratio: 1 / 1;
 		@apply rounded overflow-clip;

@@ -10,6 +10,7 @@
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { PageServerData } from './$types';
+	import { type Readable } from 'svelte/store';
 
 	interface Props {
 		data: PageServerData;
@@ -32,6 +33,7 @@
 		screenshare_enable: !!myBackstageInfo?.screenshare_enable,
 		speaker_enable: !!myBackstageInfo?.speaker_enable
 	});
+	
 
 	onMount(() => {
 		if (data.isJoined && data?.live_debate?.id) {

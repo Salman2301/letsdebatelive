@@ -24,8 +24,7 @@
 
 	import type { PageData } from '../../page.types';
 	import type { Tables } from '$lib/schema/database.types';
-	import type { boolean } from 'zod';
-
+  
 	interface Props {
 		pageData: PageData | null;
 		participants: Tables<'live_debate_participants'>[];
@@ -39,6 +38,9 @@
 		pageData,
 		devicesEnable
 	}: Props = $props();
+
+  // let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
+
 
 	let audienceSetting = $state({
 		hand_raised: myBackstageInfo?.hand_raised,
@@ -69,8 +71,22 @@
 
 <div class="backstage-section">
 	<div class="audience-container">
-		{#each new Array(participants.length).fill('') as item}
-			<div class="audience">{item}</div>
+		{#each participants as participant}
+      <div class="audience-item">
+        <div
+          class="audience-item-image"
+          style="border-color:{pageData?.teamMapColor?.[participant.team]}"
+        >
+          <div class="audience-icon">
+            {participant.display_name[0].toUpperCase()}
+          </div>
+        </div>
+        {#if participant.hand_raised}
+          <div class="audience-hand">
+            <RaiseHand />
+          </div>
+        {/if}
+        </div>
 		{/each}
 	</div>
 	<div class="audience-setting-section">
@@ -179,6 +195,29 @@
 		@apply flex justify-start flex-wrap gap-2;
 		@apply py-2 px-2;
 	}
+  .audience-item {
+    width: 40px;
+    height: 40px;
+  }
+  .audience-item-image {
+    width: 40px;
+    height: 40px;
+    @apply flex items-center justify-center;
+    @apply rounded-full overflow-hidden;
+    @apply border-2;
+  }
+  .audience-hand {
+    margin-top: -48px;
+    margin-left: 20px;
+    color: yellow;
+  }
+  .audience-icon {
+    @apply bg-white/80 text-black;
+    width: 36px;
+    height: 36px;
+    @apply rounded-full;
+    @apply flex items-center justify-center;
+  }
 
 	.audience-setting-section {
 		@apply flex items-center;
@@ -241,12 +280,5 @@
 	}
 	.raise-hands-btn.active {
 		@apply text-yellow-400;
-	}
-	.audience {
-		width: 40px;
-		height: 40px;
-		border-radius: 100%;
-		@apply bg-transparent;
-		@apply border border-white;
 	}
 </style>
