@@ -68,6 +68,7 @@
     left: 20px;
     top: -8px;
     text-transform: capitalize;
+    border-radius: 10px;
 	}
 
 

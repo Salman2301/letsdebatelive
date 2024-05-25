@@ -47,45 +47,44 @@
       >
         Create Debate
       </button>
-      <button
-        class="btn-popup"
-        onclick={()=>($currentModal="login")}
-        class:hidden={$isLoggedIn}
-      >
-        Login
-      </button>
-      <button
-        class="btn-popup"
-        onclick={()=>($currentModal="register")}
-        class:hidden={$isLoggedIn}
-      >
-        Create account
-      </button>
-      <button
-        class="btn-popup"
-        onclick={()=>(gotoClosePopup(`/profile/${$authUserData?.username}/control-room`))}
-        class:hidden={!$isLoggedIn}
-      >
-        Control room
-      </button>
-      <button
-        class="btn-popup"
-        onclick={()=>(gotoClosePopup(`/u/${$authUserData?.username}`))}
-        class:hidden={!$isLoggedIn}
-      >
-        Live page
-      </button>
-      <button
-        class="btn-popup logout"
-        onclick={()=>{
-          supabase.auth.signOut();
-          $authUserData = null;
-          gotoClosePopup(`/profile/logout?${Date.now()}`);
-        }}
-        class:hidden={!$isLoggedIn}
-      >
-        Logout
-      </button>
+      {#if !$isLoggedIn}
+        <button
+          class="btn-popup"
+          onclick={()=>($currentModal="login")}
+        >
+          Login
+        </button>
+        <button
+          class="btn-popup bg-primary/70"
+          onclick={()=>($currentModal="register")}
+        >
+          Create account
+        </button>
+        {:else}
+          <button
+            class="btn-popup"
+            onclick={()=>(gotoClosePopup(`/profile/${$authUserData?.username}/control-room`))}
+          >
+            Control room
+          </button>
+          <button
+            class="btn-popup"
+            onclick={()=>(gotoClosePopup(`/u/${$authUserData?.username}`))}
+          >
+            Live page
+          </button>
+          <button
+            class="btn-popup logout"
+            onclick={()=>{
+              supabase.auth.signOut();
+              $authUserData = null;
+              gotoClosePopup(`/profile/logout?${Date.now()}`);
+            }}
+          >
+            Logout
+          </button>
+      {/if}
+      
     </div>
   {/if}
 </div>

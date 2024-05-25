@@ -4,8 +4,8 @@ TODO:
       ☐ Check if the the, backstage is full before insert
       ☐ Check if the user in stage is max?
       ☐ Check if the backstage panel is open only for selected team
-      ☐ Display the team
-        ☐ Update the backstage panel border with the team color
+      ☐ Display the team modal
+        ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)
 
       ☐ Show the user image in the backstage panel @low
       ☐ On mic input, show the sound wave on the icon @low 
