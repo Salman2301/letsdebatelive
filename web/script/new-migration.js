@@ -2,16 +2,22 @@ import { exec, spawn } from 'child_process';
 import * as readline from 'readline';
 
 const dryRunProcess = spawn('supabase', ['db', 'diff']);
-
+	let noSchemChangeText = "No schema changes found";
+	let noSchemChange = false;
+	
 	dryRunProcess.stdout.on('data', (data) => {
 		process.stdout.write(data.toString());
 	});
 
 	dryRunProcess.stderr.on('data', (data) => {
-		process.stderr.write(data.toString());
+		let text = data.toString();
+		if( text.trim() ===noSchemChangeText ) noSchemChange = true
+		process.stderr.write(text);
+
 	});
 
 	dryRunProcess.on('close', () => {
+		if (noSchemChange) return process.exit(0);
 		const rl = readline.createInterface({
 			input: process.stdin,
 			output: process.stdout
