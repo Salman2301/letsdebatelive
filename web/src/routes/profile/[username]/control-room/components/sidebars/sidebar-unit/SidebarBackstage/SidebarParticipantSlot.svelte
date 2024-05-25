@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_MAP_TEAM_COLOR, CTX_KEY_LIVE_PARTICIPANT } from '$lib/constant/context_key';
 	import SettingIcon from '$lib/components/icon/SettingIcon.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Button from '$lib/components/button/Button.svelte';
@@ -19,6 +18,19 @@
 
 	import { getContext } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
+	import {
+		CTX_KEY_LIVE_DEBATE,
+		CTX_KEY_MAP_TEAM_COLOR,
+		CTX_KEY_LIVE_PARTICIPANT
+	} from '$lib/constant/context_key';
+	
+	import {
+		CloseX,
+		DownArrow,
+		Link,
+		ListMode,
+		GridMode
+	} from '$lib/components/icon';
 	
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { authUserData } from '$lib/components/auth/auth.store';
@@ -92,20 +104,7 @@
 	<div class="right-content">
 		<button class="icon-container" onclick={toggleSetting}>
 			{#if showSetting}
-				<svg
-					width="15"
-					height="15"
-					viewBox="0 0 15 15"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M2 13L13 2M2 2L13 13"
-						stroke="currentcolor"
-						stroke-width="3"
-						stroke-linecap="round"
-					/>
-				</svg>
+				<CloseX />
 			{:else}
 				<SettingIcon />
 			{/if}
@@ -113,8 +112,8 @@
 	</div>
 </div>
 
+<!-- svelte-ignore slot_element_deprecated -->
 {#if showSetting}
-	<!-- svelte-ignore deprecated_slot_element -->
 	<slot name="setting"></slot>
 {:else}
 	<div class="header-center">
@@ -124,39 +123,12 @@
 			label={$isLessThanLg ? `Copy ${title} link` : ''}
 			onclick={handleCopyLink}
 		>
-			<svg
-				slot="icon-left"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 24 24"
-				id="Hyperlink-3--Streamline-Ultimate"
-				height="24"
-				width="24"
-				style="scale:{0.65}"
-				><g
-					><path
-						d="m10.46 18.37 -2.74 2.74a2.86 2.86 0 0 1 -3.94 0l-0.89 -0.89a2.77 2.77 0 0 1 -0.82 -2 2.74 2.74 0 0 1 0.82 -2l5.8 -5.81a2.8 2.8 0 0 1 3.94 0l0.89 0.9A1 1 0 1 0 14.94 10l-0.89 -0.89a4.79 4.79 0 0 0 -6.77 0l-5.81 5.8a4.79 4.79 0 0 0 0 6.77l0.89 0.89a4.78 4.78 0 0 0 6.78 0l2.73 -2.73a1 1 0 0 0 0 -1.42 1 1 0 0 0 -1.41 -0.05Z"
-						fill="#fff"
-						stroke-width="1"
-					/><path
-						d="m22.53 2.36 -0.9 -0.89a4.8 4.8 0 0 0 -6.77 0L12 4.38a1 1 0 1 0 1.41 1.41l2.91 -2.9a2.79 2.79 0 0 1 3.94 0l0.89 0.9a2.74 2.74 0 0 1 0.82 2 2.77 2.77 0 0 1 -0.82 2l-5.8 5.8a2.77 2.77 0 0 1 -2 0.82 2.75 2.75 0 0 1 -2 -0.82A1 1 0 0 0 10 14.93a4.76 4.76 0 0 0 3.39 1.41 4.75 4.75 0 0 0 3.38 -1.4l5.81 -5.81a4.79 4.79 0 0 0 0 -6.77Z"
-						fill="#fff"
-						stroke-width="1"
-					/></g
-				></svg
-			>
+			<Link slot="icon-left"/>
 		</Button>
 
 		<button class="dropdown-container" onclick={toggleBulkAction}>
 			<div class="dropdown-label">Bulk Action</div>
-			<svg
-				width="21"
-				height="12"
-				viewBox="0 0 21 12"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
-			</svg>
+			<DownArrow />
 		</button>
 	</div>
 
@@ -164,15 +136,7 @@
 		<div class="bulkaction">
 			<button class="header" onclick={toggleBulkAction}>
 				<div class="title">Bulk Action</div>
-				<svg
-					width="21"
-					height="12"
-					viewBox="0 0 21 12"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path d="M1 1L9.5 10.5L20 1" stroke="white" stroke-width="2" stroke-linecap="round" />
-				</svg>
+				<DownArrow />
 			</button>
 			<div class="description">Enable / disable all the user devices</div>
 			<div class="icons">
@@ -218,12 +182,7 @@
 			class:active={viewMode==="grid"}
 			onclick={() => (viewMode = "grid")}
 		>
-		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M7.5 2.25H2.25V7.5H7.5V2.25Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M15.75 2.25H10.5V7.5H15.75V2.25Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M15.75 10.5H10.5V15.75H15.75V10.5Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M7.5 10.5H2.25V15.75H7.5V10.5Z" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
+		<GridMode />
 			
 		</button>
 		<button
@@ -231,15 +190,7 @@
 			class:active={viewMode==="list"}
 			onclick={() => (viewMode = "list")}
 		>
-		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M6 4.5H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M6 9H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M6 13.5H15.75" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M2.25 4.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M2.25 9H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M2.25 13.5H2.2575" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
-			
+			<ListMode />
 		</button>
 	</div>
 	<div class="participant-card-container">
@@ -271,7 +222,7 @@
 	<div class="flex items-center justify-center">
 		<Button
 			onclick={()=>{
-				$currentSidebar = type === "backstage" ? "participants": "backstageSetting"; 
+				$currentSidebar = type === "backstage" ? "participants": "backstage"; 
 			}}
 			label={type === "stage"? "Goto Backstage panel": "Show current stage member?"}
 			fillType="dark"

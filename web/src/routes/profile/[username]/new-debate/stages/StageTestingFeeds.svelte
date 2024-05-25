@@ -5,7 +5,7 @@
 	import { getContext, onMount } from 'svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
-	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icons';
+	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icon';
 	import NoFeedCard from '../components/NoFeedCard.svelte';
 	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE } from '../new-debate.constant';
 	import { newToast } from '$lib/components/toast/Toast.svelte';

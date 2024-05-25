@@ -1,10 +1,6 @@
 import { expect, test, beforeEach, afterEach, vi, it } from 'vitest'
 import { onParticpantChange, registeredCallBacks, triggerParticipantChange } from './participantSync';
 
-// vi.mock('uuid', () => ({
-//   v4: vi.fn(() => 'mocked-uuid')
-// }));
-
 beforeEach(() => {
   for (const key in registeredCallBacks) {
     delete registeredCallBacks[key];

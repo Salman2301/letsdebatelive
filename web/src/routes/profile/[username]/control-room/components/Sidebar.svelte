@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
-	import { writable } from "svelte/store";
-	import type { Writable } from "svelte/store";
+	import { writable, type Writable } from 'svelte/store';
 	import {
 		ICON_BACKSTAGE_SETTINGS,
 		ICON_BROADCAST,
@@ -12,11 +11,10 @@
 		ICON_BANNER,
 		ICON_CHAT_LIVE,
 		ICON_CHAT_MODERATION
-	} from "./sidebars/sidebar-icons";
-	
+	} from './sidebars/sidebar-icons';
+
 	import {
 		SidebarBroadcast,
-		SidebarSetting,
 		SidebarAgenda,
 		SidebarPoll,
 		SidebarQA,
@@ -25,9 +23,18 @@
 		SidebarChatLive,
 		SidebarChatModerator,
 		SidebarParticipant
-	} from "./sidebars/sidebar-unit";
+	} from './sidebars/sidebar-unit';
 
-	type SidebarKey = "setting" | "participants" | "backstageSetting" | "chatLive" | "agenda" | "poll" | "qa" | "banner" | "chatModerator" | "broadcast";
+	type SidebarKey =
+		| 'participants'
+		| 'backstage'
+		| 'chatLive'
+		| 'agenda'
+		| 'poll'
+		| 'qa'
+		| 'banner'
+		| 'chatModerator'
+		| 'broadcast';
 
 	type SidebarSmall = {
 		[index in SidebarKey]: {
@@ -38,66 +45,64 @@
 		};
 	};
 
-	
 	const sidebarSmall: SidebarSmall = {
-		setting: {
-			label: "Setting",
-			icon: ICON_SETTINGS,
-			sidebar: SidebarSetting
-		},
+		// setting: {
+		// 	label: "Setting",
+		// 	icon: ICON_SETTINGS,
+		// 	sidebar: SidebarSetting
+		// },
 		participants: {
-			label: "Participants",
+			label: 'Participants',
 			icon: ICON_PARTICIPANTS,
 			sidebar: SidebarParticipant
 		},
-		backstageSetting: {
-			label: "Backstage Setting",
+		backstage: {
+			label: 'Backstage Setting',
 			icon: ICON_BACKSTAGE_SETTINGS,
 			sidebar: SidebarBackstageSetting
 		},
 		chatLive: {
-			label: "Chat Live",
+			label: 'Chat Live',
 			icon: ICON_CHAT_LIVE,
 			sidebar: SidebarChatLive,
 			divider: true
 		},
 
 		agenda: {
-			label: "Debate Agenda",
+			label: 'Debate Agenda',
 			icon: ICON_DEBATE_AGENDA,
 			sidebar: SidebarAgenda
 		},
 		poll: {
-			label: "Poll",
+			label: 'Poll',
 			icon: ICON_POLL_ANALYTICS,
 			sidebar: SidebarPoll
 		},
 		qa: {
-			label: "Question and Answer",
+			label: 'Question and Answer',
 			icon: ICON_QA,
 			sidebar: SidebarQA
 		},
 		banner: {
-			label: "Banner",
+			label: 'Banner',
 			icon: ICON_BANNER,
 			sidebar: SidebarBanner,
 			divider: true
 		},
-		
+
 		chatModerator: {
-			label: "Chat Moderator",
+			label: 'Chat Moderator',
 			icon: ICON_CHAT_MODERATION,
 			sidebar: SidebarChatModerator
 		},
 		broadcast: {
-			label: "Broadcast setting",
+			label: 'Broadcast setting',
 			icon: ICON_BROADCAST,
 			sidebar: SidebarBroadcast
 		}
 	} as const;
 
-	export let currentSidebar: Writable<SidebarKey> = writable("backstageSetting");
-
+	export let currentSidebar: Writable<SidebarKey> = writable('backstage');
 </script>
 
 <script lang="ts">
@@ -110,20 +115,20 @@
 
 <div class="sidebar">
 	<div class="sidebar-small-icon">
-    <!-- List of icons -->
+		<!-- List of icons -->
 		{#each sidebarKeys as sidebarKey}
-			<div class="icon-item" class:active={$currentSidebar === sidebarKey}>
-				<button
-				class="icon-sidebar"
-				class:active={$currentSidebar===sidebarKey}
-				onclick={()=>($currentSidebar=sidebarKey)}
+			<button
+				class="icon-item"
+				class:active={$currentSidebar === sidebarKey}
+				onclick={() => ($currentSidebar = sidebarKey)}
 			>
-				<svelte:component this={sidebarSmall[sidebarKey].icon} />
+				<div class="icon-sidebar" class:active={$currentSidebar === sidebarKey}>
+					<svelte:component this={sidebarSmall[sidebarKey].icon} />
+				</div>
+				<div class="popup">
+					{sidebarSmall[sidebarKey].label}
+				</div>
 			</button>
-			<div class="popup">
-				{sidebarSmall[sidebarKey].label}
-			</div>
-			</div>
 			{#if hasDivider(sidebarKey)}
 				<div class="divider"></div>
 			{/if}
@@ -137,7 +142,7 @@
 <style lang="postcss">
 	.sidebar {
 		height: calc(100vh - 76px);
-    @apply flex;
+		@apply flex;
 	}
 
 	.icon-item {
@@ -172,7 +177,7 @@
 	}
 
 	.icon-sidebar {
-		color: #A8A8A8;
+		color: #a8a8a8;
 		display: flex;
 		justify-content: center;
 		height: 40px;
@@ -180,8 +185,7 @@
 	}
 
 	.icon-sidebar:focus,
-	.icon-sidebar:active
-	 {
+	.icon-sidebar:active {
 		outline: none;
 	}
 
@@ -193,12 +197,12 @@
 		width: 50px;
 		height: 100%;
 
-    position: fixed;
-    top: 76px;
-    height: calc(100vh - 76px);
+		position: fixed;
+		top: 76px;
+		height: calc(100vh - 76px);
 		z-index: 999;
 		/* Causing z-index issue with the sidebar name popup? */
-		/* position: sticky; */ 
+		/* position: sticky; */
 
 		display: flex;
 		justify-content: space-evenly;
@@ -209,13 +213,11 @@
 	}
 	.sidebar-content {
 		@apply bg-primary-dark;
-		width: calc( 50vw - 180px );
+		@apply relative;
+		width: calc(50vw - 180px);
 		height: 100%;
 		overflow: auto;
 		margin-left: 50px;
-		@apply relative;
 		z-index: 1;
-		/* @apply px-4; */
 	}
-
 </style>

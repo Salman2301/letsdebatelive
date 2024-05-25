@@ -1,8 +1,15 @@
 TODO:
+
+  Svelte V5:
+    ☐ Remove on:click
+    ☐ Avoide using svelte store?
+    ☐ slot
+
+
   Backstage Feature:
     ☐ Subscribe to backstage panel
       ☐ Check if the the, backstage is full before insert
-      ☐ Check if the user in stage is max?
+      ☐ Check if the user in stage, is max before inserting?
       ☐ Check if the backstage panel is open only for selected team
       ☐ Display the team modal
         ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)
@@ -13,6 +20,9 @@ TODO:
     ☐ On backstage complete 
       - Write the integration test
 
+
+  Screen:
+    ☐ List all the screen
   Non-active-user:
     ☐ Check if the user is stil `online`, after 2-mins timeout remove the user.
 

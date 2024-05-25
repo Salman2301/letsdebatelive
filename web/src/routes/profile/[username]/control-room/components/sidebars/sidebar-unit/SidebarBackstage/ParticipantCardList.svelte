@@ -1,21 +1,25 @@
 <script lang="ts">
-	import RaiseHand from '$lib/components/icon/RaiseHand.svelte';
-	import UserRemove from '$lib/components/icon/UserRemove.svelte';
-	import DeviceCamera from '$lib/components/icon/DeviceCamera.svelte';
-	import DeviceCameraDisabled from '$lib/components/icon/DeviceCameraDisabled.svelte';
-	import DeviceMic from '$lib/components/icon/DeviceMic.svelte';
-	import DeviceMicDisabled from '$lib/components/icon/DeviceMicDisabled.svelte';
-	import DeviceScreen from '$lib/components/icon/DeviceScreen.svelte';
-	import DeviceScreenDisabled from '$lib/components/icon/DeviceScreenDisabled.svelte';
-	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
-	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
-	import UserBan from '$lib/components/icon/UserBan.svelte';
+	import {
+		RaiseHand,
+		UserRemove,
+		DeviceCamera,
+		DeviceCameraDisabled,
+		DeviceMic,
+		DeviceMicDisabled,
+		DeviceScreen,
+		DeviceScreenDisabled,
+		DeviceUserProfile,
+		DeviceUserProfileDisabled,
+		UserBan
+	} from '$lib/components/icon';
 
 	import { getContext, tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	
-	import type { Tables } from '$lib/schema/database.types';
 	import { getSupabase } from '$lib/supabase';
+
+
+	import type { Tables } from '$lib/schema/database.types';
+	import CheckMark from '$lib/components/icon/CheckMark.svelte';
 
 	interface Props {
 		participant: Tables<'live_debate_participants'>;
@@ -126,20 +130,7 @@
 					<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
 					{#if showNameSubmitBtn}
 						<button onclick={() => updateName(displayName)}>
-							<svg
-								width="21"
-								height="20"
-								viewBox="0 0 21 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									fill-rule="evenodd"
-									clip-rule="evenodd"
-									d="M0.914551 10C0.914551 7.34783 1.96812 4.8043 3.84348 2.92893C5.71885 1.05357 8.26239 0 10.9146 0C13.5667 0 16.1103 1.05357 17.9856 2.92893C19.861 4.8043 20.9146 7.34783 20.9146 10C20.9146 12.6522 19.861 15.1957 17.9856 17.0711C16.1103 18.9464 13.5667 20 10.9146 20C8.26239 20 5.71885 18.9464 3.84348 17.0711C1.96812 15.1957 0.914551 12.6522 0.914551 10ZM15.9746 6.662C16.1421 6.38108 16.1928 6.04569 16.1159 5.72777C16.039 5.40986 15.8405 5.13476 15.5631 4.9615C15.2857 4.78824 14.9514 4.73062 14.632 4.80101C14.3126 4.8714 14.0335 5.06418 13.8546 5.338L9.68655 12.006L7.79855 10.116C7.5641 9.88155 7.24611 9.74984 6.91455 9.74984C6.58299 9.74984 6.265 9.88155 6.03055 10.116C5.7961 10.3505 5.66439 10.6684 5.66439 11C5.66439 11.1642 5.69672 11.3267 5.75955 11.4784C5.82238 11.6301 5.91446 11.7679 6.03055 11.884L9.03055 14.884C9.16342 15.0171 9.3246 15.1184 9.50208 15.1805C9.67955 15.2427 9.86876 15.2639 10.0556 15.2428C10.2424 15.2216 10.4221 15.1586 10.5812 15.0584C10.7403 14.9582 10.8748 14.8234 10.9746 14.664L15.9746 6.664V6.662Z"
-									fill="white"
-								/>
-							</svg>
+							<CheckMark />
 						</button>
 					{/if}
 				</div>

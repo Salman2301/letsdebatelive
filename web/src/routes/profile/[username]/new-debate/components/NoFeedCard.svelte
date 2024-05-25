@@ -1,5 +1,5 @@
 <script lang="ts">
-	import NoFeed from '../icons/NoFeed.svelte';
+	import NoFeed from '../icon/NoFeed.svelte';
 
 	interface Props {
 		label: string;
