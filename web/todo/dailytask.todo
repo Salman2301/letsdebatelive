@@ -11,7 +11,7 @@ TODO:
       ☐ On mic input, show the sound wave on the icon @low 
 
     ☐ On backstage complete 
-      ☐ Write the integration test
+      - Write the integration test
 
   Non-active-user:
     ☐ Check if the user is stil `online`, after 2-mins timeout remove the user.
@@ -92,3 +92,10 @@ TODO:
     ☐ On page reload, request for the screen and webcam share
     ☐ Abiltiy to toggle different user and screen from the panel
     ☐ Ability to disable from app.html showing screen for debug purpose
+
+
+KNOWN BUGS:
+  ☐ Move the form using form action
+    ☐ Login user have to refresh to update the UI
+    ☐ Register user have to refresh to update the UI
+  
