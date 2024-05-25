@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-	import { writable, type Writable } from 'svelte/store';
 	import {
 		ICON_BACKSTAGE_SETTINGS,
 		ICON_BROADCAST,
@@ -24,17 +23,8 @@
 		SidebarChatModerator,
 		SidebarParticipant
 	} from './sidebars/sidebar-unit';
+	import { currentSidebar, type SidebarKey } from '$lib/stores/sidebar.store';
 
-	type SidebarKey =
-		| 'participants'
-		| 'backstage'
-		| 'chatLive'
-		| 'agenda'
-		| 'poll'
-		| 'qa'
-		| 'banner'
-		| 'chatModerator'
-		| 'broadcast';
 
 	type SidebarSmall = {
 		[index in SidebarKey]: {
@@ -102,7 +92,6 @@
 		}
 	} as const;
 
-	export let currentSidebar: Writable<SidebarKey> = writable('backstage');
 </script>
 
 <script lang="ts">

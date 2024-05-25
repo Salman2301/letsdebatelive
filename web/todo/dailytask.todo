@@ -1,11 +1,5 @@
 TODO:
 
-  Svelte V5:
-    ✔ Remove on:click @done(24-05-25 22:52)
-    ☐ Avoide using svelte store?
-    ☐ slot
-
-
   Backstage Feature:
     ☐ Subscribe to backstage panel
       ☐ Check if the the, backstage is full before insert
@@ -19,8 +13,6 @@ TODO:
 
     ☐ On backstage complete 
       - Write the integration test
-
-
   Screen:
     ☐ List all the screen
   Non-active-user:

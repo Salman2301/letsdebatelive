@@ -1,8 +1,8 @@
 Code:
   ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
-  ☐ Convert all the svg icons and move to `$lib/component/icon`
+  ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)
   ☐ Remove empty files
-  ☐ Remove too many relative parent folder in import statement `../../../../../Component`
+  ✔ Remove too many relative parent folder in import statement `../../../../../Component` @done(24-05-26 00:23)
 
 Design:
   ☐ Update pixel perfect setup and design it in figma
@@ -27,6 +27,11 @@ Re-Write:
 Security:
   ☐ 
 
+  
+Svelte V5:
+  ✔ Remove on:click @done(24-05-25 22:52)
+  ☐ Avoide using svelte store?
+  slot
 Optimization:
   ☐ Have a field `username` in the `live_debate` table. so, we don't need to keep looking for `*, host(*)` in the select statement
     ☐ Don't let the user to change their username during the live stream

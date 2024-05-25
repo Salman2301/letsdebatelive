@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getContext } from "svelte";
-	import { currentSidebar } from "../../../Sidebar.svelte";
-  
+	import { getContext } from "svelte";  
+	import { currentSidebar } from "$lib/stores/sidebar.store";
+
 	import type { Tables } from "$lib/schema/database.types";
-	import type { Readable, Writable } from "svelte/store";
+	import type { Writable } from "svelte/store";
 
   interface Props {
     type: "backstage" | "stage";
@@ -22,7 +22,7 @@
     <p>No user(s) in backstage</p>
   {:else}
     <p>
-      <button onclick={()=>$currentSidebar="backstageSetting"}>Stage is empty!</button>
+      <button onclick={()=>$currentSidebar="backstage"}>Stage is empty!</button>
     </p>
   {/if}
 {:else}
@@ -30,7 +30,7 @@
     <p>No user(s) in backstage</p>
   {:else}
     <p>
-      <button onclick={()=>$currentSidebar="backstageSetting"}>Stage is empty!</button>
+      <button onclick={()=>$currentSidebar="backstage"}>Stage is empty!</button>
     </p>
   {/if}
 {/if}

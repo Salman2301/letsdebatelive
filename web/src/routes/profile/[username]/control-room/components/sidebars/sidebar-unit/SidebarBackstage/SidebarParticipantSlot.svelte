@@ -34,8 +34,8 @@
 	
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
 	import { authUserData } from '$lib/components/auth/auth.store';
+	import { currentSidebar } from '$lib/stores/sidebar.store';
 	import { getSupabase } from '$lib/supabase';
-	import { currentSidebar } from '../../../Sidebar.svelte';
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Readable, Writable } from 'svelte/store';
