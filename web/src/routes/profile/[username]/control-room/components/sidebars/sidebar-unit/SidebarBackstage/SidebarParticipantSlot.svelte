@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_MAP_TEAM_COLOR, CTX_KEY_LIVE_PARTICIPANT } from './../../../../constant';
+	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_MAP_TEAM_COLOR, CTX_KEY_LIVE_PARTICIPANT } from '$lib/constant/context_key';
 	import SettingIcon from '$lib/components/icon/SettingIcon.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import Button from '$lib/components/button/Button.svelte';
@@ -273,7 +273,7 @@
 			onclick={()=>{
 				$currentSidebar = type === "backstage" ? "participants": "backstageSetting"; 
 			}}
-			label={type === "stage"? "Goto Backstage panel": "Goto Stage panel"}
+			label={type === "stage"? "Goto Backstage panel": "Show current stage member?"}
 			fillType="dark"
 			fontType="normal"
 		/>

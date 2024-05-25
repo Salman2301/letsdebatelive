@@ -3,7 +3,7 @@
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 
-	import { CTX_KEY_LIVE_DEBATE } from './constant';
+	import { CTX_KEY_LIVE_DEBATE } from '$lib/constant/context_key';
 	import { getContext, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';

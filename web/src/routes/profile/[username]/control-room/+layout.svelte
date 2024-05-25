@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from './constant';
+	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from '$lib/constant/context_key';
 	import Sidebar from './components/Sidebar.svelte';
 	import { getContext, onDestroy, setContext } from 'svelte';
 	import { onMount } from 'svelte';

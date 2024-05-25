@@ -11,7 +11,7 @@
 
 	import { lastScreenPayloadContent } from '$lib/components/video-feed/scenes/store/scene';
 	import { getSupabase } from '$lib/supabase';
-	import { CTX_KEY_LIVE_DEBATE } from "../../constant";
+	import { CTX_KEY_LIVE_DEBATE } from "$lib/constant/context_key";
 	
 	import type { LayerIdContent } from '$lib/components/video-feed/video-feed.types';
 	import type { Writable } from 'svelte/store';
