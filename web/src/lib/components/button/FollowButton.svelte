@@ -8,7 +8,7 @@
 	let { followed = false }: Props = $props();
 </script>
 
-<Button label="" on:click={() => (followed = !followed)}>
+<Button label="" onclick={() => (followed = !followed)}>
 	<span slot="icon-left" class="follow-icon">
 		<svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path

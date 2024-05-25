@@ -4,11 +4,12 @@
 	interface Props {
 		label: string;
 		feedType?: "profile" | "screen"
+		onclick?: ()=>void;
 	}
-	let { label = 'No Feed', feedType="profile" }: Props = $props();
+	let { label = 'No Feed', feedType="profile", onclick }: Props = $props();
 </script>
 
-<button class="no-feed-container" on:click>
+<button class="no-feed-container" onclick={onclick}>
 	<div class="content">
 		<p>{label}</p>
 	</div>

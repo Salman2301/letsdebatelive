@@ -14,7 +14,7 @@
 	import { page } from '$app/stores';
 
 
-	let currentState: number = 3;
+	let currentState: number = 1;
 	// @ts-expect-error
 	let stageInstance: [StageTestingFeeds, StageTeam, StageDebate, StageStudio, StageBroadcast] = [];
 
@@ -23,6 +23,7 @@
 	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
 
 	async function handleNext() {
+		console.log("handle nexgt!")
 		await stageInstance[currentState - 1].beforeOnNext();
 		if (currentState === 5) {
 			// redirect to control room
@@ -73,11 +74,11 @@
 			color="secondary"
 			fillType="outline-solid"
 			width={120}
-			on:click={handlePrev}
+			onclick={handlePrev}
 		/>
 	</div>
 
-	<Button label="Next" color="secondary" width={120} on:click={handleNext} />
+	<Button label="Next" color="secondary" width={120} onclick={handleNext} />
 </div>
 
 <style lang="postcss">

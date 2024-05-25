@@ -284,13 +284,16 @@
 					speaker_id: speakerDeviceId,
 					mic_id: micDeviceId,
 
-					team: "",
+					team: "5932f887-2683-4489-b659-2024f57fd80d",
 					display_name: "Host",
 					location: "stage",
 
 				}]).select();
 				
-				if( hostError || !hostData ) throw new Error("Failed to create database participants!");
+				if( hostError || !hostData ) {
+					console.error(hostError)
+					throw new Error("Failed to create database participants!")
+				};
 
 				$hostParticipant = hostData[0];
 
@@ -318,7 +321,7 @@
 	<div class="video-title-container">
 		<div class="video-container">
 			{#if !webcamFeedPlaying}
-				<NoFeedCard label="No web camera feed" feedType="profile" on:click={toggleWebCam} />
+				<NoFeedCard label="No web camera feed" feedType="profile" onclick={toggleWebCam} />
 			{/if}
 
 			<video bind:this={videoInstance} class="video-el" autoplay playsinline>
@@ -326,7 +329,7 @@
 			</video>
 		</div>
 		<div class="header">
-			<button on:click={toggleWebCam} class="btn-icon">
+			<button onclick={toggleWebCam} class="btn-icon">
 				{#if webcamFeedPlaying}
 					<WebCamEnabled />
 				{:else}
@@ -351,12 +354,12 @@
 				<track kind="captions" />
 			</video>
 			{#if !screenSharePlaying}
-				<NoFeedCard label="No screen share feed" on:click={toggleScreenShare} feedType="screen" />
+				<NoFeedCard label="No screen share feed" onclick={toggleScreenShare} feedType="screen" />
 			{/if}
 		</div>
 
 		<div class="header">
-			<button on:click={toggleScreenShare} class="btn-icon">
+			<button onclick={toggleScreenShare} class="btn-icon">
 				{#if screenSharePlaying}
 					<ScreenShareEnabled />
 				{:else}
@@ -375,7 +378,7 @@
 	<div class="audio-mic-container">
 		<Heading3 content="MICROPHONE" />
 		<div class="audio-select-container">
-			<select class="select-audio" bind:value={micDeviceId} on:change={micAnalyser}>
+			<select class="select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
 				{#each kindMapDevices['audioinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
@@ -388,7 +391,7 @@
 	<div class="audio-speaker-container">
 		<Heading3 content="SPEAKER" />
 		<div class="audio-select-container">
-			<select class="select-audio" bind:value={speakerDeviceId} on:change={handleSpeakerChange}>
+			<select class="select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
 				{#each kindMapDevices['audiooutput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
@@ -396,7 +399,7 @@
 
 			<Button
 				label={speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
-				on:click={toggleSound}
+				onclick={toggleSound}
 				color={speakerIsPlaying ? 'accent-red' : 'secondary'}
 				fillType="{speakerIsPlaying ? "solid": "outline-solid"}"
 			/>

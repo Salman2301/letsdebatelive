@@ -44,10 +44,6 @@
     audioDeviceManager.resumeContext();
   }
 
-  function handleOutputChange(event) {
-
-  }
-
   function handleDeviceOutputChange() {
     audioDeviceManager.setOutputDevice(currentOutputDeviceId);
   }
@@ -58,15 +54,15 @@
 
 <div class="container">
   
-<button on:click={handleTestMic}>Test Mic</button>
+<button onclick={handleTestMic}>Test Mic</button>
 
-<select bind:value={currentInputDeviceId} placeholder="Microphone" on:change={handleDeviceInputChange}>
+<select bind:value={currentInputDeviceId} placeholder="Microphone" onchange={handleDeviceInputChange}>
   {#each inputDevices as inputDevice}
     <option value={inputDevice.deviceId}>{inputDevice.label}</option>
   {/each}
 </select>
 
-<select bind:value={currentOutputDeviceId} placeholder="Speaker" on:change={handleDeviceOutputChange}>
+<select bind:value={currentOutputDeviceId} placeholder="Speaker" onchange={handleDeviceOutputChange}>
   {#each outputDevices as outputDevice}
     <option value={outputDevice.deviceId}>{outputDevice.label}</option>
   {/each}

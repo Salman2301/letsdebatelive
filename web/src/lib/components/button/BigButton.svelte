@@ -6,9 +6,10 @@
 		color?: "primary" | "secondary";
 		isLoading?: boolean;
 		disabled?: boolean;
+		onclick?: ()=>void
 	}
 	
-	let { label = "Button", color="primary", isLoading = false, disabled=false }: Props = $props();
+	let { label = "Button", color="primary", isLoading = false, disabled=false, onclick }: Props = $props();
 	
 </script>
 
@@ -17,7 +18,7 @@
 	class:secondary={color === "secondary"}
 	class:loading={isLoading}
 	disabled={isLoading || disabled}
-  on:click
+  {onclick}
 >
 	{#if isLoading}
 		<Loader />

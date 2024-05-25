@@ -35,7 +35,7 @@
       {:else}
         <div class="flex items-center w-full mt-10 justify-center flex-col gap-4 bg-secondary-dark/40 py-2 rounded">   
           <p class="text-white/80 text-xs">No participant found (Optional)</p>     
-          <Button label="Invite user" color="secondary" fillType="dark" on:click={()=>newToast({ type: "error", message: "Not implemented!"})} >
+          <Button label="Invite user" color="secondary" fillType="dark" onclick={()=>newToast({ type: "error", message: "Not implemented!"})} >
             <svg slot="icon-left" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.5 2.5V11.25" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M3.125 6.875H11.875" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
