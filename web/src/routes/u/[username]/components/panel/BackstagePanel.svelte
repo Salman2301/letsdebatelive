@@ -10,6 +10,7 @@
 		DeviceMicDisabled,
 		DeviceMic
 	} from '$lib/components/icon';
+	import type { Tables } from '$lib/schema/database.types';
 	import type { PageData } from '../../page.types';
 
   
@@ -22,10 +23,11 @@
 	});
 
   interface Props {
-    pageData: PageData | null;
+    // pageData: PageData | null;
+    participants: Tables<"live_debate_participants">[];
   }
 
-  let { pageData = $bindable(null) }: Props = $props();
+  let { participants = $bindable([]) }: Props = $props();
 
 	function toggleDevice(device: keyof typeof audienceSetting) {
 		audienceSetting[device] = !audienceSetting[device];
@@ -36,7 +38,7 @@
 
 <div class="backstage-section">
   <div class="audience-container">
-    {#each new Array(pageData?.participants.length).fill('') as item}
+    {#each new Array(participants.length).fill('') as item}
       <div class="audience">{item}</div>
     {/each}
   </div>

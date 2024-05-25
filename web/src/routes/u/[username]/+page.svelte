@@ -3,6 +3,12 @@
 	import FollowButton from '$lib/components/button/FollowButton.svelte';
 	import BackstagePanel from './components/panel/BackstagePanel.svelte';
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
+	
+	import { getContext, onDestroy, onMount } from 'svelte';
+	import { getSupabase } from '$lib/supabase';
+	import { authUserData } from '$lib/components/auth/auth.store';
+
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { PageServerData } from './$types';
 
 	interface Props {
@@ -13,6 +19,48 @@
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 	let userJoined = $state(data.isJoined);
 
+	const supabase = getSupabase(getContext);
+	let backstageChannel: RealtimeChannel;
+
+	let participants = $state(data.participants || []);
+	let isJoined = $state(data.isJoined);
+	
+	onMount(()=>{
+		if( data.isJoined && data?.live_debate?.id) {
+			backstageChannel = supabase.channel(`backstage_${data.live_debate.id}`);
+
+			backstageChannel.on("postgres_changes",
+				{
+					event: '*',
+					schema: 'public',
+					table: 'live_debate_participants',
+					filter: `live_debate=eq.${data.live_debate.id}`		
+				},
+				payload=>syncBackstage()
+			)
+
+			backstageChannel.subscribe();
+		}
+	});
+
+	async function syncBackstage() {
+		if( !data?.live_debate?.id) return;
+		if( !$authUserData ) {
+			return;
+		}
+		const { data: participantsData, error  } = await supabase.from("live_debate_participants")
+			.select().eq("live_debate", data.live_debate.id);
+
+		participants = participantsData || [];
+
+		isJoined = !!participants.find(item=>item.participant_id === $authUserData.id )
+
+		if(!isJoined) backstageChannel.unsubscribe();
+	}
+
+	onDestroy(()=>{
+		backstageChannel?.unsubscribe();
+	})
 
 </script>
 
@@ -20,7 +68,7 @@
 	<div class="live-video-content">
 		<div class="video-container"></div>
 		{#if userJoined}
-			<BackstagePanel bind:pageData={data}/>
+			<BackstagePanel bind:participants={participants}/>
 		{:else}
 			<JoinBackstagePanel />
 		{/if}

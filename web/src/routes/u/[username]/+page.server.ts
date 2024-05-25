@@ -9,6 +9,7 @@ export async function load({ locals, params }) {
     user: null,
     participants: [],
     isJoined: false,
+    live_debate: null,
     myBackstageInfo: null
   }
   const supabase = locals.supabase;
@@ -29,6 +30,7 @@ export async function load({ locals, params }) {
   // TODO: get only the published!
   const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username)
 
+  PAGE_DATA.live_debate = live_debates?.[0] ?? null;
   const liveDebateId = live_debates?.[0]?.id;
 
   if (error || live_debates.length === 0 || typeof liveDebateId !== "string" ) {
