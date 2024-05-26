@@ -11,13 +11,13 @@ export type Database = {
     Tables: {
       live_debate: {
         Row: {
-          backstage_allow_only: string | null
+          backstage_audience:
+            | Database["public"]["Enums"]["audience_type"][]
+            | null
           backstage_max: number | null
+          chat_audience: Database["public"]["Enums"]["audience_type"][] | null
           chat_filter_words: string | null
-          chat_follower_only: boolean | null
           chat_rules: string | null
-          chat_support_only: boolean | null
-          chat_team_only: string | null
           created_at: string
           debate_type: string | null
           debater_card_show: boolean | null
@@ -29,16 +29,16 @@ export type Database = {
           publishedTz: string | null
           studio_mode: boolean | null
           title: string | null
-          viewer_type: string | null
+          viewer_audience: Database["public"]["Enums"]["audience_type"][] | null
         }
         Insert: {
-          backstage_allow_only?: string | null
+          backstage_audience?:
+            | Database["public"]["Enums"]["audience_type"][]
+            | null
           backstage_max?: number | null
+          chat_audience?: Database["public"]["Enums"]["audience_type"][] | null
           chat_filter_words?: string | null
-          chat_follower_only?: boolean | null
           chat_rules?: string | null
-          chat_support_only?: boolean | null
-          chat_team_only?: string | null
           created_at?: string
           debate_type?: string | null
           debater_card_show?: boolean | null
@@ -50,16 +50,18 @@ export type Database = {
           publishedTz?: string | null
           studio_mode?: boolean | null
           title?: string | null
-          viewer_type?: string | null
+          viewer_audience?:
+            | Database["public"]["Enums"]["audience_type"][]
+            | null
         }
         Update: {
-          backstage_allow_only?: string | null
+          backstage_audience?:
+            | Database["public"]["Enums"]["audience_type"][]
+            | null
           backstage_max?: number | null
+          chat_audience?: Database["public"]["Enums"]["audience_type"][] | null
           chat_filter_words?: string | null
-          chat_follower_only?: boolean | null
           chat_rules?: string | null
-          chat_support_only?: boolean | null
-          chat_team_only?: string | null
           created_at?: string
           debate_type?: string | null
           debater_card_show?: boolean | null
@@ -71,16 +73,11 @@ export type Database = {
           publishedTz?: string | null
           studio_mode?: boolean | null
           title?: string | null
-          viewer_type?: string | null
+          viewer_audience?:
+            | Database["public"]["Enums"]["audience_type"][]
+            | null
         }
         Relationships: [
-          {
-            foreignKeyName: "live_debate_chat_team_only_fkey"
-            columns: ["chat_team_only"]
-            isOneToOne: false
-            referencedRelation: "live_debate_team"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "public_live_debate_host_fkey"
             columns: ["host"]
@@ -128,6 +125,42 @@ export type Database = {
           },
           {
             foreignKeyName: "debate_agenda_team_fkey"
+            columns: ["team"]
+            isOneToOne: false
+            referencedRelation: "live_debate_team"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_debate_audience_team_only: {
+        Row: {
+          created_at: string
+          live_debate: string
+          service: Database["public"]["Enums"]["audience_service"]
+          team: string
+        }
+        Insert: {
+          created_at?: string
+          live_debate: string
+          service: Database["public"]["Enums"]["audience_service"]
+          team: string
+        }
+        Update: {
+          created_at?: string
+          live_debate?: string
+          service?: Database["public"]["Enums"]["audience_service"]
+          team?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_debate_audience_team_only_live_debate_fkey"
+            columns: ["live_debate"]
+            isOneToOne: false
+            referencedRelation: "live_debate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_debate_audience_team_only_team_fkey"
             columns: ["team"]
             isOneToOne: false
             referencedRelation: "live_debate_team"
@@ -776,6 +809,14 @@ export type Database = {
       }
     }
     Enums: {
+      audience_service: "viewer" | "chat" | "backstage"
+      audience_type:
+        | "supporter"
+        | "follower"
+        | "team-only"
+        | "registered"
+        | "anonymous"
+        | "invite_only"
       notification_service:
         | "live_chat"
         | "backstage_chat"

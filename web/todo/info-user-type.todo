@@ -10,3 +10,33 @@ user_type:
   ☐ follower
   ☐ register
   ☐ anonymous
+
+----
+☐ Co-host
+----
+
+roles:
+  ☐ host
+  ☐ co-host
+  ☐ moderator
+  ☐ audience
+  
+backstage_type:
+  ☐ supporter
+  ☐ team-only
+    ☐ Team A
+    ☐ Team B
+    ☐ Team C
+  ☐ follower
+  ☐ register
+  ☐ anonymous
+
+chat_enable:
+  ☐ Supporter
+  ☐ Team
+    ☐ Team A
+    ☐ Team B
+    ☐ Team C
+  ☐ follower
+  ☐ register
+  ☐ anonymous

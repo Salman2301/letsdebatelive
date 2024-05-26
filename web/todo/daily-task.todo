@@ -2,7 +2,9 @@ TODO:
 
   BACKSTAGE_TYPE:
 
-  Separate kick all
+  Bulk Action: 
+    ☐ Separate kick all button in bulk action
+    ☐ Bulk backstage should only affect the `audience` not the `co-host`
 
   Backstage Feature:
     ☐ Subscribe to backstage panel
@@ -12,10 +14,11 @@ TODO:
         ✘ For now let's just check it in server action @cancelled(24-05-26 02:50)
           ✘ Re-write move to stage using server function. @cancelled(24-05-26 02:50)
           ☐ Check if the max stage is less than current stage participants
-      ☐ Check if the backstage panel is open only for selected team
+      ☐ Check if the backstage panel is open only for selected team / audience type
       ☐ Save setting button
-      ☐ Display the team modal
+      ☐ List teams
         ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)
+
 
       ☐ Show the user image in the backstage panel @low
       ☐ On mic input, show the sound wave on the icon @low 
@@ -58,7 +61,7 @@ TODO:
     ☐ Add before trigger to check if the user ?
 
   Modal:
-    ☐ Show the list of team
+    ☐ Show the list of team for UI
     ☐ User device setup and test
 
 

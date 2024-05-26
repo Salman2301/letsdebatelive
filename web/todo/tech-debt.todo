@@ -1,8 +1,8 @@
 Code:
   ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
-  ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)
   ☐ Remove empty files
   ✔ Remove too many relative parent folder in import statement `../../../../../Component` @done(24-05-26 00:23)
+  ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)
 
 Design:
   ☐ Update pixel perfect setup and design it in figma

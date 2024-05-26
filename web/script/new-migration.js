@@ -41,16 +41,20 @@ function executeMigration(migrationName, rl) {
 	});
 
 	supabaseProcess.on('close', () => {
-		console.log("Migration successfully executed");
-
-		exec('supabase migration list', (err, stdout) => {
-			if (err) {
-				console.error(err);
-				return;
-			}
-			console.log(stdout);
-		});
-		console.log("Run 'supabase db push' to sync to remote db")
-		rl.close();
+		console.log("Migration successfully executed\n");
+		console.log("Updating types based on current migration:");
+		console.log("> npm run db:types");
+		exec('npm run db:types', (err, stdout) => {
+			console.log("> supabase migration list");
+			exec('supabase migration list', (err, stdout) => {
+				if (err) return console.error(err);;
+				
+				console.log(stdout);
+				console.log("Run below code to sync to remote db:")
+				console.log("supabase db push")
+			});
+			rl.close();
+		})
+		
 	});
 }
