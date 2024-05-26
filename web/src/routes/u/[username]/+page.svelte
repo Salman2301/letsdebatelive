@@ -70,7 +70,6 @@
 
 		myBackstageInfo = participants.find((item) => item.participant_id === $authUserData.id) || null;
 
-		console.log({ cam: myBackstageInfo?.cam_enable });
 		isJoined = !!myBackstageInfo;
 		if (!isJoined) backstageChannel.unsubscribe();
 	}

@@ -29,7 +29,7 @@ export async function load({ locals, params }) {
   if (!username) throw redirect(303, "/?error=INVALID_USERID");
   
   // TODO: get only the published!
-  const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username)
+  const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username).not('host', 'is', null)
 
   PAGE_DATA.live_debate = live_debates?.[0] ?? null;
   const liveDebateId = live_debates?.[0]?.id;
@@ -89,7 +89,8 @@ export const actions = {
     if( typeof username !== "string" || username === "" ) return fail(404, { message: "Invalid username!"})
 
       
-    const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username)
+    const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username).not('host', 'is', null)
+
 
     const live_debate = live_debates?.[0]
     const liveDebateId = live_debate?.id;
@@ -103,7 +104,7 @@ export const actions = {
     async function getAnyTeamId(liveDebateId: string): Promise<string> {
       const { data, error } = await supabase.from("live_debate_team").select("id")
         .eq("live_debate", liveDebateId);
-      
+      if(!data?.[0]?.id) console.error(`Invalid team found for ${liveDebateId}`)
       return data?.[0]?.id || "invalid";
     }
 
@@ -149,7 +150,7 @@ export const actions = {
     if( typeof username !== "string" || username === "" ) return fail(404, { message: "Invalid username!"})
 
       
-    const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username)
+    const { data: live_debates, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username).not('host', 'is', null);
 
     const liveDebateId = live_debates?.[0]?.id;
 
