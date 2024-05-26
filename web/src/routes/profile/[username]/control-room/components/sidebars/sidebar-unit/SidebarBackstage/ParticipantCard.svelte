@@ -285,7 +285,7 @@
 		@apply bg-primary-dark;
 	}
 	.btn-stage:disabled {
-		@apply bg-light-gray;
+		background: darkgray;
 		@apply cursor-not-allowed;
 	}
 	.btn-action {

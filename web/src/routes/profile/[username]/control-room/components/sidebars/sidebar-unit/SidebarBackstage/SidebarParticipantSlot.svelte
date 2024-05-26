@@ -14,6 +14,7 @@
 	import DeviceUserProfile from '$lib/components/icon/DeviceUserProfile.svelte';
 	import DeviceUserProfileDisabled from '$lib/components/icon/DeviceUserProfileDisabled.svelte';
 	import ParticipantCardList from './ParticipantCardList.svelte';
+	import SidebarSetting from './SidebarSetting.svelte';
 	import NoParticipant from './NoParticipant.svelte';
 
 	import { getContext } from 'svelte';
@@ -117,7 +118,10 @@
 
 <!-- svelte-ignore slot_element_deprecated -->
 {#if showSetting}
-	<slot name="setting"></slot>
+	<SidebarSetting
+		{type}
+		onclose={() => (showSetting = false)}
+	/>
 {:else}
 	<div class="header-center">
 		<Button
@@ -179,28 +183,34 @@
 			</div>
 		</div>
 	{/if}
-	<div class="view-mode-container">
-		<button
-			class="view-mode grid"
-			class:active={viewMode === 'grid'}
-			onclick={() => (viewMode = 'grid')}
-		>
-			<GridMode />
-		</button>
-		<button
-			class="view-mode list"
-			class:active={viewMode === 'list'}
-			onclick={() => (viewMode = 'list')}
-		>
-			<ListMode />
-		</button>
+	
+	<div class="stage-full-view-mode">
+		{#if type==="backstage" && filteredParticipants.length > 0 && isStageFull}
+			<button
+				onclick={()=>$currentSidebar = "participants"}
+				class="text-stage-full"
+			>The stage is full! (Remove some user)</button>
+			{:else}
+				<div></div>
+		{/if}
+
+		<div class="view-mode-container">
+			<button
+				class="view-mode grid"
+				class:active={viewMode === 'grid'}
+				onclick={() => (viewMode = 'grid')}
+			>
+				<GridMode />
+			</button>
+			<button
+				class="view-mode list"
+				class:active={viewMode === 'list'}
+				onclick={() => (viewMode = 'list')}
+			>
+				<ListMode />
+			</button>
+		</div>
 	</div>
-	{#if type==="backstage" && isStageFull}
-		<button
-			onclick={()=>$currentSidebar = "participants"}
-			class="w-full text-center flex items-center justify-center"
-		>The stage is full! remove some user</button>
-	{/if}
 	<div class="participant-card-container">
 		{#if viewMode === 'grid'}
 			{#each filteredParticipants as participant (participant.participant_id)}
@@ -269,11 +279,9 @@
 		background-color: #3a0e63;
 		@apply p-2 pl-4 pr-6;
 		@apply my-2;
-		/* opacity: 0.6; */
 		margin-top: -52px;
 		z-index: 4;
 		@apply relative;
-		/* transform: translateY(-60px); */
 	}
 
 	.header {
@@ -320,10 +328,21 @@
 
 	.dropdown-label {
 		width: 150px;
+		@apply text-sm;
+	}
+	.stage-full-view-mode{
+		@apply flex justify-between;
+		@apply mt-2;
 	}
 
+	.text-stage-full {
+		@appply text-center flex items-center justify-start;
+		@apply text-accent-red;
+		@apply font-bold;
+		@apply pl-4;
+	}
 	.view-mode-container {
-		@apply flex w-full justify-end;
+		@apply flex justify-end;
 		@apply pr-4;
 	}
 	.view-mode {
