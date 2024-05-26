@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       live_debate: {
         Row: {
+          auto_move_to_stage: boolean | null
           backstage_audience:
             | Database["public"]["Enums"]["audience_type"][]
             | null
@@ -32,6 +33,7 @@ export type Database = {
           viewer_audience: Database["public"]["Enums"]["audience_type"][] | null
         }
         Insert: {
+          auto_move_to_stage?: boolean | null
           backstage_audience?:
             | Database["public"]["Enums"]["audience_type"][]
             | null
@@ -55,6 +57,7 @@ export type Database = {
             | null
         }
         Update: {
+          auto_move_to_stage?: boolean | null
           backstage_audience?:
             | Database["public"]["Enums"]["audience_type"][]
             | null
