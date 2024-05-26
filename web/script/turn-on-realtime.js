@@ -8,6 +8,10 @@ const supabase = createClient(
   process.env.SUPABASE_SECRET_KEY
 );
 
-let { error } = await supabase.rpc('turn_on_realtime', {});
-if (error) throw new Error(error.message)
+let { error } = await supabase.rpc('turn_on_realtime');
+if (error) {
+  console.log(`Sometimes 127.0.0.1 throws error use localhost and try again >`)
+  console.error({error, url: process.env.PUBLIC_SUPABASE_URL })
+  throw new Error(error.message)
+}
 else console.log(`Real-time is turned on for 'live_*' table`);

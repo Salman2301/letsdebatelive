@@ -1,6 +1,7 @@
 import { exec, spawn } from 'child_process';
 import * as readline from 'readline';
 
+console.log(`> supabase db diff`)
 const dryRunProcess = spawn('supabase', ['db', 'diff']);
 	let noSchemChangeText = "No schema changes found";
 	let noSchemChange = false;
@@ -30,6 +31,7 @@ const dryRunProcess = spawn('supabase', ['db', 'diff']);
 	});
 	
 function executeMigration(migrationName, rl) {
+	console.log(`> supabase db diff --file ${migrationName}`)
 	const supabaseProcess = spawn('supabase', ['db', 'diff', '--file', migrationName]);
 
 	supabaseProcess.stdout.on('data', (data) => {

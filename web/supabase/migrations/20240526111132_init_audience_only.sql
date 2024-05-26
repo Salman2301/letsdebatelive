@@ -1,6 +1,6 @@
 create type "public"."audience_service" as enum ('viewer', 'chat', 'backstage');
 
-create type "public"."audience_type" as enum ('supporter', 'follower', 'team-only', 'registered', 'anonymous', 'invite_only');
+create type "public"."audience_type" as enum ('supporter', 'follower', 'team-only', 'registered', 'anonymous', 'invite_only', 'none');
 
 alter table "public"."live_debate" drop constraint "live_debate_chat_team_only_fkey";
 

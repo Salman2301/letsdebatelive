@@ -823,6 +823,7 @@ export type Database = {
         | "registered"
         | "anonymous"
         | "invite_only"
+        | "none"
       notification_service:
         | "live_chat"
         | "backstage_chat"

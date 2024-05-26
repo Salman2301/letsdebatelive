@@ -217,7 +217,7 @@
 			}
 		}
 	}
-	
+
 </script>
 
 <div class="px-4">
@@ -280,7 +280,7 @@
 				<option value="team-only-{team.id}">Team - {team.title}</option>
 			{/each}
 			<option value="" disabled>----</option>
-			<option value="disabled">Disable</option>
+			<option value="none">Disable</option>
 		</select>
 	</div>
 
@@ -296,7 +296,7 @@
 				<option value="team-only-{team.id}">Team - {team.title}</option>
 			{/each}
 			<option value="" disabled>----</option>
-			<option value="disabled">Disable</option>
+			<option value="none">Disable</option>
 		</select>
 	</div>
 
@@ -312,7 +312,7 @@
 				<option value="team-only-{team.id}">Team - {team.title}</option>
 			{/each}
 			<option value="" disabled>----</option>
-			<option value="disabled">Disable</option>
+			<option value="none">Disable</option>
 		</select>
 	</div>
 	<div class="mt-12">
