@@ -478,6 +478,7 @@ export type Database = {
           color: string
           created_at: string
           id: string
+          is_default: boolean | null
           live_debate: string
           slug: string
           title: string
@@ -486,6 +487,7 @@ export type Database = {
           color: string
           created_at?: string
           id?: string
+          is_default?: boolean | null
           live_debate: string
           slug: string
           title: string
@@ -494,6 +496,7 @@ export type Database = {
           color?: string
           created_at?: string
           id?: string
+          is_default?: boolean | null
           live_debate?: string
           slug?: string
           title?: string
