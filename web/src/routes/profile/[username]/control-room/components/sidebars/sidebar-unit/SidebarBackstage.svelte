@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SidebarParticipantSlot from "./SidebarBackstage/SidebarParticipantSlot.svelte";
 
-	let showSetting = $state(false);
+	let showSetting = $state(true);
 	let type: "backstage" | "stage" = $state("backstage");
 </script>
 

@@ -3,19 +3,18 @@
 	import SmallSidePanel from "./components/mini-panel/MiniPanel.svelte";
 	import LayoutHeader from './components/layout-action/LayoutHeader.svelte';
 
-	import { CTX_KEY_LIVE_DEBATE } from '$lib/constant/context_key';
 	import { getContext, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
 
-	import type { Tables } from '$lib/schema/database.types';
-	import type { Writable } from 'svelte/store';
+	import { getControlRoomCtx } from '$lib/context/control-room';
 
   const supabase = getSupabase(getContext);
-  const live_debate: Writable<Tables<"live_debate">> = getContext(CTX_KEY_LIVE_DEBATE);
+  const live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate")
 
   onMount(async ()=>{
-    emitSceneChange(supabase, $live_debate?.id, {
+    if(!$live_debate?.id) return;
+    emitSceneChange(supabase, $live_debate.id, {
       sceneType: "scene_content",
       layerId: "profile_multiple"
     });
@@ -25,6 +24,7 @@
   });
 
   async function handleLive() {
+    if(!$live_debate?.id) return;
     // Create a live_debate
     emitBroadcastEvent(supabase, "broadcast_start", $live_debate?.id);
   }

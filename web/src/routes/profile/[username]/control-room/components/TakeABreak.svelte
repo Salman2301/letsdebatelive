@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE } from '$lib/constant/context_key';
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';
-	import type { Tables } from '$lib/schema/database.types';
-	import type { Writable } from 'svelte/store';
+	import { getControlRoomCtx } from '$lib/context/control-room';
 
 	const supabase = getSupabase(getContext);
-	let live_debate: Writable<Tables<"live_debate">> = getContext(CTX_KEY_LIVE_DEBATE);
+	let live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
   
   let timeout = $state("5min");
   function handleLayoutShift() {
+		if(!$live_debate?.id) return;
     const breakEnd = new Date();
     breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
     breakEnd.setSeconds(breakEnd.getSeconds() +1);

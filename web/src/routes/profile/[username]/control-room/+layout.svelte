@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { CTX_KEY_LIVE_DEBATE, CTX_KEY_LIVE_PARTICIPANT, CTX_KEY_LIVE_TEAM, CTX_KEY_LIVE_PARTICIPANT_STAGE, CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, CTX_KEY_MAP_TEAM_COLOR } from '$lib/constant/context_key';
 	import Sidebar from './components/Sidebar.svelte';
 	import { getContext, onDestroy, setContext } from 'svelte';
+	import { setControlRoomCtx } from '$lib/context/control-room';
 	import { onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { derived, writable, type Readable, type Writable } from 'svelte/store';
@@ -38,19 +38,18 @@
 		}, {});
 	});
 
-	setContext(CTX_KEY_LIVE_DEBATE, liveDebate);
+	setControlRoomCtx(setContext, "ctx_table$live_debate", liveDebate);
 
-	setContext(CTX_KEY_LIVE_PARTICIPANT, participants);
-	setContext(CTX_KEY_LIVE_PARTICIPANT_STAGE, participantsOnStage);
-	setContext(CTX_KEY_LIVE_PARTICIPANT_BACKSTAGE, participantsBackStage);
+	setControlRoomCtx(setContext, "ctx_table$live_debate_participants", participants);
+	setControlRoomCtx(setContext, "ctx_table$live_debate_participants_stage", participantsOnStage);
+	setControlRoomCtx(setContext, "ctx_table$live_debate_participants_backstage", participantsBackStage);
 
-	setContext(CTX_KEY_LIVE_TEAM, teams);
-	setContext(CTX_KEY_MAP_TEAM_COLOR, teamMapColor);
+	setControlRoomCtx(setContext, "ctx_table$live_debate_team", teams);
+	setControlRoomCtx(setContext, "ctx_map$teamColor", teamMapColor);
 
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 
 	onMount(async () => {
-		// Check if the current user name match with the route
 
 		const { data: liveDebateData, error: liveDebateError } = await supabase
 			.from('live_debate')

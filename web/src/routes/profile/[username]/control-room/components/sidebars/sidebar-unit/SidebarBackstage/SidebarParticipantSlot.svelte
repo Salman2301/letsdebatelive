@@ -19,11 +19,6 @@
 
 	import { getContext } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import {
-		CTX_KEY_LIVE_DEBATE,
-		CTX_KEY_MAP_TEAM_COLOR,
-		CTX_KEY_LIVE_PARTICIPANT
-	} from '$lib/constant/context_key';
 
 	import { CloseX, DownArrow, Link, ListMode, GridMode } from '$lib/components/icon';
 
@@ -32,8 +27,8 @@
 	import { currentSidebar } from '$lib/stores/sidebar.store';
 	import { getSupabase } from '$lib/supabase';
 
+	import { getControlRoomCtx } from '$lib/context/control-room';
 	import type { Tables } from '$lib/schema/database.types';
-	import type { Readable, Writable } from 'svelte/store';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -45,11 +40,10 @@
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants: Writable<Tables<'live_debate_participants'>[]> =
-		getContext(CTX_KEY_LIVE_PARTICIPANT);
-	
-	let liveDebate: Writable<Tables<'live_debate'>> = getContext(CTX_KEY_LIVE_DEBATE);
-	let teamMapColor: Readable<Record<string, string>> = getContext(CTX_KEY_MAP_TEAM_COLOR);
+	let participants = getControlRoomCtx(getContext, "ctx_table$live_debate_participants");
+	let live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
+	let teamMapColor = getControlRoomCtx(getContext, "ctx_map$teamColor");
+
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []
@@ -58,9 +52,10 @@
 	let isStageFull: boolean = $state(false);
 
 	$effect(()=>{
+		if(!$participants || !$live_debate) return;
 		const currentStageCount = $participants.filter(e=>e.location==="stage").length;
 
-		isStageFull = currentStageCount >= $liveDebate.max_stage
+		isStageFull = currentStageCount >= $live_debate.max_stage
 	});
 
 	let viewMode: 'list' | 'grid' = $state('list');
@@ -90,7 +85,7 @@
 		const { data, error } = await supabase
 			.from('live_debate_participants')
 			.update(toUpdate)
-			.eq('live_debate', $liveDebate.id);
+			.eq('live_debate', $live_debate?.id as string);
 	}
 
 	async function handleCopyLink() {
@@ -212,24 +207,24 @@
 		</div>
 	</div>
 	<div class="participant-card-container">
-		{#if viewMode === 'grid'}
+		{#if viewMode === 'grid' && $live_debate}
 			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCard
 					{participant}
 					{isStageFull}
-					live_debate={$liveDebate}
+					live_debate={$live_debate}
 					teamMapColor={$teamMapColor}
 					type={type}
 				/>
 			{:else}
 				<NoParticipant {type} />
 			{/each}
-		{:else}
+		{:else if viewMode==="list" && $live_debate}
 			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCardList
 					{isStageFull}
 					{participant}
-					live_debate={$liveDebate}
+					live_debate={$live_debate}
 					teamMapColor={$teamMapColor}
 					type={type}
 				/>

@@ -1,5 +1,6 @@
 TODO:
 
+  BACKSTAGE_TYPE:
 
   Separate kick all
 
@@ -12,6 +13,7 @@ TODO:
           ✘ Re-write move to stage using server function. @cancelled(24-05-26 02:50)
           ☐ Check if the max stage is less than current stage participants
       ☐ Check if the backstage panel is open only for selected team
+      ☐ Save setting button
       ☐ Display the team modal
         ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)
 
@@ -22,6 +24,7 @@ TODO:
       - Write the integration test
   Screen:
     ☐ List all the screen
+
   Non-active-user:
     ☐ Check if the user is stil `online`, after 2-mins timeout remove the user.
 
@@ -32,7 +35,7 @@ TODO:
 
   Live Page:
     ☐ Connect title
-    ☐ Connect host nane
+    ☐ Connect host name
     ☐ Setup image
       ☐ Update the seed to upload the image in the storage?
       ☐ Get the follower count

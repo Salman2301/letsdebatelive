@@ -21,7 +21,7 @@
 	});
 
 	interface Props {
-		live_debate_id: string;
+		live_debate_id?: string;
 	}
 
 	let { live_debate_id }: Props = $props();
@@ -51,6 +51,7 @@
 	});
 
 	async function onParticpantChange() {
+		if(!live_debate_id) return;
 		const { data, error } = await supabase.from('live_debate_participants')
 			.select()
 			.eq("live_debate", live_debate_id)

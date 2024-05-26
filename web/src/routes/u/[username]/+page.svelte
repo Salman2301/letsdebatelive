@@ -158,7 +158,6 @@
 
 <style lang="postcss">
 	.page-container {
-		@apply w-full;
 		@apply flex gap-2;
 		@apply mx-2;
 	}

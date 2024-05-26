@@ -2,18 +2,36 @@
 	import Button from "$lib/components/button/Button.svelte";
 	import { GoBack } from "$lib/components/icon";
 
+  let showSubmit: boolean = $state(true);
+
   interface Props {
     type: "backstage" | "stage";
     onclose?: () => void;
   }
+
+  // const liveD
+
   const { onclose, type }: Props = $props();
+
+
 </script>
 
 
 <div class="px-4">
-  <Button label="Back to {type==="stage" ? "Stage" : "Backstage"}" fillType="hover" onclick={onclose} >
-    <GoBack slot="icon-left"/>
-  </Button>
+  <div class="flex justify-between">
+    <Button label="Back to {type==="stage" ? "Stage" : "Backstage"}" fillType="hover" onclick={onclose} >
+      <GoBack slot="icon-left"/>
+    </Button>
+    {#if showSubmit}
+      <Button
+        color="secondary"
+        label="Save"
+        width={120}
+      />
+    {:else}
+      <div></div>
+    {/if}
+  </div>
 
   <div class="setting-item">
     <label class="label" for="in-min-participant">Min. number of participant</label>
@@ -31,7 +49,7 @@
   </div>
   
   <div class="setting-item">
-    <label class="label" for="drop-allowed-member">Backstage open for</label>
+    <label class="label" for="drop-allowed-member">Backstage open only for</label>
     <select id="drop-allowed-member">
       <option value="none">None</option>
       <option value="anyone">Anyone</option>
@@ -44,6 +62,8 @@
       <option>Team - Team A</option>
     </select>
   </div>
+
+  <!-- Show list of teams below and the user can change the color -->
 </div>
 
 <style lang="postcss">
