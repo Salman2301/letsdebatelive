@@ -40,3 +40,15 @@ chat_enable:
   ☐ follower
   ☐ register
   ☐ anonymous
+
+
+audience_type:
+  ☐ backstage?
+  ☐ supporter
+  ☐ Team
+    ☐ Team A
+    ☐ Team B
+    ☐ Team C
+  ☐ follower
+  ☐ register
+  ☐ anonymous
