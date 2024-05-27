@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Heading2 from "../form/Heading2.svelte";
-	import { currentModal } from "./modal.store";
+	import Heading2 from '../form/Heading2.svelte';
+	import { currentModal } from './modal.store';
 
 	interface Props {
 		showModal?: boolean;
@@ -9,7 +9,6 @@
 	}
 
 	let { children, title = '' }: Props = $props();
-
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -18,7 +17,7 @@
 	<div class="container">
 		<div>
 			<div class="header">
-				<div class="title"><Heading2 content={title}/></div>
+				<div class="title"><Heading2 content={title} /></div>
 				<button onclick={() => ($currentModal = null)}>
 					<svg
 						width="30"
@@ -44,12 +43,10 @@
 					</svg>
 				</button>
 			</div>
-	
+
 			{@render children?.()}
 		</div>
 	</div>
-
-	
 </div>
 
 <style>
@@ -57,7 +54,7 @@
 		position: absolute;
 		width: 100vw;
 		height: 100vh;
-		background-color: rgba(0,0,0,0.25);
+		background-color: rgba(0, 0, 0, 0.25);
 		z-index: 999;
 
 		display: flex;
@@ -110,7 +107,7 @@
 	button:hover {
 		animation: spin 0.2s;
 	}
-	
+
 	@keyframes spin {
 		0% {
 			transform: rotate(0deg);
@@ -119,5 +116,4 @@
 			transform: rotate(90deg);
 		}
 	}
-
 </style>

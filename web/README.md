@@ -1,23 +1,24 @@
-
 ### Tech:
-  - SvelteKit
-  - TailwindCSS
-  - Supabase
 
-
+- SvelteKit
+- TailwindCSS
+- Supabase
 
 ### Supabase
+
 - Install supabase locally,
 - Run `supabase link` to link the project with the remote supabase db
 
 ## Migration
 
 ### This will generate a migration file based on the local and remote DB
+
 ```sh
  supabase db diff --file migration-name
 ```
 
 ### To delete a migration run
+
 ```sh
 supabase migration list
 ```
@@ -31,11 +32,13 @@ supabase migration repair $id --status reverted --local
 ```
 
 ### Push the migration changes to the remote db
+
 ```sh
 suapabse db push
 ```
 
 ## Seed
+
 User A
 email: TeamUser1-A@example.com
 password: TeamUser1-A
@@ -45,4 +48,5 @@ password: TeamUser1-A
 npm run db:seed:dump
 
 Missing seeds:
-  - Supabase real time
+
+- Supabase real time

@@ -14,7 +14,7 @@
 
 	interface Props {
 		data: PageServerData;
-    form: ActionData;
+		form: ActionData;
 	}
 
 	let { data, form }: Props = $props();
@@ -35,7 +35,6 @@
 		screenshare_enable: !!myBackstageInfo?.screenshare_enable,
 		speaker_enable: !!myBackstageInfo?.speaker_enable
 	});
-	
 
 	onMount(() => {
 		if (data.isJoined && data?.live_debate?.id) {
@@ -74,13 +73,13 @@
 		if (!isJoined) backstageChannel.unsubscribe();
 	}
 
-  if(form && form.error_code && form.error_code === "MAX_PARTICIPANT") {
-    newToast({
-      type: "error",
-      message: form.message
-    });
-  }
-	
+	if (form && form.error_code && form.error_code === 'MAX_PARTICIPANT') {
+		newToast({
+			type: 'error',
+			message: form.message
+		});
+	}
+
 	onDestroy(() => {
 		backstageChannel?.unsubscribe();
 	});

@@ -1,39 +1,36 @@
-import type { Database, Tables } from "./database.types";
+import type { Database, Tables } from './database.types';
 
-type TableList = keyof Database["public"]["Tables"];
+type TableList = keyof Database['public']['Tables'];
 
 export type SubscriptionCB<T extends TableList> = EventInsert<T> | EventDelete<T> | EventUpdate<T>;
 
-
 type EventInsert<T extends TableList> = BaseSubscriptionResult & {
-  table: T;
-  eventType: "INSERT";
-  new: Tables<T>;
-  old: object;
+	table: T;
+	eventType: 'INSERT';
+	new: Tables<T>;
+	old: object;
 };
 
 type EventDelete<T extends TableList> = BaseSubscriptionResult & {
-  table: T;
-  eventType: "DELETE";
-  new: object;
-  old: Partial<Tables<T>>;
+	table: T;
+	eventType: 'DELETE';
+	new: object;
+	old: Partial<Tables<T>>;
 };
 
 type EventUpdate<T extends TableList> = BaseSubscriptionResult & {
-  table: T;
-  eventType: "UPDATE";
-  new: Tables<T>;
-  old: Partial<Tables<T>>;
+	table: T;
+	eventType: 'UPDATE';
+	new: Tables<T>;
+	old: Partial<Tables<T>>;
 };
 
 type BaseSubscriptionResult = {
-  schema: "public";
-  commit_timestamp: string;
-  old: Record<string, string>
-  error: any | null;
-}
-
-
+	schema: 'public';
+	commit_timestamp: string;
+	old: Record<string, string>;
+	error: any | null;
+};
 
 /*
   // Update

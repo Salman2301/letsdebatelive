@@ -25,7 +25,7 @@
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
 		isStageFull: boolean;
-		type: "stage" | "backstage";
+		type: 'stage' | 'backstage';
 	}
 
 	let { participant, live_debate, teamMapColor, isStageFull, type }: Props = $props();
@@ -93,7 +93,9 @@
 	}
 
 	async function toggleLocation() {
-		await updateLiveDebateParticipant({ location: participant.location === "stage" ? "backstage" : "stage" });
+		await updateLiveDebateParticipant({
+			location: participant.location === 'stage' ? 'backstage' : 'stage'
+		});
 	}
 
 	async function deleteParticipant() {
@@ -104,7 +106,6 @@
 				.eq('live_debate', live_debate.id)
 				.eq('participant_id', participant.participant_id)
 				.throwOnError();
-
 		} catch (e) {
 			console.error(e);
 			newToast({
@@ -120,10 +121,8 @@
 		<button onclick={deleteParticipant} class="btn-remove">
 			<UserRemove />
 		</button>
-	
-		<div class="username-img-default">
-			
-		</div>
+
+		<div class="username-img-default"></div>
 		<div>
 			<div class="username-text">
 				<div class="team-circle" style="background-color:{teamMapColor[participant.team]}"></div>
@@ -179,7 +178,7 @@
 			<button
 				class="btn-stage"
 				onclick={() => toggleLocation()}
-				disabled={type==="backstage" && isStageFull}
+				disabled={type === 'backstage' && isStageFull}
 			>
 				{participant?.location === 'stage' ? 'Move to Backstage' : 'Add to Stage'}
 			</button>
@@ -200,7 +199,7 @@
 	}
 
 	.left {
-		@apply flex items-center ;
+		@apply flex items-center;
 		@apply w-full;
 		width: 360px;
 		gap: 10px;
@@ -208,10 +207,10 @@
 	}
 
 	.btn-remove {
-		color: rgba(255,255,255, 0.6);
+		color: rgba(255, 255, 255, 0.6);
 	}
 	.btn-remove:hover {
-		color: rgba(255,255,255, 1);
+		color: rgba(255, 255, 255, 1);
 	}
 	.username-img-default {
 		aspect-ratio: 1;
@@ -291,7 +290,7 @@
 		background: darkgray;
 		@apply cursor-not-allowed;
 	}
-	
+
 	.btn-action {
 		@apply w-full flex justify-end;
 	}

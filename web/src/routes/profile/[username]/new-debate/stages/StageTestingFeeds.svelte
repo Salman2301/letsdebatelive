@@ -7,10 +7,15 @@
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icon';
 	import NoFeedCard from '../components/NoFeedCard.svelte';
-	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE } from '../new-debate.constant';
+	import {
+		CTX_KEY_HOST_PARTICIPANT,
+		CTX_KEY_NEW_DEBATE,
+		type CTX_KEY_HOST_PARTICIPANT_TYPE,
+		type CTX_KEY_NEW_DEBATE_TYPE
+	} from '../new-debate.constant';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
-	
+
 	import type { Tables } from '$lib/schema/database.types';
 
 	let errorWebcamFeed: string = '';
@@ -33,7 +38,7 @@
 		value: string;
 	}
 
-	const supabase = getSupabase(getContext)
+	const supabase = getSupabase(getContext);
 
 	async function getDevices(): Promise<SelectOptions[]> {
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -256,58 +261,65 @@
 		try {
 			// add host to the current  participants table
 			// Create a live debate If the debate didn't exist in the store
-			// 
-			if( !$liveDebate?.id ) {
-				const { data, error } = await supabase.from("live_debate").insert([{
-					host: $authUserData?.id as string,
-					studio_mode: true,
-				}]).select();
+			//
+			if (!$liveDebate?.id) {
+				const { data, error } = await supabase
+					.from('live_debate')
+					.insert([
+						{
+							host: $authUserData?.id as string,
+							studio_mode: true
+						}
+					])
+					.select();
 
-				if( error || !data ) throw new Error("Failed create debate");
-				
-				$liveDebate = data[0] as Tables<"live_debate">;
+				if (error || !data) throw new Error('Failed create debate');
 
-				const { data: hostData, error: hostError } = await supabase.from("live_debate_participants").insert([{
-					live_debate: $liveDebate.id as string,
-					is_host: true,
+				$liveDebate = data[0] as Tables<'live_debate'>;
 
-					cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
-					mic_available: kindMapDevices.audioinput.length > 0,
-					speaker_available: kindMapDevices.audiooutput.length > 0,
-					screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
-					
-					cam_enable: webcamFeedPlaying,
-					mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
-					speaker_enable: kindMapDevices.audiooutput.length > 0,
+				const { data: hostData, error: hostError } = await supabase
+					.from('live_debate_participants')
+					.insert([
+						{
+							live_debate: $liveDebate.id as string,
+							is_host: true,
 
-					cam_id: webCamDeviceId,
-					speaker_id: speakerDeviceId,
-					mic_id: micDeviceId,
+							cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
+							mic_available: kindMapDevices.audioinput.length > 0,
+							speaker_available: kindMapDevices.audiooutput.length > 0,
+							screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
 
-					team: "5932f887-2683-4489-b659-2024f57fd80d",
-					display_name: "Host",
-					location: "stage",
+							cam_enable: webcamFeedPlaying,
+							mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
+							speaker_enable: kindMapDevices.audiooutput.length > 0,
 
-				}]).select();
-				
-				if( hostError || !hostData ) {
-					console.error(hostError)
-					throw new Error("Failed to create database participants!")
-				};
+							cam_id: webCamDeviceId,
+							speaker_id: speakerDeviceId,
+							mic_id: micDeviceId,
+
+							team: '5932f887-2683-4489-b659-2024f57fd80d',
+							display_name: 'Host',
+							location: 'stage'
+						}
+					])
+					.select();
+
+				if (hostError || !hostData) {
+					console.error(hostError);
+					throw new Error('Failed to create database participants!');
+				}
 
 				$hostParticipant = hostData[0];
-
 			}
 
 			return true;
-		}
-		catch(e) {
+		} catch (e) {
 			console.error(e);
 			newToast({
-				type: "error",
-				message: "Something went wrong!"
+				type: 'error',
+				message: 'Something went wrong!'
 			});
-			throw new Error("Failed to create new debate")
+			throw new Error('Failed to create new debate');
 		}
 	}
 </script>
@@ -401,7 +413,7 @@
 				label={speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
 				onclick={toggleSound}
 				color={speakerIsPlaying ? 'accent-red' : 'secondary'}
-				fillType="{speakerIsPlaying ? "solid": "outline-solid"}"
+				fillType={speakerIsPlaying ? 'solid' : 'outline-solid'}
 			/>
 		</div>
 	</div>

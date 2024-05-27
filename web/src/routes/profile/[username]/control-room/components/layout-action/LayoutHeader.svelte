@@ -11,19 +11,21 @@
 	import { lastScreenPayloadContent } from '$lib/components/video-feed/scenes/store/scene';
 	import { getSupabase } from '$lib/supabase';
 	import { getControlRoomCtx } from '$lib/context/control-room';
-	
+
 	import type { LayerIdContent } from '$lib/components/video-feed/video-feed.types';
 
 	let layerIdContent: LayerIdContent;
-	const live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
+	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
 	// made sense to use LayoutHeader for short
 
 	function handleStopBroadcast() {
-		if(!$live_debate?.id) return;
-		emitBroadcastEvent(supabase, 'broadcast_end', $live_debate.id, { liveDebateId: $live_debate.id });
+		if (!$live_debate?.id) return;
+		emitBroadcastEvent(supabase, 'broadcast_end', $live_debate.id, {
+			liveDebateId: $live_debate.id
+		});
 
 		emitSceneChange(supabase, $live_debate.id, {
 			sceneType: 'scene_end',
@@ -34,14 +36,13 @@
 		});
 	}
 
-	onMount(()=>{
+	onMount(() => {
 		layerIdContent = $lastScreenPayloadContent.layerId;
-	})
+	});
 
 	function setScreenLayout(newLayerIdContent?: LayerIdContent) {
-		if(!$live_debate?.id) return;
+		if (!$live_debate?.id) return;
 		if (newLayerIdContent) {
-
 			layerIdContent = newLayerIdContent;
 		}
 

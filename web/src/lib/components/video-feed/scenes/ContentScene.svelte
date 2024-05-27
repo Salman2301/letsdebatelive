@@ -7,11 +7,11 @@
 	// import { lastScreenPayloadContent } from './store/scente.store';
 
 	interface Props {
-		payload: ScenePayloadContent
+		payload: ScenePayloadContent;
 		participantsList: Tables<'live_debate_participants'>[];
 	}
 
-	let { payload, participantsList }: Props  = $props();
+	let { payload, participantsList }: Props = $props();
 	// let layoutId: LayoutContentType = "profile_multiple";
 	// let participantsList: Tables<'live_debate_participants'>[] = [ ];
 
@@ -46,7 +46,6 @@
 			<div class="w-full h-full">
 				<ScreenCard screen={filterScreen()} />
 			</div>
-
 		{:else if payload.layerId === 'screen_profile'}
 			<div class="m-4 flex items-center justify-between">
 				<div class="flex flex-col h-full">

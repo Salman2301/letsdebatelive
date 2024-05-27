@@ -1,13 +1,6 @@
 <script lang="ts">
-
-  export function beforeOnNext() {
-    
-  }
- 
+	export function beforeOnNext() {}
 </script>
 
-
-
 <style lang="postcss">
-
 </style>

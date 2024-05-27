@@ -1,14 +1,13 @@
 <script lang="ts">
-	import type { Tables } from "$lib/schema/database.types";
+	import type { Tables } from '$lib/schema/database.types';
 
-  let profileImage: string;
+	let profileImage: string;
 
 	interface Props {
-		type?: "audio" | "video";
-		participant: Tables<"live_debate_participants">;
+		type?: 'audio' | 'video';
+		participant: Tables<'live_debate_participants'>;
 	}
 	let { type, participant }: Props = $props();
-
 </script>
 
 <div class="card">
@@ -17,9 +16,9 @@
 			{participant.display_name?.[0].toUpperCase() || 'A'}
 		</div>
 	</div>
-  <div class="profile-name">
-    { participant?.display_name }
-  </div>
+	<div class="profile-name">
+		{participant?.display_name}
+	</div>
 </div>
 
 <style lang="postcss">
@@ -32,7 +31,6 @@
 		aspect-ratio: 4 / 3;
 		width: 200px;
 		@apply flex items-center justify-center;
-
 	}
 	.circle-icon {
 		width: 60px;

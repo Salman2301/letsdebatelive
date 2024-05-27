@@ -5,12 +5,18 @@
 	<span>
 		LETSDEBATE
 		<span class="live">
-			<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg
+				width="10"
+				height="10"
+				viewBox="0 0 10 10"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
 				<circle cx="5" cy="5" r="5" fill="#F81F1F" />
 			</svg>
 			LIVE
 		</span>
-</span>
+	</span>
 </a>
 
 <style lang="postcss">
@@ -36,9 +42,9 @@
 		from {
 			opacity: 0.8;
 		}
-    50% {
-      opacity: 1;
-    }
+		50% {
+			opacity: 1;
+		}
 		to {
 			opacity: 0.8;
 		}
@@ -47,9 +53,9 @@
 		from {
 			scale: 0.9;
 		}
-    50% {
-      scale: 1;
-    }
+		50% {
+			scale: 1;
+		}
 		to {
 			scale: 0.9;
 		}

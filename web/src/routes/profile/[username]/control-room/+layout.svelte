@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { derived, writable, type Readable, type Writable } from 'svelte/store';
-	import type { PageData } from "./$types";
+	import type { PageData } from './$types';
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { SubscriptionCB } from '$lib/schema/subscription.types';
@@ -13,7 +13,7 @@
 	const supabase = getSupabase(getContext);
 
 	interface Props {
-		data: PageData
+		data: PageData;
 	}
 	let { data }: Props = $props();
 
@@ -21,7 +21,9 @@
 
 	const teams: Writable<Tables<'live_debate_team'>[]> = writable(data.teamData);
 
-	const participants: Writable<Tables<'live_debate_participants'>[]> = writable(data.participantsData);
+	const participants: Writable<Tables<'live_debate_participants'>[]> = writable(
+		data.participantsData
+	);
 	const participantsOnStage: Readable<Tables<'live_debate_participants'>[]> = derived(
 		participants,
 		($participants) => $participants.filter((e) => e.location === 'stage')
@@ -38,19 +40,22 @@
 		}, {});
 	});
 
-	setControlRoomCtx(setContext, "ctx_table$live_debate", liveDebate);
+	setControlRoomCtx(setContext, 'ctx_table$live_debate', liveDebate);
 
-	setControlRoomCtx(setContext, "ctx_table$live_debate_participants", participants);
-	setControlRoomCtx(setContext, "ctx_table$live_debate_participants_stage", participantsOnStage);
-	setControlRoomCtx(setContext, "ctx_table$live_debate_participants_backstage", participantsBackStage);
+	setControlRoomCtx(setContext, 'ctx_table$live_debate_participants', participants);
+	setControlRoomCtx(setContext, 'ctx_table$live_debate_participants_stage', participantsOnStage);
+	setControlRoomCtx(
+		setContext,
+		'ctx_table$live_debate_participants_backstage',
+		participantsBackStage
+	);
 
-	setControlRoomCtx(setContext, "ctx_table$live_debate_team", teams);
-	setControlRoomCtx(setContext, "ctx_map$teamColor", teamMapColor);
+	setControlRoomCtx(setContext, 'ctx_table$live_debate_team', teams);
+	setControlRoomCtx(setContext, 'ctx_map$teamColor', teamMapColor);
 
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 
 	onMount(async () => {
-
 		const { data: liveDebateData, error: liveDebateError } = await supabase
 			.from('live_debate')
 			.select()

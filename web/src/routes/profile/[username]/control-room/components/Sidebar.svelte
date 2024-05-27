@@ -25,7 +25,6 @@
 	} from './sidebars/sidebar-unit';
 	import { currentSidebar, type SidebarKey } from '$lib/stores/sidebar.store';
 
-
 	type SidebarSmall = {
 		[index in SidebarKey]: {
 			label: string;
@@ -91,7 +90,6 @@
 			sidebar: SidebarBroadcast
 		}
 	} as const;
-
 </script>
 
 <script lang="ts">

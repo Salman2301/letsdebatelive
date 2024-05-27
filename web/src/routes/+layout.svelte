@@ -3,19 +3,19 @@
 	import { page } from '$app/stores';
 	import '../app.css';
 	import { screenWindowSizePx } from '$lib/stores/screen-size.store';
-	import { onMount, setContext } from "svelte";
+	import { onMount, setContext } from 'svelte';
 	import { authUserData } from '$lib/components/auth/auth.store';
 	import type { PageData } from './$types';
 
 	interface Props {
-		data: PageData
+		data: PageData;
 	}
 
-	const { data } : Props = $props();
+	const { data }: Props = $props();
 
-	setContext("lib_supabase", data.supabase);
+	setContext('lib_supabase', data.supabase);
 
-	onMount(async ()=>{
+	onMount(async () => {
 		await data.supabase.auth.getSession();
 
 		$authUserData = data.userData;

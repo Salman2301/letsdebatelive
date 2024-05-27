@@ -3,18 +3,24 @@
 
 	interface Props {
 		label: string;
-		feedType?: "profile" | "screen"
-		onclick?: ()=>void;
+		feedType?: 'profile' | 'screen';
+		onclick?: () => void;
 	}
-	let { label = 'No Feed', feedType="profile", onclick }: Props = $props();
+	let { label = 'No Feed', feedType = 'profile', onclick }: Props = $props();
 </script>
 
-<button class="no-feed-container" onclick={onclick}>
+<button class="no-feed-container" {onclick}>
 	<div class="content">
 		<p>{label}</p>
 	</div>
-	
-	<img src="{feedType === "profile"? "/images/thumbnail/NO_VIDEO_PROFILE.png" : "/images/thumbnail/NO_VIDEO_SCREEN.png"}" class="no-feed-thumbnail" alt="web cam feed" />
+
+	<img
+		src={feedType === 'profile'
+			? '/images/thumbnail/NO_VIDEO_PROFILE.png'
+			: '/images/thumbnail/NO_VIDEO_SCREEN.png'}
+		class="no-feed-thumbnail"
+		alt="web cam feed"
+	/>
 </button>
 
 <style lang="postcss">
@@ -33,6 +39,6 @@
 	}
 	p {
 		font-size: 18px;
-    color: orange;
+		color: orange;
 	}
 </style>

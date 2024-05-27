@@ -17,7 +17,7 @@
 				fill={followed ? '#F7F0FF' : 'rgba(0,0,0,0)'}
 			/>
 		</svg>
-  </span>
+	</span>
 </Button>
 
 <style lang="postcss">

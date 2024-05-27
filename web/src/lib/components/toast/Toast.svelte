@@ -11,18 +11,17 @@
 	const toast: Writable<ToastItemI[]> = writable([]);
 
 	export function newToast(toastNewMessage: ToastItemI) {
-
-    let id = toastNewMessage.id || genId();
-    setTimeout(()=>{
-      clear(id);
-    }, 14_000 )
+		let id = toastNewMessage.id || genId();
+		setTimeout(() => {
+			clear(id);
+		}, 14_000);
 		toast.set([...get(toast), { ...toastNewMessage, id }]);
 	}
 
 	export function clear(id: string) {
 		toast.set(get(toast).filter((e) => e.id !== id));
 	}
-</script> 
+</script>
 
 <script lang="ts">
 	import ToastItem from './ToastItem.svelte';

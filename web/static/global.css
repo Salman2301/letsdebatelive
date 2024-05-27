@@ -1,37 +1,44 @@
 :root {
-  --color-black: 0 0 0;
-  --color-white: 247 240 255;
-  --color-primary: 125 7 228;
-  --color-secondary: 139 4 87;
-  --color-primary-dark: 13 1 23;
-  --color-secondary-dark: 74 3 53;
-  --color-accent-gray: 39 39 39;
-  --color-accent-red: 193 6 62;
-  --color-accent-red-dark: 116 2 36;
-  --color-light-gray: rgba(204, 204, 204, 0.3);
-  --color-team-a: 50 222 138;
-  --color-team-b: 239 118 116;
-  --color-team-c: 68  131 255;
+	--color-black: 0 0 0;
+	--color-white: 247 240 255;
+	--color-primary: 125 7 228;
+	--color-secondary: 139 4 87;
+	--color-primary-dark: 13 1 23;
+	--color-secondary-dark: 74 3 53;
+	--color-accent-gray: 39 39 39;
+	--color-accent-red: 193 6 62;
+	--color-accent-red-dark: 116 2 36;
+	--color-light-gray: rgba(204, 204, 204, 0.3);
+	--color-team-a: 50 222 138;
+	--color-team-b: 239 118 116;
+	--color-team-c: 68 131 255;
 }
 
-html, body {
-  background: rgb(var(--color-black));
-  color: white;
-  box-sizing: border-box;
-
+html,
+body {
+	background: rgb(var(--color-black));
+	color: white;
+	box-sizing: border-box;
 }
 
-p, h1, h2, h3, h4, h5, h6, input {
-  color: rgb(var(--color-white));
-  font-family: "Urbanist";
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+	color: rgb(var(--color-white));
+	font-family: 'Urbanist';
 }
 
 input {
-  background: rgb(var(--color-black));
+	background: rgb(var(--color-black));
 }
 
 button:focus,
 input,
 select:focus {
-  outline: 1px solid var(--color-light-gray);
+	outline: 1px solid var(--color-light-gray);
 }

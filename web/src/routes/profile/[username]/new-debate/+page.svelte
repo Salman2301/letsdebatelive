@@ -5,14 +5,20 @@
 	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
 	import StageTeam from './stages/StageTeam.svelte';
 	import { getContext } from 'svelte';
-	import { CTX_KEY_HOST_PARTICIPANT, CTX_KEY_NEW_DEBATE, CTX_KEY_TITLE, type CTX_KEY_HOST_PARTICIPANT_TYPE, type CTX_KEY_NEW_DEBATE_TYPE, type CTX_KEY_TITLE_TYPE } from './new-debate.constant';
+	import {
+		CTX_KEY_HOST_PARTICIPANT,
+		CTX_KEY_NEW_DEBATE,
+		CTX_KEY_TITLE,
+		type CTX_KEY_HOST_PARTICIPANT_TYPE,
+		type CTX_KEY_NEW_DEBATE_TYPE,
+		type CTX_KEY_TITLE_TYPE
+	} from './new-debate.constant';
 	import StageDebate from './stages/StageDebate.svelte';
 	import StageBroadcast from './stages/StageBroadcast.svelte';
 	import StageStudio from './stages/StageStudio.svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-
 
 	let currentState: number = 1;
 	// @ts-expect-error
@@ -26,19 +32,18 @@
 		await stageInstance[currentState - 1].beforeOnNext();
 		if (currentState === 5) {
 			// redirect to control room
-			if(!$liveDebate) {
+			if (!$liveDebate) {
 				newToast({
-					type: "error",
-					message: "Something went wrong!"
+					type: 'error',
+					message: 'Something went wrong!'
 				});
-				throw new Error("Failed to get the live debate");
+				throw new Error('Failed to get the live debate');
 			}
 
 			$liveDebate.published = true;
 			$liveDebate.publishedTz = new Date().toISOString();
 
 			goto(`/profile/${$page.params.username}/control-room`);
-
 		}
 		currentState += 1;
 	}

@@ -60,16 +60,18 @@
 		// Check if the max stage is less than max participant
 		const toUpdate: Partial<Tables<'live_debate'>> = {};
 
-		if( Number(settingForm.maxParticipant) <= (Number(settingForm.maxStage)) ) {
+		if (Number(settingForm.maxParticipant) <= Number(settingForm.maxStage)) {
 			newToast({
-				type: "error",
+				type: 'error',
 				message: "Max participants can't be less than max. stage member"
 			});
 			return;
 		}
 
-		if (typeof settingForm.maxParticipant === "number" && settingForm.maxParticipant !== $live_debate.max_participants) {
-		
+		if (
+			typeof settingForm.maxParticipant === 'number' &&
+			settingForm.maxParticipant !== $live_debate.max_participants
+		) {
 			toUpdate.max_participants = settingForm.maxParticipant;
 		}
 
@@ -78,7 +80,7 @@
 		}
 
 		// Check if maxStage is less than maxParticipant
-		
+
 		if (settingForm.autoMoveToStage !== $live_debate.auto_move_to_stage) {
 			toUpdate.auto_move_to_stage = settingForm.autoMoveToStage;
 		}
@@ -226,7 +228,6 @@
 			}
 		}
 	}
-
 </script>
 
 <div class="px-4">

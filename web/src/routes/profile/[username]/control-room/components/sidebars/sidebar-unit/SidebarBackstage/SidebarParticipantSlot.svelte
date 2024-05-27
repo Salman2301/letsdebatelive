@@ -40,22 +40,21 @@
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants = getControlRoomCtx(getContext, "ctx_table$live_debate_participants");
-	let live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
-	let teamMapColor = getControlRoomCtx(getContext, "ctx_map$teamColor");
-
+	let participants = getControlRoomCtx(getContext, 'ctx_table$live_debate_participants');
+	let live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	let teamMapColor = getControlRoomCtx(getContext, 'ctx_map$teamColor');
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []
 	);
-	
+
 	let isStageFull: boolean = $state(false);
 
-	$effect(()=>{
-		if(!$participants || !$live_debate) return;
-		const currentStageCount = $participants.filter(e=>e.location==="stage").length;
+	$effect(() => {
+		if (!$participants || !$live_debate) return;
+		const currentStageCount = $participants.filter((e) => e.location === 'stage').length;
 
-		isStageFull = currentStageCount >= $live_debate.max_stage
+		isStageFull = currentStageCount >= $live_debate.max_stage;
 	});
 
 	let viewMode: 'list' | 'grid' = $state('list');
@@ -113,10 +112,7 @@
 
 <!-- svelte-ignore slot_element_deprecated -->
 {#if showSetting}
-	<SidebarSetting
-		{type}
-		onclose={() => (showSetting = false)}
-	/>
+	<SidebarSetting {type} onclose={() => (showSetting = false)} />
 {:else}
 	<div class="header-center">
 		<Button
@@ -178,15 +174,14 @@
 			</div>
 		</div>
 	{/if}
-	
+
 	<div class="stage-full-view-mode">
-		{#if type==="backstage" && filteredParticipants.length > 0 && isStageFull}
-			<button
-				onclick={()=>$currentSidebar = "participants"}
-				class="text-stage-full"
-			>The stage is full! (Remove some user)</button>
-			{:else}
-				<div></div>
+		{#if type === 'backstage' && filteredParticipants.length > 0 && isStageFull}
+			<button onclick={() => ($currentSidebar = 'participants')} class="text-stage-full"
+				>The stage is full! (Remove some user)</button
+			>
+		{:else}
+			<div></div>
 		{/if}
 
 		<div class="view-mode-container">
@@ -214,19 +209,19 @@
 					{isStageFull}
 					live_debate={$live_debate}
 					teamMapColor={$teamMapColor}
-					type={type}
+					{type}
 				/>
 			{:else}
 				<NoParticipant {type} />
 			{/each}
-		{:else if viewMode==="list" && $live_debate}
+		{:else if viewMode === 'list' && $live_debate}
 			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCardList
 					{isStageFull}
 					{participant}
 					live_debate={$live_debate}
 					teamMapColor={$teamMapColor}
-					type={type}
+					{type}
 				/>
 			{:else}
 				<NoParticipant {type} />
@@ -325,7 +320,7 @@
 		width: 150px;
 		@apply text-sm;
 	}
-	.stage-full-view-mode{
+	.stage-full-view-mode {
 		@apply flex justify-between;
 		@apply mt-2;
 	}

@@ -37,25 +37,29 @@
 
 		supabase
 			.channel(`participants_${live_debate_id}`)
-			.on("postgres_changes",
-			{
-				event: '*',
-				schema: 'public',
-				table: 'live_debate_participants',
-				filter: `live_debate=eq.${live_debate_id}`
-			}, (payload: RealtimePostgresChangesPayload<Tables<"live_debate_participants">>)=>onParticpantChange())
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'live_debate_participants',
+					filter: `live_debate=eq.${live_debate_id}`
+				},
+				(payload: RealtimePostgresChangesPayload<Tables<'live_debate_participants'>>) =>
+					onParticpantChange()
+			)
 			.subscribe();
 
-			onParticpantChange();
-
+		onParticpantChange();
 	});
 
 	async function onParticpantChange() {
-		if(!live_debate_id) return;
-		const { data, error } = await supabase.from('live_debate_participants')
+		if (!live_debate_id) return;
+		const { data, error } = await supabase
+			.from('live_debate_participants')
 			.select()
-			.eq("live_debate", live_debate_id)
-			.eq("location", "stage");
+			.eq('live_debate', live_debate_id)
+			.eq('location', 'stage');
 		participantsList = data ?? [];
 	}
 

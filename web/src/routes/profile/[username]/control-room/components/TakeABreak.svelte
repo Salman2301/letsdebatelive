@@ -5,14 +5,14 @@
 	import { getControlRoomCtx } from '$lib/context/control-room';
 
 	const supabase = getSupabase(getContext);
-	let live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
-  
-  let timeout = $state("5min");
-  function handleLayoutShift() {
-		if(!$live_debate?.id) return;
-    const breakEnd = new Date();
-    breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace("mins", "")));
-    breakEnd.setSeconds(breakEnd.getSeconds() +1);
+	let live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+
+	let timeout = $state('5min');
+	function handleLayoutShift() {
+		if (!$live_debate?.id) return;
+		const breakEnd = new Date();
+		breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace('mins', '')));
+		breakEnd.setSeconds(breakEnd.getSeconds() + 1);
 
 		emitSceneChange(supabase, $live_debate.id, {
 			sceneType: 'scene_break',
@@ -22,13 +22,12 @@
 				breakEndAt: breakEnd.toISOString()
 			}
 		});
-
-  }
+	}
 </script>
 
 <div class="container">
 	<button onclick={handleLayoutShift}> Take a break </button>
-	<select bind:value={timeout} >
+	<select bind:value={timeout}>
 		<option value="5min" selected>5 mins</option>
 		<option value="10min">10 mins</option>
 		<option value="15min">15 mins</option>

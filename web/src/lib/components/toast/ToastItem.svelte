@@ -9,7 +9,7 @@
 </script>
 
 <div class="container type-{data.type}">
-  <div class="loader"></div>
+	<div class="loader"></div>
 	<div class="content">
 		<div class="icon-container">
 			{#if data.type === 'success'}
@@ -107,25 +107,25 @@
 		border-radius: 4px;
 		margin-bottom: 10px;
 
-    --color-success: rgba(133, 255, 133, 0.8);
-    --color-error: rgba(255, 56, 56, 0.8);
-    --color-warn: rgba(255, 242, 95, 0.8);
-    --color-info: rgba(107, 107, 107, 0.8);
+		--color-success: rgba(133, 255, 133, 0.8);
+		--color-error: rgba(255, 56, 56, 0.8);
+		--color-warn: rgba(255, 242, 95, 0.8);
+		--color-info: rgba(107, 107, 107, 0.8);
 
-    overflow: hidden;
-    position: relative;
+		overflow: hidden;
+		position: relative;
 	}
-  .loader {
-    width: 0%;
-    position: absolute;
-    height: 4px;
-    top: 0px;
-    background-color: rgba(255,255,255,0.8);
-    animation: load 14.4s linear;
-    left: 0;
-  }
+	.loader {
+		width: 0%;
+		position: absolute;
+		height: 4px;
+		top: 0px;
+		background-color: rgba(255, 255, 255, 0.8);
+		animation: load 14.4s linear;
+		left: 0;
+	}
 
-  .type-success .loader {
+	.type-success .loader {
 		background-color: var(--color-success);
 	}
 	.type-error .loader {
@@ -138,14 +138,14 @@
 		background-color: var(--color-info);
 	}
 
-  @keyframes load {
-    0% {
-      width: 0%;
-    }
-    100% {
-      width: 100%;
-    }
-  }
+	@keyframes load {
+		0% {
+			width: 0%;
+		}
+		100% {
+			width: 100%;
+		}
+	}
 	.content {
 		@apply flex gap-1 w-full;
 	}

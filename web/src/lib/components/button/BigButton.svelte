@@ -1,24 +1,29 @@
 <script lang="ts">
-	import Loader from "../icon/Loader.svelte";
+	import Loader from '../icon/Loader.svelte';
 
 	interface Props {
 		label?: string;
-		color?: "primary" | "secondary";
+		color?: 'primary' | 'secondary';
 		isLoading?: boolean;
 		disabled?: boolean;
-		onclick?: ()=>void
+		onclick?: () => void;
 	}
-	
-	let { label = "Button", color="primary", isLoading = false, disabled=false, onclick }: Props = $props();
-	
+
+	let {
+		label = 'Button',
+		color = 'primary',
+		isLoading = false,
+		disabled = false,
+		onclick
+	}: Props = $props();
 </script>
 
 <button
-	class:primary={color === "primary"}
-	class:secondary={color === "secondary"}
+	class:primary={color === 'primary'}
+	class:secondary={color === 'secondary'}
 	class:loading={isLoading}
 	disabled={isLoading || disabled}
-  {onclick}
+	{onclick}
 >
 	{#if isLoading}
 		<Loader />
@@ -37,9 +42,9 @@
 		gap: 4px;
 		border-radius: 4px;
 		font-size: 18px;
-    width: 280px;
-    @apply text-center;
-    @apply border border-light-gray;
+		width: 280px;
+		@apply text-center;
+		@apply border border-light-gray;
 	}
 	button.loading {
 		@apply opacity-50 cursor-not-allowed;

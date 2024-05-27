@@ -4,7 +4,7 @@
 	import Modal from './Modal.svelte';
 	import BigButton from '$lib/components/button/BigButton.svelte';
 	import { currentModal } from './modal.store';
-	import { z } from "zod";
+	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
 	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
@@ -16,14 +16,13 @@
 
 	const form = {
 		email: '',
-		password: ''	
+		password: ''
 	};
 
 	const loginSchema = z.object({
 		email: z.string().email(),
 		password: z.string().regex(REGEX_PASSWORD_VALIDATION, {
-			message:
-				'Invalid password'
+			message: 'Invalid password'
 		})
 	});
 
@@ -32,17 +31,21 @@
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;
 
-	async function handleSubmit(event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
+	async function handleSubmit(
+		event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }
+	) {
 		try {
 			event.preventDefault();
 			parsed = loginSchema.safeParse(form);
 			hasErrors = hasErrorParse(parsed);
 			isLoading = true;
 
-			if(!parsed.success) throw new Error("Form error");
+			if (!parsed.success) throw new Error('Form error');
 
-			const { data: { session }} = await supabase.auth.getSession();
-			if( session ) throw new Error("Already signed in!");
+			const {
+				data: { session }
+			} = await supabase.auth.getSession();
+			if (session) throw new Error('Already signed in!');
 
 			const { data, error } = await supabase.auth.signInWithPassword({
 				email: form.email,
@@ -51,19 +54,18 @@
 
 			invalidateAll();
 			reloadPage();
-			if( error ) {
-				newToast({ type: "error", message: error.message })
+			if (error) {
+				newToast({ type: 'error', message: error.message });
 				throw new Error(error.message);
 			}
 
-			const { data: userData, error: errorData } = await supabase.from("user_data").select();
-			if(userData?.[0]) $authUserData = userData?.[0];
+			const { data: userData, error: errorData } = await supabase.from('user_data').select();
+			if (userData?.[0]) $authUserData = userData?.[0];
 			invalidateAll();
 
 			isLoading = false;
 			$currentModal = null;
-		}
-		catch(e) {
+		} catch (e) {
 			isLoading = false;
 			console.error(e);
 		}
@@ -72,15 +74,15 @@
 	function reloadPage() {
 		const thisPage = window.location.pathname;
 
-		goto('/', { invalidateAll: true }).then(
-			() => goto(thisPage)
-		);
+		goto('/', { invalidateAll: true }).then(() => goto(thisPage));
 	}
 
-	onMount(async ()=>{
-		const { data: { session }} = await supabase.auth.getSession();
-		if( session ) $currentModal = null; // close the modal
-	})
+	onMount(async () => {
+		const {
+			data: { session }
+		} = await supabase.auth.getSession();
+		if (session) $currentModal = null; // close the modal
+	});
 </script>
 
 <Modal title="Login">
@@ -92,16 +94,9 @@
 			name="email"
 			hasError={!!hasErrors?.email}
 		/>
-		<InPassword
-			bind:value={form.password}
-			hasError={!!hasErrors?.password}
-		/>
+		<InPassword bind:value={form.password} hasError={!!hasErrors?.password} />
 		<div class="text-content">
-			<button
-				class="w-full text-left"
-				onclick={() => currentModal.set('register')}
-				type="button"
-			>
+			<button class="w-full text-left" onclick={() => currentModal.set('register')} type="button">
 				Create an account? click here
 			</button>
 			<button

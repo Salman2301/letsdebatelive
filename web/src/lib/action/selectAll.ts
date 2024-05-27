@@ -1,8 +1,7 @@
 export function selectAll(node: HTMLInputElement, cb?: () => void) {
-
-  node.addEventListener("focus", selectAll);
+	node.addEventListener('focus', selectAll);
 	function selectAll() {
-		if (node && node.select ) node.select();
+		if (node && node.select) node.select();
 	}
 
 	return {

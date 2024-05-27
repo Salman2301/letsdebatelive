@@ -19,10 +19,10 @@
 </svg>
 
 <style lang="postcss">
-  svg {
-    @apply fill-accent-red;
-  }
+	svg {
+		@apply fill-accent-red;
+	}
 	svg:hover {
-    @apply text-accent-red;
-  }
+		@apply text-accent-red;
+	}
 </style>

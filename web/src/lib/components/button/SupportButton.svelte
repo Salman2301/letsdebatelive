@@ -1,16 +1,15 @@
 <script lang="ts">
-	import Button from "./Button.svelte";
-  
-  interface Props {
-    color?: "primary" | "secondary";
-  }
+	import Button from './Button.svelte';
 
-  const { color = "primary" }: Props = $props();
- 
+	interface Props {
+		color?: 'primary' | 'secondary';
+	}
+
+	const { color = 'primary' }: Props = $props();
 </script>
 
 <Button {color} label="Support">
-  <span slot="icon-left">
+	<span slot="icon-left">
 		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path
 				fill-rule="evenodd"
@@ -23,5 +22,4 @@
 </Button>
 
 <style lang="postcss">
-
 </style>

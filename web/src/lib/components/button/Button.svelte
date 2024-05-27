@@ -3,16 +3,24 @@
 		label: string;
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
-		fillType?: 'solid' | 'outline' | 'hover' | 'outline-solid' | 'solid-outline' | "dark" | "solid-white";
-		onclick?: ()=>void;
-		fontType?: "bold" | "semibold" | "normal";
+		fillType?:
+			| 'solid'
+			| 'outline'
+			| 'hover'
+			| 'outline-solid'
+			| 'solid-outline'
+			| 'dark'
+			| 'solid-white';
+		onclick?: () => void;
+		fontType?: 'bold' | 'semibold' | 'normal';
 	}
 	let {
 		label = 'Button',
 		color = 'primary',
 		fillType = 'solid',
-		width, onclick=()=>{},
-		fontType = "bold"
+		width,
+		onclick = () => {},
+		fontType = 'bold'
 	}: Props = $props();
 </script>
 
@@ -21,7 +29,7 @@
 	style="--theme-color:rgb(var(--color-{color}));--theme-color-dark:rgba(var(--color-{color}-dark));width: {width
 		? `${width}px`
 		: 'fit-content'};font-weight:{fontType}"
-	onclick={onclick}
+	{onclick}
 >
 	<slot name="icon-left" />
 	{label}
@@ -41,7 +49,6 @@
 		display: flex;
 		justify-content: center;
 	}
-
 
 	button {
 		&.fill-type-solid {
@@ -78,7 +85,7 @@
 				@apply bg-transparent;
 			}
 		}
-		
+
 		&.fill-type-solid-white {
 			background-color: var(--theme-color);
 			&:hover {

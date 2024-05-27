@@ -1,24 +1,23 @@
 <script lang="ts">
-	import Heading3 from "$lib/components/form/Heading3.svelte";
-	import { CheckMark, CloseX } from "$lib/components/icon";
-	import { getControlRoomCtx } from "$lib/context/control-room";
-	import { getSupabase } from "$lib/supabase";
-	import { getContext, tick } from "svelte";
-  import slugify from "slugify";
-	import TeamSettingItem from "./TeamSettingItem.svelte";
+	import Heading3 from '$lib/components/form/Heading3.svelte';
+	import { CheckMark, CloseX } from '$lib/components/icon';
+	import { getControlRoomCtx } from '$lib/context/control-room';
+	import { getSupabase } from '$lib/supabase';
+	import { getContext, tick } from 'svelte';
+	import slugify from 'slugify';
+	import TeamSettingItem from './TeamSettingItem.svelte';
 
- 
 	const teams = getControlRoomCtx(getContext, 'ctx_table$live_debate_team');
-  const live_debate = getControlRoomCtx(getContext, "ctx_table$live_debate");
-  const supabase = getSupabase(getContext);
+	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	const supabase = getSupabase(getContext);
 
-  let newTeamValue = $state("");
-  let showSubmitBtn = $derived(!!newTeamValue);
-  
+	let newTeamValue = $state('');
+	let showSubmitBtn = $derived(!!newTeamValue);
+
 	async function onKeydownChange(event: KeyboardEvent) {
 		await tick();
 		if (event.key === 'Escape') {
-			newTeamValue = "";
+			newTeamValue = '';
 			(event.target as HTMLInputElement).blur?.();
 			return;
 		}
@@ -27,84 +26,70 @@
 			(event.target as HTMLInputElement).blur?.();
 			return;
 		}
-
 	}
 
-  async function newTeam() {
-    if(!$live_debate?.id) return;
+	async function newTeam() {
+		if (!$live_debate?.id) return;
 
-    await supabase.from("live_debate_team").insert({
-      color: getAvailableColor(),
-      live_debate: $live_debate?.id,
-      slug: slugify(newTeamValue),
-      title: newTeamValue,
-      is_default: false
-    });
-		newTeamValue = "";
-    refreshTeamData();
-
-  }
+		await supabase.from('live_debate_team').insert({
+			color: getAvailableColor(),
+			live_debate: $live_debate?.id,
+			slug: slugify(newTeamValue),
+			title: newTeamValue,
+			is_default: false
+		});
+		newTeamValue = '';
+		refreshTeamData();
+	}
 
 	function getAvailableColor(): string {
-		const availableColors = [
-			"#32DE8A",
-			"#EF7674",
-			"#F2AF29",
-			"#ff0000",
-			"#00ff00",
-			"#0000ff",
-		];
+		const availableColors = ['#32DE8A', '#EF7674', '#F2AF29', '#ff0000', '#00ff00', '#0000ff'];
 
-		const currentColorsUsed = $teams.map(item=>item.color); 
+		const currentColorsUsed = $teams.map((item) => item.color);
 
-		for( let color of availableColors ) {
+		for (let color of availableColors) {
 			const isUsed = currentColorsUsed.includes(color);
-			if(!isUsed) return color;
+			if (!isUsed) return color;
 		}
 
-		return "#000000";
-
+		return '#000000';
 	}
 
-  async function refreshTeamData() {
-    if(!$live_debate?.id) return;
+	async function refreshTeamData() {
+		if (!$live_debate?.id) return;
 
-    const { data: newTeamsData } = await supabase.from("live_debate_team").select().eq("live_debate", $live_debate.id).order("title");
+		const { data: newTeamsData } = await supabase
+			.from('live_debate_team')
+			.select()
+			.eq('live_debate', $live_debate.id)
+			.order('title');
 
-    if(newTeamsData) teams.set(newTeamsData);
-  }
-
+		if (newTeamsData) teams.set(newTeamsData);
+	}
 </script>
-
 
 <Heading3 content="Team" textAlign="center" />
 <p class="team-desc">Split your audience into different teams</p>
 <div class="teams-container">
-  {#each $teams as team (team.id)}
-    <TeamSettingItem {team} onsubmit={refreshTeamData}/>
-  {/each}
+	{#each $teams as team (team.id)}
+		<TeamSettingItem {team} onsubmit={refreshTeamData} />
+	{/each}
 </div>
 <div class="new-team-container">
-  <input
-    class="in-new-team"
-    placeholder="+ Create new team"
-    bind:value={newTeamValue}
-    onkeydown={onKeydownChange}
-  />
+	<input
+		class="in-new-team"
+		placeholder="+ Create new team"
+		bind:value={newTeamValue}
+		onkeydown={onKeydownChange}
+	/>
 
-  <button
-		class="btn-new-team"
-		onclick={newTeam}
-		class:hidden={!showSubmitBtn}
-	>
-    <CheckMark />
-  </button>
+	<button class="btn-new-team" onclick={newTeam} class:hidden={!showSubmitBtn}>
+		<CheckMark />
+	</button>
 </div>
 
 <style lang="postcss">
-
-
-.team-desc {
+	.team-desc {
 		@apply text-xs font-bold mb-2;
 		color: #ccc;
 	}

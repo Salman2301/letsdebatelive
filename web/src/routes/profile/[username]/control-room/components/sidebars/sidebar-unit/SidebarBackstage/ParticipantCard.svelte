@@ -12,20 +12,19 @@
 		DeviceUserProfile,
 		DeviceUserProfileDisabled,
 		UserBan,
-		CheckMark,
+		CheckMark
 	} from '$lib/components/icon';
-	
 
 	import { getContext, tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Tables } from '$lib/schema/database.types';
-	
+
 	interface Props {
 		participant: Tables<'live_debate_participants'>;
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
 		isStageFull: boolean;
-		type: "backstage" | "stage";
+		type: 'backstage' | 'stage';
 	}
 
 	let { participant, live_debate, teamMapColor, isStageFull, type }: Props = $props();
@@ -93,7 +92,9 @@
 	}
 
 	async function toggleLocation() {
-		await updateLiveDebateParticipant({ location: participant.location === "stage" ? "backstage" : "stage" });
+		await updateLiveDebateParticipant({
+			location: participant.location === 'stage' ? 'backstage' : 'stage'
+		});
 	}
 
 	async function deleteParticipant() {
@@ -179,7 +180,7 @@
 			<button
 				class="btn-stage"
 				onclick={() => toggleLocation()}
-				disabled={type==="backstage" && isStageFull}
+				disabled={type === 'backstage' && isStageFull}
 			>
 				{participant?.location === 'stage' ? 'Move to backstage' : 'Move to stage'}
 			</button>
