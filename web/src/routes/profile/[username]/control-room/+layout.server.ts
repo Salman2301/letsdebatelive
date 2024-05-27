@@ -7,7 +7,7 @@ export async function load({ locals, params }) {
   if (!username) throw redirect(303, "/?error=INVALID_USERNAME");
   // TODO: check only for published VOD
   // check username against the live debate and get the live debate
-  const { data, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username);
+  const { data, error } = await supabase.from("live_debate").select("*, host(*)").eq("host.username", username).not("host", "is", null);
   
   if (error) {
     console.error(error)
@@ -22,10 +22,10 @@ export async function load({ locals, params }) {
     { data: teamData, error: teamError },
     { data: participantsData, error: participantsError }
   ] = await Promise.all([
-    supabase.from("live_debate_team").select().eq("live_debate", liveDebateId),
+    supabase.from("live_debate_team").select().eq("live_debate", liveDebateId).order("title"),
     supabase.from("live_debate_participants").select().eq("live_debate", liveDebateId),
   ]);
-
+  console.log({ teamData, participantsData })
   if (teamError ) {
     console.error(teamError);
     throw redirect(303, "/?error=SERVER_ERROR_TEAM");
