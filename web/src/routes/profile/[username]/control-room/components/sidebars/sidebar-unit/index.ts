@@ -1,5 +1,4 @@
 export { default as SidebarBroadcast } from './SidebarBroadcast.svelte';
-export { default as SidebarSetting } from "./SidebarSetting.svelte";
 export { default as SidebarAgenda } from "./SidebarAgenda.svelte";
 export { default as SidebarPoll } from "./SidebarPoll.svelte";
 export { default as SidebarQA } from "./SidebarQA.svelte";

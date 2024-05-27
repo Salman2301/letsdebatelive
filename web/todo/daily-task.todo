@@ -7,21 +7,17 @@ TODO:
     ☐ Bulk backstage should only affect the `audience` not the `co-host`
 
   Backstage Feature:
-    ☐ Subscribe to backstage panel
+    ✔ Subscribe to backstage panel @done(24-05-27 11:58)
       ✔ Check if the the, backstage is full before insert @done(24-05-26 01:43)
       ✔ Check if the user in stage, is max before inserting? @done(24-05-26 02:49)
         Check is useless since we can override it via api, For now disable the button in frontned
         ✘ For now let's just check it in server action @cancelled(24-05-26 02:50)
           ✘ Re-write move to stage using server function. @cancelled(24-05-26 02:50)
-          ☐ Check if the max stage is less than current stage participants
-      ☐ Check if the backstage panel is open only for selected team / audience type
-      ☐ Save setting button
-      ☐ List teams
+          ✔ Check if the max stage is less than current stage participants @done(24-05-27 11:57)
+      ✔ Save setting button @done(24-05-27 11:57)
+      ✔ List teams @done(24-05-27 11:57)
         ✔ Update the backstage panel border with the team color @done(24-05-25 20:43)
 
-
-      ☐ Show the user image in the backstage panel @low
-      ☐ On mic input, show the sound wave on the icon @low 
 
     ☐ On backstage complete 
       - Write the integration test
@@ -43,6 +39,10 @@ TODO:
       ☐ Update the seed to upload the image in the storage?
       ☐ Get the follower count
         ☐ Setup database trigger and function to setup the follower count
+    ☐ Check if the backstage panel is open only for selected team / audience type
+    ☐ Show the user image in the backstage panel @low
+    ☐ On mic input, show the sound wave on the icon @low 
+  
 
     Test:
       Live:
