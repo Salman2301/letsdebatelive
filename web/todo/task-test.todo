@@ -1,0 +1,25 @@
+
+E2E:
+  Auth: 
+    ☐ Register
+    ☐ Login
+    ☐ Logout
+    ☐ Magic link?
+  Control room:
+    All sidebars:
+      ☐ Click on each sidebar
+      ☐ Check if the sidebar heading change
+    Sidebar Backstage setting:
+      ☐ Sidebar setting form
+        ☐ On form change - show save
+        ☐ on reverse hide - show save
+        ☐ Check the max stage value is greather than max. participant
+        ☐ Check if the app error
+        ☐ On button click 
+          - Wait for 200 ok 
+          - Button save to hide
+        ☐ Refresh the sidebar
+          ☐ Check if the value is updated
+        ☐ Check for auto-backstage
+          ☐ Refresh the sidebar
+          ☐ Check if the value is saved

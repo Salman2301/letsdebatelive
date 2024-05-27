@@ -1,4 +1,9 @@
 
+
+Bulk Action: 
+  ✔ On backstage complete @done(24-05-27 18:48)
+    ✔ Write the integration test @done(24-05-27 18:48)
+    
 Backstage Feature:
   ✔ Subscribe to backstage panel @done(24-05-27 11:58)
     ✔ Check if the the, backstage is full before insert @done(24-05-26 01:43)

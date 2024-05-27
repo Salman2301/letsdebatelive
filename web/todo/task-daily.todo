@@ -1,11 +1,30 @@
 TODO:
 
-  BACKSTAGE_TYPE:
+  Missing core-feature:
+    - screen
+    - mux
+    - animation
+    - start and stop
+    - integrations to youtube and twitch
+    - live RTMP stream
+    - banner
+    - live-chat compiled
+    - background image / color uploads
+    - logo upload and corner selection
+    
+    - Full-tutorial
+    - Private stream
+    - Test stream
+    - Health check
+    - CI / CD setup
+    - Server with backup setup
+    - Database live setup
+    - Audience equip setup
+    - Audience join
+    - Live chat
+    - Team selection
+    - Audience filter
 
-  Bulk Action: 
-    ☐ Separate kick all button in bulk action
-    ☐ On backstage complete 
-      - Write the integration test
   Screen:
     ☐ List all the screen
 
@@ -14,8 +33,14 @@ TODO:
 
   Debate Create:
     ☐ Any user can create a debate
+    ☐ Able to add title
     ☐ Check if the user is not already in live debates
     ☐ Only one debate per channel?
+  
+  Setting page:
+    ☐ Able to change the username
+    ☐ Able to upload the user image
+    ☐ Schedules to display during offline?
 
   Live Page:
     ☐ Connect title
@@ -27,32 +52,10 @@ TODO:
     ☐ Check if the backstage panel is open only for selected team / audience type
     ☐ Show the user image in the backstage panel @low
     ☐ On mic input, show the sound wave on the icon @low 
-  
-
-    Test:
-      Auth: 
-        ☐ Register
-        ☐ Login
-        ☐ Logout
-        ☐ Magic link?
-      Control room:
-        All sidebars:
-          ☐ Click on each sidebar
-          ☐ Check if the sidebar heading change
-        Sidebar Backstage setting:
-          ☐ Sidebar setting form
-            ☐ On form change - show save
-            ☐ on reverse hide - show save
-            ☐ Check the max stage value is greather than max. participant
-            ☐ Check if the app error
-            ☐ On button click 
-              - Wait for 200 ok 
-              - Button save to hide
-            ☐ Refresh the sidebar
-              ☐ Check if the value is updated
-            ☐ Check for auto-backstage
-              ☐ Refresh the sidebar
-              ☐ Check if the value is saved
+ 
+  UI-RETHINK:
+    ☐ Separate kick all button in bulk action
+    ☐ Remove unused sidebars for prototype
 
 
       Live:

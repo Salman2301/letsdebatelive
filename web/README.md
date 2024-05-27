@@ -1,5 +1,16 @@
-### Tech:
+Letsdebatelive is a video-conference platform to organize debates and live stream to audience at ease. 
 
+- **Audience** get a chance to participate in the live debate and 
+- **Host** will seemlessly host different debate to multiple platform with less hassel.
+Since we will be taking care of the setup, OBS, streams, recording, add / removing participants, adding moderators and co-host with a link and login.
+- **Moderator/Participant** of the debates will get portion of earning based on the host custmoization how much percent will be split between them.
+
+It's useful for:
+- Different community, that wants to take down different radical views/ideas and debate it live
+- Will have an engaging poll / live chat for audience to act on it
+
+
+### Tech:
 - SvelteKit
 - TailwindCSS
 - Supabase
