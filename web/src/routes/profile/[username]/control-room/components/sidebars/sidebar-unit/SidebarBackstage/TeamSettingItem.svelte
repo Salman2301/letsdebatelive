@@ -72,14 +72,12 @@
   
   async function remove() {
     if(!$live_debate) return;
-    console.log("delete")
     const {data, error} = await supabase
       .from("live_debate_team")
       .delete()
       .eq("id", team.id);
-      console.log({ data, error })
     if(error) {
-      console.log({ error })
+      console.error({ error })
       newToast({
         type: "error",
         message: "Failed to delete the team"

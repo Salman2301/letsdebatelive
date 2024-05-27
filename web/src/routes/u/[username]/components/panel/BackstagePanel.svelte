@@ -53,7 +53,6 @@
 
 	async function toggleDevice(device: keyof typeof audienceSetting) {
 		if (!(pageData?.live_debate?.id && pageData?.user?.id)) return;
-		console.log('toggle device');
 
 		await supabase
 			.from('live_debate_participants')

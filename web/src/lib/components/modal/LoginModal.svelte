@@ -50,7 +50,6 @@
 			});
 
 			invalidateAll();
-			console.log("invalidated")
 			reloadPage();
 			if( error ) {
 				newToast({ type: "error", message: error.message })
@@ -72,8 +71,6 @@
 
 	function reloadPage() {
 		const thisPage = window.location.pathname;
-
-		console.log('goto ' + thisPage);
 
 		goto('/', { invalidateAll: true }).then(
 			() => goto(thisPage)

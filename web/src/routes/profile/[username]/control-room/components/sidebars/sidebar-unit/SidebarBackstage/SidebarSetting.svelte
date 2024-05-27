@@ -2,16 +2,14 @@
 	import Button from '$lib/components/button/Button.svelte';
 	import Switch from '$lib/components/form/Switch.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
-	import CloseX from '$lib/components/icon/CloseX.svelte';
-	import CheckMark from '$lib/components/icon/CheckMark.svelte';
+	import TeamSetting from './TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
 	import { getControlRoomCtx } from '$lib/context/control-room';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Database, Tables } from '$lib/schema/database.types';
-	import TeamSetting from './TeamSetting.svelte';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -266,11 +264,6 @@
 	</div>
 
 	<div class="mt-12">
-		<TeamSetting />
-	</div>
-
-
-	<div class="mt-12">
 		<Heading3 content="Audience type" textAlign="center" />
 	</div>
 	<div class="setting-item">
@@ -319,6 +312,10 @@
 			<option value="" disabled>----</option>
 			<option value="none">Disable</option>
 		</select>
+	</div>
+
+	<div class="mt-12">
+		<TeamSetting />
 	</div>
 
 	<!-- Show list of teams below and the user can change the color -->

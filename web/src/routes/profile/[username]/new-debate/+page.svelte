@@ -23,7 +23,6 @@
 	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
 
 	async function handleNext() {
-		console.log("handle nexgt!")
 		await stageInstance[currentState - 1].beforeOnNext();
 		if (currentState === 5) {
 			// redirect to control room
