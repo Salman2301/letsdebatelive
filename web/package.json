@@ -14,7 +14,7 @@
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
 		"test:unit": "vitest",
-		"db:types": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts",
+		"db:types": "supabase gen types typescript --local --schema public > ./src/lib/schema/database.types.ts && npx prettier --write src/lib/schema/database.types.ts",
 		"db:push": "supabase db push --linked",
 		"db:pull": "supabase db pull --linked",
 		"db:migration:new": "node --env-file=.env ./script/new-migration",

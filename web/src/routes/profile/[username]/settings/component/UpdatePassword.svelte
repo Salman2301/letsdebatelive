@@ -85,7 +85,7 @@
 	<div class="w-full flex justify-end items-center gap-4 my-4" class:hidden={isAllEmpty}>
 		<Button
 			disabled={!isAllValid}
-			label="Submit"
+			label="Update password"
 			width={180}
 			onclick={submit}
 			fillType="solid-white"

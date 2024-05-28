@@ -677,6 +677,7 @@ export type Database = {
 					initials: string | null;
 					lastName: string | null;
 					oneLineDesc: string | null;
+					profile_image: string | null;
 					username: string;
 				};
 				Insert: {
@@ -689,6 +690,7 @@ export type Database = {
 					initials?: string | null;
 					lastName?: string | null;
 					oneLineDesc?: string | null;
+					profile_image?: string | null;
 					username: string;
 				};
 				Update: {
@@ -701,6 +703,7 @@ export type Database = {
 					initials?: string | null;
 					lastName?: string | null;
 					oneLineDesc?: string | null;
+					profile_image?: string | null;
 					username?: string;
 				};
 				Relationships: [
