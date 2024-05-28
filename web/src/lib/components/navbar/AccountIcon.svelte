@@ -49,14 +49,14 @@
 				>
 					Control room
 				</button>
+				<button class="btn-popup" onclick={() => gotoClosePopup(`/u/${username}`)}>
+					Live page
+				</button>
 				<button
 					class="btn-popup"
 					onclick={() => gotoClosePopup(`/profile/${username}/settings`)}
 				>
 					Setting
-				</button>
-				<button class="btn-popup" onclick={() => gotoClosePopup(`/u/${username}`)}>
-					Live page
 				</button>
 				<button
 					class="btn-popup logout"

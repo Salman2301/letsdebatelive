@@ -91,7 +91,7 @@
 						<svelte:component this={getSocialIcon(socialLink.link)} />
 					</div>
 				</div>
-				<div class="social-link-url">{socialLink.link}</div>
+				<div class="social-link-url"><a href={socialLink.link}>{socialLink.link}</a></div>
 				<button onclick={() => deleteItem(socialLink.id)} class="social-link-close">
 					<CloseX />
 				</button>

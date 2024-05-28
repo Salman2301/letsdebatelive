@@ -12,12 +12,14 @@
 			| 'dark'
 			| 'solid-white';
 		onclick?: () => void;
+		disabled?: boolean;
 		fontType?: 'bold' | 'semibold' | 'normal';
 	}
 	let {
 		label = 'Button',
 		color = 'primary',
 		fillType = 'solid',
+		disabled=false,
 		width,
 		onclick = () => {},
 		fontType = 'bold'
@@ -29,6 +31,7 @@
 	style="--theme-color:rgb(var(--color-{color}));--theme-color-dark:rgba(var(--color-{color}-dark));width: {width
 		? `${width}px`
 		: 'fit-content'};font-weight:{fontType}"
+	{disabled}
 	{onclick}
 >
 	<slot name="icon-left" />
@@ -108,5 +111,14 @@
 				background-color: var(--theme-color);
 			}
 		}
+	}
+
+	button:disabled {
+		background: lightgray;
+		cursor: pointer;
+	}
+	button:disabled:hover {
+		background: lightgray;
+		cursor: pointer;
 	}
 </style>

@@ -4,6 +4,7 @@
 	import Textarea from '$lib/components/form/textarea/Textarea.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import SocialLink from './component/SocialLink.svelte';
+	import UpdatePassword from './component/UpdatePassword.svelte';
 </script>
 
 <div class="page-setting">
@@ -39,39 +40,7 @@
 			<!-- OnState change, ask for OTP -->
 		</form>
 
-		<div class="my-2 mb-4">
-			<Heading2 content="Update password"></Heading2>
-		</div>
-
-		<form class="password-container">
-			<div class="flex w-full justify-between">
-				<div class="password-left-input">
-					<Input name="Old password" width="230px" type="password" rounded="sm" />
-
-					<Input name="New password" type="password" width="230px" rounded="sm" />
-
-					<Input name="Re-enter password" type="password" width="230px" rounded="sm" />
-				</div>
-				<div class="password-right-input">
-					<div class="validity-fields">
-						<p class="password-valid-text">
-							<span class="check-mark">✓</span>Atleast one capital letter
-						</p>
-						<p class="password-valid-text">
-							<span class="check-mark">✗</span>Atleast one small letter
-						</p>
-						<p class="password-valid-text"><span class="check-mark">✓</span>Atleast one number</p>
-						<p class="password-valid-text"><span class="check-mark">✓</span>Atleast one symbol</p>
-						<p class="password-valid-text"><span class="check-mark">✓</span>Password must watch</p>
-					</div>
-				</div>
-			</div>
-			<div class="w-full flex justify-end items-center gap-4 mt-2 mb-4">
-				<p class="text-accent-red font-bold text-xs">Error</p>
-				<Button label="Submit" width={180} />
-			</div>
-		</form>
-
+		<UpdatePassword />
 		<SocialLink />
 
 		<!-- Account sync -->
@@ -89,18 +58,6 @@
 		<Input placeholder="@Username" width="250px" rounded="sm" />
 	</div>
 </div>
-
-<!-- Form -->
-
-<!-- Initials -->
-<!-- Display name -->
-<!-- User can add first name / last name -->
-<!-- User can update the password -->
-<!-- User can upload the profile pic -->
-<!-- Phone Number -->
-<!-- Address -->
-<!-- Description -->
-<!-- Connect social links -->
 
 <!-- Community -->
 <!-- Chat rules -->
@@ -134,23 +91,6 @@
 		@apply my-4;
 	}
 
-	.password-container {
-		@apply flex w-full flex-col;
-	}
-
-	.password-valid-text {
-		@apply text-base;
-		@apply text-white/60;
-		@apply font-semibold;
-	}
-
-	.check-mark {
-		@apply pr-2;
-	}
-
-	.validity-fields {
-		@apply flex gap-2 flex-col;
-	}
 
 	select {
 		@apply bg-primary-dark;

@@ -4,14 +4,17 @@
 
 	let inPasswordType = $state('password');
 	interface Props {
+		name?: string;
+		width?: string;
 		value: string;
 		hasError?: boolean;
+		rounded?: "sm" | "full";
 	}
-	let { value = $bindable(''), hasError }: Props = $props();
+	let { value = $bindable(''), hasError, name="password", rounded, width}: Props = $props();
 </script>
 
 <div class="password-field">
-	<Input bind:value type={inPasswordType} name="password" hasError={!!hasError} />
+	<Input bind:value type={inPasswordType} name={name} hasError={!!hasError} {rounded} {width}/>
 	<button
 		class="icon-eye"
 		onclick={() => (inPasswordType = inPasswordType === 'password' ? 'text' : 'password')}
