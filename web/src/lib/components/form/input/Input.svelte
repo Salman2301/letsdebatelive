@@ -41,7 +41,6 @@
 		{name}
 		{type}
 		class:has-error={hasError}
-		{autofocus}
 		style="width:{width ? width : "280px"};border-radius:{rounded === "sm"? "4px" : "40px" }"
 		aria-label={ariaLabel}
 		oninput={() => {

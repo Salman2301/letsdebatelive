@@ -1,0 +1,13 @@
+export { default as Youtube } from "./Youtube.svelte";
+export { default as Github } from "./Github.svelte";
+export { default as Facebook } from "./Facebook.svelte";
+export { default as LinkedIn } from "./LinkedIn.svelte";
+export { default as Instagram } from "./Instagram.svelte";
+export { default as TikTok } from "./TikTok.svelte";
+export { default as Snapchat } from "./Snapchat.svelte";
+export { default as Telegram } from "./Telegram.svelte";
+export { default as Twitter } from "./Twitter.svelte";
+export { default as Reddit } from "./Reddit.svelte";
+export { default as Discord } from "./Discord.svelte";
+export { default as Twitch } from "./Twitch.svelte";
+export { default as Globe } from "./Globe.svelte";

@@ -30,7 +30,7 @@ h5,
 h6,
 input {
 	color: rgb(var(--color-white));
-	font-family: 'Urbanist';
+	font-family: 'Urbanist', Verdana, Geneva, Tahoma, sans-serif;
 }
 
 input {
