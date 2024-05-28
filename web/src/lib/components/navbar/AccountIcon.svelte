@@ -36,19 +36,26 @@
 	{#if showPopup}
 		<div class="popup">
 			<button class="btn-popup" onclick={handleCreateDebate}> Create Debate </button>
-			{#if !$isLoggedIn}
+			{#if $authUserData === null}
 				<button class="btn-popup" onclick={() => ($currentModal = 'login')}> Login </button>
 				<button class="btn-popup bg-primary/70" onclick={() => ($currentModal = 'register')}>
 					Create account
 				</button>
 			{:else}
+				{@const username = $authUserData.username}
 				<button
 					class="btn-popup"
-					onclick={() => gotoClosePopup(`/profile/${$authUserData?.username}/control-room`)}
+					onclick={() => gotoClosePopup(`/profile/${username}/control-room`)}
 				>
 					Control room
 				</button>
-				<button class="btn-popup" onclick={() => gotoClosePopup(`/u/${$authUserData?.username}`)}>
+				<button
+					class="btn-popup"
+					onclick={() => gotoClosePopup(`/profile/${username}/settings`)}
+				>
+					Setting
+				</button>
+				<button class="btn-popup" onclick={() => gotoClosePopup(`/u/${username}`)}>
 					Live page
 				</button>
 				<button

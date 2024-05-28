@@ -1,16 +1,19 @@
 TODO:
-
   Missing core-feature:
-    - screen
-    - mux
+    - Setting page
+    - Equip page
+    - background image / color uploads
+    - logo upload and corner selection
+    - Screen sidebar
+    - WebRTC
+    - Stream server
     - animation
     - start and stop
+    - Mux
     - integrations to youtube and twitch
     - live RTMP stream
     - banner
     - live-chat compiled
-    - background image / color uploads
-    - logo upload and corner selection
     
     - Full-tutorial
     - Private stream
@@ -56,8 +59,6 @@ TODO:
   UI-RETHINK:
     ☐ Separate kick all button in bulk action
     ☐ Remove unused sidebars for prototype
-
-
       Live:
         ☐ Check if the channel is live
         ☐ Check if the user can access the channel from the live site
