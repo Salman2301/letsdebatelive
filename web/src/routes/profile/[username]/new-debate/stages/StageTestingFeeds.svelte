@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authUserData } from '$lib/components/auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 	import Button from '$lib/components/button/Button.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
 	import { getContext, onMount } from 'svelte';

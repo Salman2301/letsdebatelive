@@ -4,7 +4,7 @@
 	import '../app.css';
 	import { screenWindowSizePx } from '$lib/stores/screen-size.store';
 	import { onMount, setContext } from 'svelte';
-	import { authUserData } from '$lib/components/auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 	import type { PageData } from './$types';
 
 	interface Props {

@@ -9,7 +9,7 @@
 		autofocus?: boolean;
 		hasError?: boolean;
 		width?: string;
-		rounded?: "sm" | "full";
+		rounded?: 'sm' | 'full';
 		ariaLabel?: string;
 	}
 	let {
@@ -28,10 +28,7 @@
 </script>
 
 <div>
-	<label
-		for=""
-		style="left:{rounded==="sm" ? "10px": "20px"}"
-	>
+	<label for="" style="left:{rounded === 'sm' ? '10px' : '20px'}">
 		{title || name}
 	</label>
 	<input
@@ -41,7 +38,7 @@
 		{name}
 		{type}
 		class:has-error={hasError}
-		style="width:{width ? width : "280px"};border-radius:{rounded === "sm"? "4px" : "40px" }"
+		style="width:{width ? width : '280px'};border-radius:{rounded === 'sm' ? '4px' : '40px'}"
 		aria-label={ariaLabel}
 		oninput={() => {
 			hasError = false;

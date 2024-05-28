@@ -19,7 +19,7 @@
 		label = 'Button',
 		color = 'primary',
 		fillType = 'solid',
-		disabled=false,
+		disabled = false,
 		width,
 		onclick = () => {},
 		fontType = 'bold'

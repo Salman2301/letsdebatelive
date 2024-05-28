@@ -25,7 +25,9 @@ Re-Write:
     I am fine with the current setup, Will need to rethink this later
 
 Security:
-  ☐ 
+  ☐ User can navigate to different profile via client rendering void that
+  ☐ Prevent user to change the email
+  https://github.com/orgs/supabase/discussions/656
 
   
 Svelte V5:

@@ -23,7 +23,7 @@
 	import { CloseX, DownArrow, Link, ListMode, GridMode } from '$lib/components/icon';
 
 	import { isLessThanLg } from '$lib/stores/screen-size.store';
-	import { authUserData } from '$lib/components/auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 	import { currentSidebar } from '$lib/stores/sidebar.store';
 	import { getSupabase } from '$lib/supabase';
 

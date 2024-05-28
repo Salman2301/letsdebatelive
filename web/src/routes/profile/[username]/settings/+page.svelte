@@ -5,35 +5,109 @@
 	import Button from '$lib/components/button/Button.svelte';
 	import SocialLink from './component/SocialLink.svelte';
 	import UpdatePassword from './component/UpdatePassword.svelte';
+	import { authUserData } from '$lib/stores/auth.store';
+	import { getSupabase } from '$lib/supabase';
+	import { getContext } from 'svelte';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
+	import { goto } from '$app/navigation';
+
+	const supabase = getSupabase(getContext);
+	let basicForm = $derived({
+		initials: $authUserData?.initials || 'Mr.',
+		firstName: $authUserData?.firstName || '',
+		lastName: $authUserData?.lastName || '',
+		displayName: $authUserData?.displayName || '',
+		oneLineDesc: $authUserData?.oneLineDesc || '',
+		username: $authUserData?.username || '',
+		email: $authUserData?.email || ''
+	});
+
+	async function submit() {
+		if (!$authUserData || !$authUserData?.id) {
+			return newToast({
+				type: 'error',
+				message: 'Failed to update user basic info'
+			});
+		}
+
+		const { data, error } = await supabase
+			.from('user_data')
+			.update({
+				...basicForm
+			})
+			.eq('id', $authUserData?.id)
+			.select();
+
+		if (data) $authUserData = data[0];
+
+		if (error) {
+			return newToast({
+				type: 'error',
+				message: 'Failed to update user basic info'
+			});
+		}
+
+		goto(`/profile/${$authUserData?.username}/settings`);
+
+		newToast({
+			type: 'success',
+			message: 'Basic info updated successfully'
+		});
+	}
 </script>
 
 <div class="page-setting">
 	<div class="left-content">
 		<Heading2 content="Basic info" />
-		<form action="?/profile-update" method="POST" class="basic-form">
+		<div class="basic-form">
 			<div class="row-container">
-				<select>
-					<option>Mr.</option>
-					<option>Mrs.</option>
-					<option>Ms.</option>
+				<select bind:value={basicForm.initials}>
+					<option value="Mr.">Mr.</option>
+					<option value="Mrs.">Mrs.</option>
+					<option value="Ms.">Ms.</option>
 				</select>
-				<Input width="200px" ariaLabel="First name" name="firstName" rounded="sm" />
+				<Input
+					width="200px"
+					ariaLabel="First name"
+					name="firstName"
+					rounded="sm"
+					value={basicForm?.firstName || ''}
+				/>
 
-				<Input name="lastName" title="Last Name" width="200px" rounded="sm" />
+				<Input
+					name="lastName"
+					title="Last Name"
+					width="200px"
+					rounded="sm"
+					bind:value={basicForm.lastName}
+				/>
 			</div>
 			<div class="row-container">
-				<Input name="name" title="Display Name" width="230px" rounded="sm" />
-				<Input name="email" title="Email" type="email" disabled={true} width="230px" rounded="sm" />
+				<Input
+					name="name"
+					title="Display Name"
+					width="230px"
+					rounded="sm"
+					bind:value={basicForm.displayName}
+				/>
+				<Input
+					name="email"
+					title="Email"
+					type="email"
+					disabled={true}
+					width="230px"
+					rounded="sm"
+					bind:value={basicForm.email!}
+				/>
 			</div>
 			<div class="row-container">
-				<Textarea title="Description" />
+				<Textarea title="Description" bind:value={basicForm.oneLineDesc} />
 			</div>
 
 			<div class="w-full flex justify-end items-center gap-4 mt-4 mb-6">
-				<p class="text-accent-red font-bold text-xs">Error</p>
-				<Button label="Submit" width={180} />
+				<Button label="Submit" width={180} onclick={submit} fillType="solid-white" />
 			</div>
-		</form>
+		</div>
 
 		<form class="phone-container">
 			<!-- Phone number with country code -->
@@ -52,10 +126,22 @@
 		<!-- Stream location dropdown -->
 	</div>
 	<div class="right-content">
-		<!-- Show profile icon -->
-		<!-- Show username input -->
-		<div class="profile-img"></div>
-		<Input placeholder="@Username" width="250px" rounded="sm" />
+		<div class="profile-img">
+			{#if false}
+			{:else}
+				<img
+					src="/images/NO_PROFILE_DEFAULT.svg"
+					alt="default no user profile"
+				/>
+			{/if}
+		</div>
+		<Input
+			placeholder="@Username"
+			width="250px"
+			rounded="sm"
+			title="@Username"
+			bind:value={basicForm.username}
+		/>
 	</div>
 </div>
 
@@ -90,7 +176,6 @@
 		@apply flex w-full justify-between;
 		@apply my-4;
 	}
-
 
 	select {
 		@apply bg-primary-dark;

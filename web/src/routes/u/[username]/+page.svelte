@@ -7,7 +7,7 @@
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import { authUserData } from '$lib/components/auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageServerData } from './$types';

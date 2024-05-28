@@ -8,13 +8,13 @@
 		width?: string;
 		value: string;
 		hasError?: boolean;
-		rounded?: "sm" | "full";
+		rounded?: 'sm' | 'full';
 	}
-	let { value = $bindable(''), hasError, name="password", rounded, width}: Props = $props();
+	let { value = $bindable(''), hasError, name = 'password', rounded, width }: Props = $props();
 </script>
 
 <div class="password-field">
-	<Input bind:value type={inPasswordType} name={name} hasError={!!hasError} {rounded} {width}/>
+	<Input bind:value type={inPasswordType} {name} hasError={!!hasError} {rounded} {width} />
 	<button
 		class="icon-eye"
 		onclick={() => (inPasswordType = inPasswordType === 'password' ? 'text' : 'password')}

@@ -7,9 +7,19 @@
 		disabled?: boolean;
 		ariaLabel?: string;
 		hasError?: boolean;
+		value?: string;
 	}
 
-	let { placeholder, name, title, rounded, disabled, hasError, ariaLabel }: Props = $props();
+	let {
+		placeholder,
+		name,
+		title,
+		rounded,
+		disabled,
+		hasError,
+		ariaLabel,
+		value = $bindable('')
+	}: Props = $props();
 </script>
 
 <div>
@@ -22,6 +32,7 @@
 		{disabled}
 		class:has-error={hasError}
 		aria-label={ariaLabel}
+		bind:value
 		oninput={() => {
 			hasError = false;
 		}}

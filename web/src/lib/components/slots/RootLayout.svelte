@@ -3,7 +3,7 @@
 	import ModalAll from '$lib/components/modal/ModalAll.svelte';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import { getContext, onMount } from 'svelte';
-	import { authUserData } from '$lib/components/auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
 
 	const supabase = getSupabase(getContext);
@@ -15,7 +15,11 @@
 		if (!session) return;
 
 		// Create an account for new user! Should be handled somewhere backend? without RLS
-		const { data: userData } = await supabase.from('user_data').select();
+		const res = await supabase.auth.getUser();
+		if (res.error || !res.data || !res.data.user || !res.data.user.id)
+			throw new Error('Failed to retrived user');
+
+		const { data: userData } = await supabase.from('user_data').select().eq('id', res.data.user.id);
 		if (userData && userData.length > 0) {
 			authUserData.set(userData[0]);
 		}

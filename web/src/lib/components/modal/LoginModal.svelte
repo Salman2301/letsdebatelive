@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { getSupabase } from '$lib/supabase';
 	import Input from '$lib/components/form/input/Input.svelte';
 	import Modal from './Modal.svelte';
-	import BigButton from '$lib/components/button/BigButton.svelte';
-	import { currentModal } from './modal.store';
-	import { z } from 'zod';
-	import { hasErrorParse } from '$lib/utils/type';
-	import ZodError from '../form/ZodError.svelte';
-	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import InPassword from '../form/input/InPassword.svelte';
+	import BigButton from '$lib/components/button/BigButton.svelte';
+	import ZodError from '../form/ZodError.svelte';
+
+	import { z } from 'zod';
+	import { getSupabase } from '$lib/supabase';
+	import { currentModal } from './modal.store';
 	import { onMount, getContext } from 'svelte';
+	import { hasErrorParse } from '$lib/utils/type';
 	import { newToast } from '../toast/Toast.svelte';
+	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
 	import { goto, invalidateAll } from '$app/navigation';
-	import { authUserData } from '../auth/auth.store';
+	import { authUserData } from '$lib/stores/auth.store';
 
 	const form = {
 		email: '',
@@ -59,7 +60,13 @@
 				throw new Error(error.message);
 			}
 
-			const { data: userData, error: errorData } = await supabase.from('user_data').select();
+			const res = await supabase.auth.getUser();
+			if (res.error || !res.data || !res.data.user || !res.data.user.id)
+				throw new Error('Failed to retrived user');
+			const { data: userData, error: errorData } = await supabase
+				.from('user_data')
+				.select()
+				.eq('id', res.data.user.id);
 			if (userData?.[0]) $authUserData = userData?.[0];
 			invalidateAll();
 
@@ -68,6 +75,10 @@
 		} catch (e) {
 			isLoading = false;
 			console.error(e);
+			newToast({
+				type: 'error',
+				message: 'Failed to get the current user!'
+			});
 		}
 	}
 

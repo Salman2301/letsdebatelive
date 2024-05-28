@@ -11,7 +11,7 @@
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
-	import { authUserData } from '../auth/auth.store';
+	import { authUserData } from '../../stores/auth.store';
 	import { invalidateAll } from '$app/navigation';
 
 	const form = {
@@ -57,7 +57,13 @@
 				throw new Error(error.message);
 			}
 
-			const { data: userData, error: errorData } = await supabase.from('user_data').select();
+			const res = await supabase.auth.getUser();
+			if (res.error || !res.data || !res.data.user || !res.data.user.id)
+				throw new Error('Failed to retrived user');
+			const { data: userData, error: errorData } = await supabase
+				.from('user_data')
+				.select()
+				.eq('id', res.data.user.id);
 			if (userData?.[0]) $authUserData = userData?.[0];
 			invalidateAll();
 			isLoading = false;

@@ -151,6 +151,7 @@
 	}
 	.content span {
 		margin-top: 4px;
+		font-size: 14px;
 	}
 
 	.btn-close {

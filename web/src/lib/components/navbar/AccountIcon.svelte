@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { clickOutside } from '$lib/action/clickOutside';
-	import { authUserData, isLoggedIn } from '../auth/auth.store';
+	import { authUserData, isLoggedIn } from '../../stores/auth.store';
 	import { currentModal } from '../modal/modal.store';
 	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
@@ -52,10 +52,7 @@
 				<button class="btn-popup" onclick={() => gotoClosePopup(`/u/${username}`)}>
 					Live page
 				</button>
-				<button
-					class="btn-popup"
-					onclick={() => gotoClosePopup(`/profile/${username}/settings`)}
-				>
+				<button class="btn-popup" onclick={() => gotoClosePopup(`/profile/${username}/settings`)}>
 					Setting
 				</button>
 				<button
