@@ -9,7 +9,8 @@ import { getContext, setContext } from 'svelte';
 // To register a new context for control room use below object
 
 type ContextTypes = {
-  pageDataProps: PageData
+	pageDataProps: PageData;
+	myBackstageInfo: Writable<Tables<"live_debate_participants"> | null >
 };
 
 export function setLiveRoomCtx<T extends keyof ContextTypes>(

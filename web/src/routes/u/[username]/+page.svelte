@@ -5,12 +5,13 @@
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
 	import Chat from './components/sidebar/Chat.svelte';
 
-	import { setLiveRoomCtx } from '$src/lib/context/live-page';
-	import { getContext, onDestroy, onMount } from 'svelte';
-	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import { authUserData } from '$lib/stores/auth.store';
+	import { setLiveRoomCtx } from '$src/lib/context/live-page';
 	import { NO_PROFILE_DEFAULT } from '$lib/constatnt/file';
+	import { getContext, onDestroy, onMount } from 'svelte';
+	import { authUserData } from '$lib/stores/auth.store';
+	import { getSupabase } from '$lib/supabase';
+	import { writable } from 'svelte/store';
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
@@ -22,24 +23,27 @@
 	}
 
 	let { data, form }: Props = $props();
-	setLiveRoomCtx("pageDataProps", data);
 
 
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
-	let userJoined = $state(data.isJoined);
+	let userJoined = writable(data.isJoined);
 
 	const supabase = getSupabase(getContext);
 	let backstageChannel: RealtimeChannel;
 
-	let myBackstageInfo = $state(data.myBackstageInfo);
-	let participants = $state(data.participants || []);
-	let isJoined = $state(data.isJoined);
+	let myBackstageInfo = writable(data.myBackstageInfo);
+	let participants = writable(data.participants || []);
+	let isJoined = writable(data.isJoined);
+
+	setLiveRoomCtx("pageDataProps", data);
+	setLiveRoomCtx("myBackstageInfo", myBackstageInfo);
+
 
 	let devicesEnable: DevicesEnable = $derived({
-		cam_enable: !!myBackstageInfo?.cam_enable,
-		mic_enable: !!myBackstageInfo?.mic_enable,
-		screenshare_enable: !!myBackstageInfo?.screenshare_enable,
-		speaker_enable: !!myBackstageInfo?.speaker_enable
+		cam_enable: !!$myBackstageInfo?.cam_enable,
+		mic_enable: !!$myBackstageInfo?.mic_enable,
+		screenshare_enable: !!$myBackstageInfo?.screenshare_enable,
+		speaker_enable: !!$myBackstageInfo?.speaker_enable
 	});
 
 	onMount(() => {
@@ -71,11 +75,11 @@
 			.select()
 			.eq('live_debate', data.live_debate.id);
 
-		participants = participantsData || [];
+		$participants = participantsData || [];
 
-		myBackstageInfo = participants.find((item) => item.participant_id === $authUserData.id) || null;
+		$myBackstageInfo = $participants.find((item) => item.participant_id === $authUserData.id) || null;
 
-		isJoined = !!myBackstageInfo;
+		$isJoined = !!myBackstageInfo;
 		if (!isJoined) backstageChannel.unsubscribe();
 	}
 
@@ -104,7 +108,7 @@
 	<div class="live-video-content">
 		<div class="video-container"></div>
 		{#if userJoined}
-			<BackstagePanel bind:participants {myBackstageInfo} pageData={data} {devicesEnable} />
+			<BackstagePanel bind:participants={$participants} myBackstageInfo={$myBackstageInfo} pageData={data} {devicesEnable} />
 		{:else}
 			<JoinBackstagePanel />
 		{/if}

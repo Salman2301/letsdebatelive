@@ -1,28 +1,56 @@
 <script lang="ts">
-	import { closeModal, currentModal, openModal } from "$lib/components/modal/modal.store";
-	import { newToast } from "$src/lib/components/toast/Toast.svelte";
-	import { getLiveRoomCtx } from "$src/lib/context/live-page";
+	import { closeModal, currentModal, openModal } from '$lib/components/modal/modal.store';
+	import { newToast } from '$src/lib/components/toast/Toast.svelte';
+	import { getLiveRoomCtx } from '$src/lib/context/live-page';
 
-	import type { Tables } from "$src/lib/schema/database.types";
+	import { authUserData } from '$src/lib/stores/auth.store';
+	import { getSupabase } from '$src/lib/supabase';
+	import { getContext } from 'svelte';
 
-	const ctx = getLiveRoomCtx("pageDataProps");
+	import type { Tables } from '$src/lib/schema/database.types';
+
+	const supabase = getSupabase(getContext);
+	const ctx = getLiveRoomCtx('pageDataProps');
+	const myBackstageInfo = getLiveRoomCtx('myBackstageInfo');
 
 	function handleOpenTeamSelect() {
-		if( !ctx ) {
-			return newToast(({
-				type: "error",
-				message: "Failed to get the ctx"
-			}))
+		if (!ctx) {
+			return newToast({
+				type: 'error',
+				message: 'Failed to get the ctx'
+			});
 		}
 		openModal({
-			key: "team-select", 
+			key: 'team-select',
 			data: {
 				teams: ctx.teams,
-				onSelect: (team) =>{
-					closeModal()
-				}
+				onSelect: (team) => handleSelectTeam(team)
 			}
-		})
+		});
+	}
+
+	async function handleSelectTeam(team: Tables<'live_debate_team'>) {
+		if (!$authUserData?.id) {
+			return newToast({
+				type: 'error',
+				message: 'Error failed to get the current user info'
+			});
+		}
+		const { data, error } = await supabase
+			.from('live_debate_participants')
+			.update({
+				team: team.id
+			})
+			.eq('participant_id', $authUserData?.id);
+		if (error) {
+			console.error(error);
+			return newToast({
+				type: 'error',
+				message: 'Failed to update the team for the participant!'
+			});
+		}
+
+		closeModal();
 	}
 </script>
 
@@ -35,20 +63,24 @@
 		</div>
 		<div class="chat-input-container">
 			<textarea class="chat-text"></textarea>
-      <div class="chat-footer">
-        <div class="left">
-          <button
-						class="team-circle"
-						onclick={()=>handleOpenTeamSelect()}
-					>
-            <div class="circle-icon"></div>
-            <span>Change team?</span>
-          </button>
-        </div>
-  			<button
+			<div class="chat-footer">
+				<div class="left">
+					<button class="team-circle" onclick={() => handleOpenTeamSelect()}>
+						<div
+							class="circle-icon"
+							style="background-color:{$myBackstageInfo
+								? ctx.teamMapColor[$myBackstageInfo.team]
+								: ''}"
+						></div>
+						<span>Change team?</span>
+					</button>
+				</div>
+				<button
 					class="btn-submit"
-				>Submit</button>
-      </div>
+					style="background-color:{$myBackstageInfo ? ctx.teamMapColor[$myBackstageInfo.team] : ''}"
+					>Submit</button
+				>
+			</div>
 		</div>
 	</div>
 </div>
@@ -60,28 +92,31 @@
 		@apply flex flex-col justify-between;
 	}
 
+	.left {
+		@apply flex justify-between items-center;
+	}
+
 	.chat-items {
 		@apply w-full;
 		@apply px-2;
 	}
-  button {
-    @apply flex justify-center items-center gap-1;
-    &:hover span {
-      opacity: 1;
-    }
-  }
+	button {
+		@apply flex justify-center items-center gap-1;
+		&:hover span {
+			opacity: 1;
+		}
+	}
 
-  button span {
-    @apply text-xs ;
-    opacity: 0;
-
-  }
-  .circle-icon {
-    width: 15px;
-    height: 15px;
-    border-radius: 100%;
-    @apply bg-team-a;
-  }
+	button span {
+		@apply text-xs;
+		opacity: 0;
+	}
+	.circle-icon {
+		width: 15px;
+		height: 15px;
+		border-radius: 100%;
+		@apply bg-team-a;
+	}
 	.chat-input-container {
 		@apply flex flex-col justify-end;
 		height: calc(100vh - 76px - 70px);
@@ -91,20 +126,18 @@
 		@apply border border-light-gray;
 		@apply bg-transparent text-white;
 	}
-  .chat-footer {
-    @apply flex justify-between;
-    @apply my-1;
-  }
+	.chat-footer {
+		@apply flex justify-between;
+		@apply my-1;
+	}
 	.btn-submit {
 		@apply text-xs;
 		@apply bg-primary;
 		@apply px-2 py-1;
 		@apply my-1;
 		@apply rounded;
-		@apply border border-primary;
-	}
-	.btn-submit:hover {
-		@apply bg-primary-dark;
+		@apply text-black;
+		/* @apply border border-primary; */
 	}
 
 	.chat-item {

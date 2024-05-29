@@ -1,16 +1,11 @@
 <script lang="ts">
 	import Modal from "./Modal.svelte";
-
-	import { currentModalData } from "./modal.store";
-	import type { Tables } from "$lib/schema/database.types";
+	import { currentModalData, type ModalData } from "./modal.store";
 
 	const {
 		teams,
 		onSelect
-	}: {
-		teams: Tables<"live_debate_team">[];
-		onSelect: (team: Tables<"live_debate_team">) => void;
-	} = ($currentModalData || {});
+	}: ModalData["team-select"] = ($currentModalData || {});
 
 </script>
 

@@ -1,14 +1,14 @@
 import { writable, type Writable } from 'svelte/store';
 import type { Tables } from '$src/lib/schema/database.types';
 
-type ModalData = {
+export type ModalData = {
   "login": null,
   "reset-password": null;
   "register": null;
   "forgot-password": null;
   "team-select": {
     teams: Tables<"live_debate_team">[];
-    onSelect: (team: Tables<"live_debate">) => void;
+    onSelect: (team: Tables<"live_debate_team">) => void;
   },
   "none": null;
 }
