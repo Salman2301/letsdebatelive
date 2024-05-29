@@ -1,5 +1,7 @@
 Code:
   ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
+  ☐ Context file convert into a class function
+  ☐ Add a one true place to add types for modalData
   ☐ Remove empty files
   ✔ Remove too many relative parent folder in import statement `../../../../../Component` @done(24-05-26 00:23)
   ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)
@@ -20,7 +22,7 @@ GOOD PRACTICE:
   ☐ Make sure all the `throw redirect(300, "/")` contains the unique error message `throw redirect(300, '/error=ERROR_UNIQUE')`
 
 Re-Write:
-  ☐ Auth flow use backend-form
+  ✔ Auth flow use backend-form @done(24-05-29 13:17)
     One issue, I dont want the password to be sent through network. That is not something i like,
     I am fine with the current setup, Will need to rethink this later
 
@@ -32,10 +34,11 @@ Security:
   
 Svelte V5:
   ✔ Remove on:click @done(24-05-25 22:52)
-  ☐ Avoide using svelte store?
+  ✘ Avoide using svelte store? @cancelled(24-05-29 13:17)
   slot
 Optimization:
   ☐ Have a field `username` in the `live_debate` table. so, we don't need to keep looking for `*, host(*)` in the select statement
+    ☐ We do need the host anyway...
     ☐ Don't let the user to change their username during the live stream
     ```ts
       const username = params.username;

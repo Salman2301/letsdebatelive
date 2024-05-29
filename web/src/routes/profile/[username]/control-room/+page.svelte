@@ -11,7 +11,7 @@
 	import { getControlRoomCtx } from '$lib/context/control-room';
 
 	const supabase = getSupabase(getContext);
-	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	const live_debate = getControlRoomCtx('ctx_table$live_debate');
 
 	onMount(async () => {
 		if (!$live_debate?.id) return;

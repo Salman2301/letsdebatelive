@@ -2,6 +2,7 @@
 	import ForgotPasswordModal from './ForgotPasswordModal.svelte';
 	import LoginModal from './LoginModal.svelte';
 	import RegisterModal from './RegisterModal.svelte';
+	import TeamSelectModal from './TeamSelectModal.svelte';
 	import { currentModal } from './modal.store';
 </script>
 
@@ -13,4 +14,6 @@
 	<ForgotPasswordModal />
 {:else if $currentModal === 'reset-password'}
 	<ForgotPasswordModal />
+{:else if $currentModal === 'team-select'}
+	<TeamSelectModal />
 {/if}

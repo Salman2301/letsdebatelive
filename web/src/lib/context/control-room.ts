@@ -1,5 +1,5 @@
+import { getContext, setContext } from 'svelte';
 import type { Tables } from '$lib/schema/database.types';
-import type { getContext, setContext } from 'svelte';
 import type { Readable, Writable } from 'svelte/store';
 
 // This file contains all the context needed for the control-room page
@@ -24,16 +24,14 @@ type ContextTypes = {
 };
 
 export function setControlRoomCtx<T extends keyof ContextTypes>(
-	setCtx: typeof setContext,
 	key: T,
 	value: ContextTypes[T]
 ): void {
-	return setCtx(key, value) as any;
+	return setContext(key, value) as any;
 }
 
 export function getControlRoomCtx<T extends keyof ContextTypes>(
-	getCtx: typeof getContext,
 	key: T
 ): ContextTypes[T] {
-	return getCtx(key) as any;
+	return getContext(key) as any;
 }

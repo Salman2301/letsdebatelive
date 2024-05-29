@@ -1,14 +1,15 @@
 <script lang="ts">
+	import slugify from 'slugify';
+	import TeamSettingItem from './TeamSettingItem.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
-	import { CheckMark, CloseX } from '$lib/components/icon';
+
+	import { CheckMark } from '$lib/components/icon';
 	import { getControlRoomCtx } from '$lib/context/control-room';
 	import { getSupabase } from '$lib/supabase';
 	import { getContext, tick } from 'svelte';
-	import slugify from 'slugify';
-	import TeamSettingItem from './TeamSettingItem.svelte';
 
-	const teams = getControlRoomCtx(getContext, 'ctx_table$live_debate_team');
-	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	const teams = getControlRoomCtx('ctx_table$live_debate_team');
+	const live_debate = getControlRoomCtx('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	let newTeamValue = $state('');

@@ -40,18 +40,17 @@
 		}, {});
 	});
 
-	setControlRoomCtx(setContext, 'ctx_table$live_debate', liveDebate);
+	setControlRoomCtx('ctx_table$live_debate', liveDebate);
 
-	setControlRoomCtx(setContext, 'ctx_table$live_debate_participants', participants);
-	setControlRoomCtx(setContext, 'ctx_table$live_debate_participants_stage', participantsOnStage);
+	setControlRoomCtx('ctx_table$live_debate_participants', participants);
+	setControlRoomCtx('ctx_table$live_debate_participants_stage', participantsOnStage);
 	setControlRoomCtx(
-		setContext,
 		'ctx_table$live_debate_participants_backstage',
 		participantsBackStage
 	);
 
-	setControlRoomCtx(setContext, 'ctx_table$live_debate_team', teams);
-	setControlRoomCtx(setContext, 'ctx_map$teamColor', teamMapColor);
+	setControlRoomCtx('ctx_table$live_debate_team', teams);
+	setControlRoomCtx('ctx_map$teamColor', teamMapColor);
 
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 

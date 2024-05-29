@@ -15,7 +15,7 @@
 	import type { LayerIdContent } from '$lib/components/video-feed/video-feed.types';
 
 	let layerIdContent: LayerIdContent;
-	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	const live_debate = getControlRoomCtx('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader

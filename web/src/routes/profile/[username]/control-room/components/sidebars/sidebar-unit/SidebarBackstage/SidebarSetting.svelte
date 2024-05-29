@@ -20,8 +20,9 @@
 	type audience_type = Database['public']['Enums']['audience_type'];
 
 	const supabase = getSupabase(getContext);
-	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
-	const teams = getControlRoomCtx(getContext, 'ctx_table$live_debate_team');
+	const live_debate = getControlRoomCtx('ctx_table$live_debate');
+	const teams = getControlRoomCtx('ctx_table$live_debate_team');
+	
 	const { onclose, type }: Props = $props();
 
 	let settingForm = $state({

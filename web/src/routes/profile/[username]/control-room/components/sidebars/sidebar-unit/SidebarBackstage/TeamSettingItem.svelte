@@ -3,10 +3,10 @@
 	import { getControlRoomCtx } from '$lib/context/control-room';
 	import { getSupabase } from '$lib/supabase';
 	import { getContext, tick } from 'svelte';
-	import slugify from 'slugify';
-	import type { Tables } from '$lib/schema/database.types';
 	import { selectAll } from '$lib/action/selectAll';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
+	
+	import type { Tables } from '$lib/schema/database.types';
 
 	interface Props {
 		onsubmit: () => void;
@@ -15,8 +15,8 @@
 
 	let { team, onsubmit }: Props = $props();
 
-	const teams = getControlRoomCtx(getContext, 'ctx_table$live_debate_team');
-	const live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	const teams = getControlRoomCtx('ctx_table$live_debate_team');
+	const live_debate = getControlRoomCtx('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	let showSubmitBtn = $state(false);

@@ -3,22 +3,27 @@
 	import FollowButton from '$lib/components/button/FollowButton.svelte';
 	import BackstagePanel, { type DevicesEnable } from './components/panel/BackstagePanel.svelte';
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
+	import Chat from './components/sidebar/Chat.svelte';
 
+	import { setLiveRoomCtx } from '$src/lib/context/live-page';
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { authUserData } from '$lib/stores/auth.store';
-
-	import type { RealtimeChannel } from '@supabase/supabase-js';
-	import type { ActionData, PageServerData } from './$types';
 	import { NO_PROFILE_DEFAULT } from '$lib/constatnt/file';
 
+	import type { RealtimeChannel } from '@supabase/supabase-js';
+	import type { ActionData, PageData } from './$types';
+	
+	
 	interface Props {
-		data: PageServerData;
+		data: PageData;
 		form: ActionData;
 	}
 
 	let { data, form }: Props = $props();
+	setLiveRoomCtx("pageDataProps", data);
+
 
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 	let userJoined = $state(data.isJoined);
@@ -149,19 +154,7 @@
 					Backstage Chat
 				</button>
 			</div>
-			<div class="chat-container">
-				<div class="chat-items">
-					<div class="chat-item">
-						<span class="chat-item-username">username</span><span class="chat-item-content"
-							>This is a content of the chat user</span
-						>
-					</div>
-					<div class="chat-input-container">
-						<textarea class="chat-text"></textarea>
-						<button class="btn-submit">Submit</button>
-					</div>
-				</div>
-			</div>
+			<Chat />
 		</div>
 	</div>
 </div>
@@ -211,48 +204,6 @@
 		@apply text-secondary;
 	}
 
-	.chat-container {
-		@apply flex-grow;
-		@apply overflow-auto;
-		@apply flex flex-col justify-between;
-	}
-
-	.chat-items {
-		@apply w-full;
-		@apply px-2;
-	}
-
-	.chat-input-container {
-		@apply flex flex-col justify-end;
-		height: calc(100vh - 76px - 70px);
-	}
-	.chat-text {
-		@apply rounded;
-		@apply border border-light-gray;
-		@apply bg-transparent text-white;
-	}
-	.btn-submit {
-		@apply self-end;
-		@apply text-xs;
-		@apply bg-primary;
-		@apply px-2 py-1;
-		@apply my-1;
-		@apply rounded;
-		@apply border border-primary;
-	}
-	.btn-submit:hover {
-		@apply bg-primary-dark;
-	}
-
-	.chat-item {
-		@apply py-1;
-		@apply text-xs;
-	}
-	.chat-item-username {
-		@apply text-team-a;
-		@apply font-bold;
-		@apply pr-2;
-	}
 
 	.title-action {
 		@apply flex;

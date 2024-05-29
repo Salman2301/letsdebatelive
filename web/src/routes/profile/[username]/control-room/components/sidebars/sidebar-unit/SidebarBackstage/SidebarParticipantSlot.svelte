@@ -40,9 +40,9 @@
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants = getControlRoomCtx(getContext, 'ctx_table$live_debate_participants');
-	let live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
-	let teamMapColor = getControlRoomCtx(getContext, 'ctx_map$teamColor');
+	let participants = getControlRoomCtx('ctx_table$live_debate_participants');
+	let live_debate = getControlRoomCtx('ctx_table$live_debate');
+	let teamMapColor = getControlRoomCtx('ctx_map$teamColor');
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []

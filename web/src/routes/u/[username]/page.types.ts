@@ -9,6 +9,7 @@ export interface PageData {
 	participants: Tables<'live_debate_participants'>[];
 	myBackstageInfo: Tables<'live_debate_participants'> | null;
 	isJoined: boolean;
+	teams: Tables<"live_debate_team">[] | [];
 	teamMapColor: Record<string, string>;
 	host: Tables<"user_data"> | null;
 }

@@ -12,6 +12,7 @@ export async function load({ locals, params }) {
 		myBackstageInfo: null,
 		teamMapColor: {},
 		host: null,
+		teams: []
 	};
 	const supabase = locals.supabase;
 
@@ -51,7 +52,8 @@ export async function load({ locals, params }) {
 		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
 	]);
 
-	PAGE_DATA.teamMapColor = (live_debate_team || []).reduce((obj: Record<string, string>, team) => {
+	PAGE_DATA.teams = live_debate_team || [];
+	PAGE_DATA.teamMapColor = PAGE_DATA.teams.reduce((obj: Record<string, string>, team) => {
 		obj[team.id] = team.color;
 		return obj;
 	}, {});

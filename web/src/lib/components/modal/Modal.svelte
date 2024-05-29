@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import Heading2 from '../form/Heading2.svelte';
-	import { currentModal } from './modal.store';
+	import { currentModal, currentModalData } from './modal.store';
 
 	interface Props {
 		showModal?: boolean;
@@ -9,6 +10,10 @@
 	}
 
 	let { children, title = '' }: Props = $props();
+
+	onDestroy(()=>{
+		$currentModalData = null;
+	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->

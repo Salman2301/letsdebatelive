@@ -5,7 +5,7 @@
 	import { getControlRoomCtx } from '$lib/context/control-room';
 
 	const supabase = getSupabase(getContext);
-	let live_debate = getControlRoomCtx(getContext, 'ctx_table$live_debate');
+	let live_debate = getControlRoomCtx('ctx_table$live_debate');
 
 	let timeout = $state('5min');
 	function handleLayoutShift() {
