@@ -11,6 +11,7 @@
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageServerData } from './$types';
+	import { NO_PROFILE_DEFAULT } from '$lib/constatnt/file';
 
 	interface Props {
 		data: PageServerData;
@@ -83,6 +84,15 @@
 	onDestroy(() => {
 		backstageChannel?.unsubscribe();
 	});
+
+	function getProfileImage(location?: string | null): string {
+		if(!location) return NO_PROFILE_DEFAULT;
+
+		const url = supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!).data.publicUrl;
+
+		return url || NO_PROFILE_DEFAULT;
+
+	}
 </script>
 
 <div class="page-container">
@@ -101,9 +111,11 @@
 			</div>
 		</div>
 		<div class="host-header">
-			<div class="host-img"></div>
+			<div class="host-img">
+				<img src="{getProfileImage(data.host?.profile_image)}" alt="user profile"/>
+			</div>
 			<div class="host-title-desc">
-				<div class="host-detail">Host detail</div>
+				<div class="host-detail">{data.host?.displayName}</div>
 				<div class="followers">11.k followers</div>
 			</div>
 		</div>
@@ -257,6 +269,7 @@
 		height: 40px;
 		border-radius: 100%;
 		@apply bg-light-gray;
+		overflow: hidden;
 	}
 
 	.host-header {

@@ -10,7 +10,8 @@ export async function load({ locals, params }) {
 		isJoined: false,
 		live_debate: null,
 		myBackstageInfo: null,
-		teamMapColor: {}
+		teamMapColor: {},
+		host: null,
 	};
 	const supabase = locals.supabase;
 
@@ -36,6 +37,7 @@ export async function load({ locals, params }) {
 
 	PAGE_DATA.live_debate = live_debates?.[0] ?? null;
 	const liveDebateId = live_debates?.[0]?.id;
+	PAGE_DATA.host = JSON.parse(JSON.stringify(PAGE_DATA?.live_debate?.host || {}));
 
 	if (error || live_debates.length === 0 || typeof liveDebateId !== 'string') {
 		throw redirect(303, '/?error=FAILED_LIVE_DEBATE_INFO');
@@ -102,7 +104,6 @@ export const actions = {
 
 		const live_debate = live_debates?.[0];
 		const liveDebateId = live_debate?.id;
-
 		if (error || !live_debate || live_debates.length === 0 || typeof liveDebateId !== 'string') {
 			return fail(404, { message: 'Failed to get the live_debate info from db' });
 		}

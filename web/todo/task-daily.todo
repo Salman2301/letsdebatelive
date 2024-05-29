@@ -1,32 +1,49 @@
 TODO:
   Missing core-feature:
     ✔ Setting page @done(24-05-29 00:44)
-    - Equip page
-    - background image / color uploads
-    - logo upload and corner selection
-    - Screen sidebar
-    - WebRTC
-    - Stream server
-    - animation
+    Basic UI:
+      ☐ Team Select page
+      ☐ Equip page
+      ☐ background image / color uploads
+      ☐ logo upload and corner selection
+      ☐ Screen sidebar
+      ☐ Update user profile in backstage
+      ☐ Update user profile in nav bar
+      ☐ Missing all UI features
+        ☐ Profile update
+        ☐ Flow
+    
+    
+    - WebRTC @est(3 days) @started(24-05-29 08:10)
+    - Stream recording server
+    - speed test
     - start and stop
-    - Mux
+    - Mux Integration frontend
     - integrations to youtube and twitch
     - live RTMP stream
+
+
+
+    - live-chat
     - banner
-    - live-chat compiled
-    
     - Full-tutorial
     - Private stream
+
     - Test stream
     - Health check
     - CI / CD setup
     - Server with backup setup
+    
     - Database live setup
     - Audience equip setup
     - Audience join
     - Live chat
     - Team selection
     - Audience filter
+
+  Modal:
+    ☐ Show the list of team for UI
+    ☐ User device setup and test
 
   Screen:
     ☐ List all the screen
@@ -74,9 +91,6 @@ TODO:
     ☐ Add after trigger for moderation logs ?
     ☐ Add before trigger to check if the user ?
 
-  Modal:
-    ☐ Show the list of team for UI
-    ☐ User device setup and test
 
 
   Chat system:
