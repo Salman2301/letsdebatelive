@@ -3,6 +3,7 @@
 	import FollowButton from '$lib/components/button/FollowButton.svelte';
 	import BackstagePanel, { type DevicesEnable } from './components/panel/BackstagePanel.svelte';
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
+	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 	import Chat from './components/sidebar/Chat.svelte';
 
 	import { newToast } from '$lib/components/toast/Toast.svelte';
@@ -15,6 +16,7 @@
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
+	import type { ParticipantsWithUserData } from './page.types';
 	
 	
 	interface Props {
@@ -72,12 +74,13 @@
 		}
 		const { data: participantsData, error } = await supabase
 			.from('live_debate_participants')
-			.select()
-			.eq('live_debate', data.live_debate.id);
+			.select("*,participant_id(*)")
+			.eq('live_debate', data.live_debate.id)
+			.returns<ParticipantsWithUserData[]>();
 
 		$participants = participantsData || [];
 
-		$myBackstageInfo = $participants.find((item) => item.participant_id === $authUserData.id) || null;
+		$myBackstageInfo = $participants.find((item) => item.participant_id.id === $authUserData.id) || null;
 
 		$isJoined = !!myBackstageInfo;
 		if (!isJoined) backstageChannel.unsubscribe();
@@ -97,7 +100,13 @@
 	function getProfileImage(location?: string | null): string {
 		if(!location) return NO_PROFILE_DEFAULT;
 
-		const url = supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!).data.publicUrl;
+		const url = supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!, {
+			transform: {
+				height: 200,
+				width: 200,
+				resize: "cover"
+			}
+		}).data.publicUrl;
 
 		return url || NO_PROFILE_DEFAULT;
 
@@ -121,7 +130,7 @@
 		</div>
 		<div class="host-header">
 			<div class="host-img">
-				<img src="{getProfileImage(data.host?.profile_image)}" alt="user profile"/>
+				<UserImage user={data.host}/>
 			</div>
 			<div class="host-title-desc">
 				<div class="host-detail">{data.host?.displayName}</div>

@@ -1,5 +1,6 @@
 import { fail, redirect, type ActionFailure } from '@sveltejs/kit';
-import type { PageData } from './page.types';
+import type { PageData, ParticipantsWithUserData } from './page.types';
+import type { Tables } from '$src/lib/schema/database.types';
 
 export async function load({ locals, params }) {
 	const PAGE_DATA: PageData = {
@@ -44,11 +45,13 @@ export async function load({ locals, params }) {
 		throw redirect(303, '/?error=FAILED_LIVE_DEBATE_INFO');
 	}
 
+
+
 	const [
 		{ data: live_debate_participants, error: participantsError },
 		{ data: live_debate_team, error: teamError }
 	] = await Promise.all([
-		supabase.from('live_debate_participants').select('*').eq('live_debate', liveDebateId),
+		supabase.from('live_debate_participants').select('*, participant_id("*")').eq('live_debate', liveDebateId).returns<ParticipantsWithUserData[]>(),
 		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
 	]);
 
@@ -60,7 +63,7 @@ export async function load({ locals, params }) {
 
 	PAGE_DATA.participants = live_debate_participants || [];
 	PAGE_DATA.myBackstageInfo =
-		live_debate_participants?.find((item) => item.participant_id === userId) || null;
+		live_debate_participants?.find((item) => item.participant_id.id === userId) || null;
 	PAGE_DATA.isJoined = !!PAGE_DATA.myBackstageInfo;
 
 	return PAGE_DATA;

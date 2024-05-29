@@ -24,13 +24,14 @@
 	import { getSupabase } from '$lib/supabase';
 	import { getContext } from 'svelte';
 
-	import type { PageData } from '../../page.types';
+	import type { PageData, ParticipantsWithUserData } from '../../page.types';
 	import type { Tables } from '$lib/schema/database.types';
+	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 
 	interface Props {
 		pageData: PageData | null;
-		participants: Tables<'live_debate_participants'>[];
-		myBackstageInfo: Tables<'live_debate_participants'> | null;
+		participants: ParticipantsWithUserData[];
+		myBackstageInfo: ParticipantsWithUserData | null;
 		devicesEnable: DevicesEnable;
 	}
 
@@ -75,9 +76,7 @@
 					class="audience-item-image"
 					style="border-color:{pageData?.teamMapColor?.[participant.team]}"
 				>
-					<div class="audience-icon">
-						{participant.display_name[0].toUpperCase()}
-					</div>
+					<UserImage user={participant.participant_id}/>
 				</div>
 				{#if participant.hand_raised}
 					<div class="audience-hand">
@@ -184,13 +183,6 @@
 		margin-top: -48px;
 		margin-left: 20px;
 		color: yellow;
-	}
-	.audience-icon {
-		@apply bg-white/80 text-black;
-		width: 36px;
-		height: 36px;
-		@apply rounded-full;
-		@apply flex items-center justify-center;
 	}
 
 	.audience-setting-section {

@@ -1,7 +1,8 @@
-import type { Tables } from '$lib/schema/database.types';
+import { getContext, setContext } from 'svelte';
+
 import type { Readable, Writable } from 'svelte/store';
 import type { PageData } from '../../routes/u/[username]/$types';
-import { getContext, setContext } from 'svelte';
+import type { ParticipantsWithUserData } from '$src/routes/u/[username]/page.types';
 
 // This file contains all the context needed for the live-room page
 // Pass the svelte setContext and getContext to the below helper function
@@ -10,7 +11,7 @@ import { getContext, setContext } from 'svelte';
 
 type ContextTypes = {
 	pageDataProps: PageData;
-	myBackstageInfo: Writable<Tables<"live_debate_participants"> | null >
+	myBackstageInfo: Writable<ParticipantsWithUserData | null >
 };
 
 export function setLiveRoomCtx<T extends keyof ContextTypes>(

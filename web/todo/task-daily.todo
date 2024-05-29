@@ -2,8 +2,18 @@ TODO:
   Missing core-feature:
     ✔ Setting page @done(24-05-29 00:44)
 
-    ☐ Write the current code to use svelte store with context and avoid using $state()
+    ✔ Write the current code to use svelte store with context and avoid using $state() @done(24-05-30 02:25)
+    ✔ Consisten profile image @done(24-05-30 03:46)
+      ✔ Host name @done(24-05-30 03:46)
+      ☐ Account name
+      ☐ Backstage name
 
+    ☐ Thumbnail setup
+      Supabase already support on-fly transformation we can utilized, but requires $25 / month
+      ☐ Letter
+      ☐ Profile Default image
+      ☐ Profile Image
+    
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
       ☐ Team Select page
       ☐ Equip page

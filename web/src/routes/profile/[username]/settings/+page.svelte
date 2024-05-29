@@ -6,6 +6,7 @@
 	import SocialLink from './component/SocialLink.svelte';
 	import Loader from "$lib/components/icon/Loader.svelte";
 	import UpdatePassword from './component/UpdatePassword.svelte';
+	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 
 	import { v4 as uuid } from 'uuid';
 	import { authUserData } from '$lib/stores/auth.store';
@@ -13,6 +14,7 @@
 	import { getContext } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
+	import { NO_PROFILE_DEFAULT } from '$src/lib/constatnt/file';
 
 	const supabase = getSupabase(getContext);
 	let isUploading = $state(false);
@@ -99,7 +101,15 @@
 	}
 
 	function getProfileImage(): string {
-		return supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!).data.publicUrl
+		if(!$authUserData?.profile_image) return NO_PROFILE_DEFAULT;
+		
+		return supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!, {
+			transform: {
+				height: 400,
+				width: 400,
+				format: "origin"
+			}
+		}).data.publicUrl || NO_PROFILE_DEFAULT;
 	}
 </script>
 
@@ -174,12 +184,7 @@
 	</div>
 	<div class="right-content">
 		<div class="profile-img">
-			{#if $authUserData?.profile_image}
-				<img src="{getProfileImage()}" alt="profile user"/>
-			{:else}
-				<img src="/images/NO_PROFILE_DEFAULT.svg" alt="default no user profile" />
-			{/if}
-
+			<img src={getProfileImage()} alt="user image"/>
 			<label
 				for="file-upload"
 				class="upload-icon"
@@ -238,11 +243,6 @@
 	}
 	.basic-form {
 		@apply mb-8;
-	}
-	img {
-		@apply w-full h-full;
-		@apply bg-cover;
-    object-fit: contain;
 	}
 	.row-container {
 		@apply flex w-full justify-between;
