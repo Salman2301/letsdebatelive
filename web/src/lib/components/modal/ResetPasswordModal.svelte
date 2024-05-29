@@ -2,7 +2,7 @@
 	import Input from '$lib/components/form/input/Input.svelte';
 	import Modal from './Modal.svelte';
 	import BigButton from '$lib/components/button/BigButton.svelte';
-	import { currentModal } from './modal.store';
+	import { closeModal, currentModal } from './modal.store';
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
@@ -49,7 +49,7 @@
 			// await checkLoginSetStore();
 
 			isLoading = false;
-			$currentModal = null;
+			closeModal();
 		} catch (e) {
 			isLoading = false;
 			console.error(e);
@@ -60,7 +60,7 @@
 		const {
 			data: { session }
 		} = await supabase.auth.getSession();
-		if (session) $currentModal = null; // close the modal
+		if (session) closeModal();
 	});
 </script>
 

@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { clickOutside } from '$lib/action/clickOutside';
 	import { authUserData, isLoggedIn } from '../../stores/auth.store';
-	import { currentModal } from '../modal/modal.store';
+	import { currentModal, openModal } from '../modal/modal.store';
 	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 
@@ -37,8 +37,8 @@
 		<div class="popup">
 			<button class="btn-popup" onclick={handleCreateDebate}> Create Debate </button>
 			{#if $authUserData === null}
-				<button class="btn-popup" onclick={() => ($currentModal = 'login')}> Login </button>
-				<button class="btn-popup bg-primary/70" onclick={() => ($currentModal = 'register')}>
+				<button class="btn-popup" onclick={() => (openModal({ key: "login"}))}> Login </button>
+				<button class="btn-popup bg-primary/70" onclick={() => (openModal({ key: "register"}))}>
 					Create account
 				</button>
 			{:else}

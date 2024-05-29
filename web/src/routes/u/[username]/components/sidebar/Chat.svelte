@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentModal, openModal } from "$lib/components/modal/modal.store";
+	import { closeModal, currentModal, openModal } from "$lib/components/modal/modal.store";
 	import { newToast } from "$src/lib/components/toast/Toast.svelte";
 	import { getLiveRoomCtx } from "$src/lib/context/live-page";
 
@@ -14,10 +14,13 @@
 				message: "Failed to get the ctx"
 			}))
 		}
-		openModal("team-select", {
-			teams: ctx.teams,
-			onSelect: (team: Tables<"live_debate_team">) =>{
-				$currentModal = null;
+		openModal({
+			key: "team-select", 
+			data: {
+				teams: ctx.teams,
+				onSelect: (team) =>{
+					closeModal()
+				}
 			}
 		})
 	}

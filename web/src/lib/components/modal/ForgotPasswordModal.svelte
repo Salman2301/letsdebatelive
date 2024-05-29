@@ -2,7 +2,7 @@
 	import Input from '$lib/components/form/input/Input.svelte';
 	import Modal from './Modal.svelte';
 	import BigButton from '$lib/components/button/BigButton.svelte';
-	import { currentModal } from './modal.store';
+	import { closeModal, currentModal, openModal } from './modal.store';
 	import { z } from 'zod';
 	import { hasErrorParse } from '$lib/utils/type';
 	import ZodError from '../form/ZodError.svelte';
@@ -48,7 +48,7 @@
 			// await checkLoginSetStore();
 
 			isLoading = false;
-			$currentModal = null;
+			closeModal();
 		} catch (e) {
 			isLoading = false;
 			console.error(e);
@@ -59,7 +59,7 @@
 		const {
 			data: { session }
 		} = await supabase.auth.getSession();
-		if (session) $currentModal = null; // close the modal
+		if (session) closeModal(); // close the modal
 	});
 </script>
 
@@ -73,7 +73,7 @@
 			hasError={!!hasErrors?.email}
 		/>
 		<div class="text-content">
-			<button class="w-full text-left" onclick={() => currentModal.set('login')} type="button">
+			<button class="w-full text-left" onclick={() => openModal({ key: "login" })} type="button">
 				Login again?
 			</button>
 		</div>

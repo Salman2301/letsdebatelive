@@ -1,7 +1,7 @@
 Code:
   ☐ Combine all the supabase channel subscriptions to one place and sub there and connect it to svelte store
   ☐ Context file convert into a class function
-  ☐ Add a one true place to add types for modalData
+  ✔ Add a one true place to add types for modalData @done(24-05-29 14:52)
   ☐ Remove empty files
   ✔ Remove too many relative parent folder in import statement `../../../../../Component` @done(24-05-26 00:23)
   ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)

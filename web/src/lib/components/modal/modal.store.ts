@@ -1,17 +1,35 @@
 import { writable, type Writable } from 'svelte/store';
+import type { Tables } from '$src/lib/schema/database.types';
 
-type Modal = 'login' |
-  'register' |
-  'reset-password' |
-  'forgot-password' |
-  'team-select' |
-  null;
+type ModalData = {
+  "login": null,
+  "reset-password": null;
+  "register": null;
+  "forgot-password": null;
+  "team-select": {
+    teams: Tables<"live_debate_team">[];
+    onSelect: (team: Tables<"live_debate">) => void;
+  },
+  "none": null;
+}
 
-export const currentModal: Writable<Modal> = writable(null);
+export const currentModal: Writable<keyof ModalData> = writable("none");
 export const currentModalData: Writable<any> = writable(null);
 
+type ModalArg<T extends keyof ModalData> = ModalData[T] extends null
+  ? { key: T }
+  : { key: T; data: ModalData[T] };
 
-export function openModal(key: Modal, data: any) {
-  currentModal.set(key);
-  currentModalData.set(data || null);
+export function openModal<T extends keyof ModalData>(args: ModalArg<T>) {
+  currentModal.set(args.key);
+  // @ts-ignore
+  if(args.data)currentModalData.set(args.data || null);
 }
+
+export function closeModal() {
+  openModal({ key: "none" });
+}
+
+// openModal({ key: "login"}); // should be ok
+// openModal({ key: "team-select", data: {} }); // should be throw error
+// openModal({ key: "team-select", data: { teams: [], onSelect: console.log } }); // no error

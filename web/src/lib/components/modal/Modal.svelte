@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import Heading2 from '../form/Heading2.svelte';
-	import { currentModal, currentModalData } from './modal.store';
+	import { closeModal, currentModal, currentModalData } from './modal.store';
 
 	interface Props {
 		showModal?: boolean;
@@ -23,7 +23,7 @@
 		<div>
 			<div class="header">
 				<div class="title"><Heading2 content={title} /></div>
-				<button onclick={() => ($currentModal = null)}>
+				<button onclick={closeModal}>
 					<svg
 						width="30"
 						height="30"

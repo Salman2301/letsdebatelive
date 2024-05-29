@@ -7,7 +7,7 @@
 
 	import { z } from 'zod';
 	import { getSupabase } from '$lib/supabase';
-	import { currentModal } from './modal.store';
+	import { closeModal, currentModal } from './modal.store';
 	import { onMount, getContext } from 'svelte';
 	import { hasErrorParse } from '$lib/utils/type';
 	import { newToast } from '../toast/Toast.svelte';
@@ -71,7 +71,7 @@
 			invalidateAll();
 
 			isLoading = false;
-			$currentModal = null;
+			closeModal();
 		} catch (e) {
 			isLoading = false;
 			console.error(e);
@@ -92,7 +92,7 @@
 		const {
 			data: { session }
 		} = await supabase.auth.getSession();
-		if (session) $currentModal = null; // close the modal
+		if (session) closeModal();
 	});
 </script>
 
