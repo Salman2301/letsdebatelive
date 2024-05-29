@@ -1,5 +1,19 @@
 
 
+Profile Image:
+  ✔ Write the current code to use svelte store with context and avoid using $state() @done(24-05-30 02:25)
+  ✔ Consisten profile image @done(24-05-30 03:46)
+    ✔ Host name @done(24-05-30 03:46)
+    ✔ Account name @done(24-05-30 03:52)
+    ✔ Backstage name @done(24-05-30 03:52)
+
+  ✔ Thumbnail setup @done(24-05-30 03:52)
+    Supabase already support on-fly transformation we can utilized, but requires $25 / month during production
+    ✔ Letter @done(24-05-30 03:53)
+    ✔ Profile Default image @done(24-05-30 03:53)
+    ✔ Profile Image @done(24-05-30 03:53)
+  
+
 Bulk Action: 
   ✔ On backstage complete @done(24-05-27 18:48)
     ✔ Write the integration test @done(24-05-27 18:48)
