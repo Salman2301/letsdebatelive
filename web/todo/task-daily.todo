@@ -3,15 +3,11 @@ TODO:
     ✔ Setting page @done(24-05-29 00:44)
 
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
-      ☐ Team Select page
       ☐ Equip page
       ☐ background image / color uploads
       ☐ logo upload and corner selection
       ☐ Screen sidebar
-      ☐ Update user profile in backstage
-      ☐ Update user profile in nav bar
       ☐ Missing all UI features
-        ☐ Profile update
         ☐ Flow
     
     
@@ -41,7 +37,6 @@ TODO:
     - Audience filter
 
   Modal:
-    ☐ Show the list of team for UI
     ☐ User device setup and test
 
   Screen:

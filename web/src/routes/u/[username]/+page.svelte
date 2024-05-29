@@ -8,7 +8,6 @@
 
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { setLiveRoomCtx } from '$src/lib/context/live-page';
-	import { NO_PROFILE_DEFAULT } from '$lib/constatnt/file';
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
@@ -28,7 +27,6 @@
 
 
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
-	let userJoined = writable(data.isJoined);
 
 	const supabase = getSupabase(getContext);
 	let backstageChannel: RealtimeChannel;
@@ -49,7 +47,7 @@
 	});
 
 	onMount(() => {
-		if (data.isJoined && data?.live_debate?.id) {
+		if ($isJoined && data?.live_debate?.id) {
 			backstageChannel = supabase.channel(`backstage_${data.live_debate.id}`);
 
 			backstageChannel.on(
@@ -83,7 +81,7 @@
 		$myBackstageInfo = $participants.find((item) => item.participant_id.id === $authUserData.id) || null;
 
 		$isJoined = !!myBackstageInfo;
-		if (!isJoined) backstageChannel.unsubscribe();
+		if (!$isJoined) backstageChannel.unsubscribe();
 	}
 
 	if (form && form.error_code && form.error_code === 'MAX_PARTICIPANT') {
@@ -97,26 +95,12 @@
 		backstageChannel?.unsubscribe();
 	});
 
-	function getProfileImage(location?: string | null): string {
-		if(!location) return NO_PROFILE_DEFAULT;
-
-		const url = supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!, {
-			transform: {
-				height: 200,
-				width: 200,
-				resize: "cover"
-			}
-		}).data.publicUrl;
-
-		return url || NO_PROFILE_DEFAULT;
-
-	}
 </script>
 
 <div class="page-container">
 	<div class="live-video-content">
 		<div class="video-container"></div>
-		{#if userJoined}
+		{#if $isJoined}
 			<BackstagePanel bind:participants={$participants} myBackstageInfo={$myBackstageInfo} pageData={data} {devicesEnable} />
 		{:else}
 			<JoinBackstagePanel />

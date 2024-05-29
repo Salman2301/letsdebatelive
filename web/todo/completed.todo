@@ -1,11 +1,20 @@
 
 
+Modal:
+  ✔ Show the list of team for UI @done(24-05-30 04:04)
+
+✔ Update user profile in backstage @done(24-05-30 03:57)
+✔ Update user profile in nav bar @done(24-05-30 03:57)
+✔ Profile update @done(24-05-30 03:58)
+
 Profile Image:
   ✔ Write the current code to use svelte store with context and avoid using $state() @done(24-05-30 02:25)
   ✔ Consisten profile image @done(24-05-30 03:46)
     ✔ Host name @done(24-05-30 03:46)
     ✔ Account name @done(24-05-30 03:52)
     ✔ Backstage name @done(24-05-30 03:52)
+
+  
 
   ✔ Thumbnail setup @done(24-05-30 03:52)
     Supabase already support on-fly transformation we can utilized, but requires $25 / month during production
