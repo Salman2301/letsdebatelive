@@ -183,5 +183,6 @@
 
 	.social-link-url {
 		@apply text-left pl-2 w-full;
+		@apply truncate;
 	}
 </style>
