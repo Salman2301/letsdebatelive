@@ -1,4 +1,4 @@
-import NoFeed from './NoFeed.svelte';
+import NoFeed from '../../../../../lib/components/feed/NoFeed.svelte';
 import ScreenShareDisabled from './ScreenShareDisabled.svelte';
 import ScreenShareEnabled from './ScreenShareEnabled.svelte';
 import WebCamEnabled from './WebCamEnabled.svelte';

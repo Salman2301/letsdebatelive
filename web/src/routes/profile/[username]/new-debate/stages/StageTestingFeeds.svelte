@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { authUserData } from '$lib/stores/auth.store';
+	import NoFeedCard from '$lib/components/feed/NoFeedCard.svelte';
 	import Button from '$lib/components/button/Button.svelte';
-	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
-	import { getContext, onMount } from 'svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
+	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
+
+	import { getContext, onMount } from 'svelte';
+	import { authUserData } from '$lib/stores/auth.store';
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icon';
-	import NoFeedCard from '../components/NoFeedCard.svelte';
 	import {
 		CTX_KEY_HOST_PARTICIPANT,
 		CTX_KEY_NEW_DEBATE,

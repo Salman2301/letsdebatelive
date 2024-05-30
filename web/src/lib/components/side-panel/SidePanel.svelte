@@ -69,4 +69,10 @@
     font-size: 28px;
     font-weight: normal;
   }
+
+  .side-panel-content {
+    overflow: scroll;
+    height: calc(100vh - 60px);
+    @apply px-2;
+  }
 </style>
