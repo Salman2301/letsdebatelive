@@ -49,7 +49,7 @@
 		align-items: center;
   }
   .side-panel {
-    @apply bg-black;
+    @apply bg-primary-dark;
     width: 50%;
     max-width: 480px;
     height: 100%;

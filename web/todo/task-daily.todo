@@ -5,6 +5,7 @@ TODO:
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
       ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
       ☐ Equip page
+        ☐ Rethink feeds and control
       ☐ background image / color uploads
       ☐ logo upload and corner selection
       ☐ Screen sidebar
@@ -20,9 +21,9 @@ TODO:
     ☐ speed test
     ☐ Stream recording server
 
-    ☐ live-chat
+    ☐ overlay
     ☐ banner
-    ☐ 
+    ☐ live-chat
 
     - Full-tutorial
     - Private stream
