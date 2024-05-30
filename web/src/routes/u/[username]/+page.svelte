@@ -121,7 +121,7 @@
 				<div class="followers">11.k followers</div>
 			</div>
 		</div>
-		<div class="comment-section">After fact comment section</div>
+		<!-- <div class="comment-section">After fact comment section</div> -->
 	</div>
 	<div class="chat-sticky-container">
 		<div class="chat-content">

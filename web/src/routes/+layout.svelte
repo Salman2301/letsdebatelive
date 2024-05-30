@@ -30,6 +30,7 @@
 </script>
 
 <svelte:window onresize={handleScreenResize} />
+
 {#if $page.url.pathname.includes('/record-view')}
 	<slot />
 {:else}

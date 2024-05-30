@@ -3,7 +3,7 @@ TODO:
     ✔ Setting page @done(24-05-29 00:44)
 
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
-      ☐ Get the team info from the live_participant_team 
+      ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
       ☐ Equip page
       ☐ background image / color uploads
       ☐ logo upload and corner selection

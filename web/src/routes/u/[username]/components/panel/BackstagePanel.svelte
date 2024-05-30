@@ -27,6 +27,7 @@
 	import type { PageData, ParticipantsWithUserData } from '../../page.types';
 	import type { Tables } from '$lib/schema/database.types';
 	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
+	import { openSidePanel } from '$src/lib/components/side-panel/side-panel.store';
 
 	interface Props {
 		pageData: PageData | null;
@@ -148,7 +149,7 @@
 					<Phone />
 				</button>
 			</form>
-			<button class="btn-setting">
+			<button class="btn-setting" onclick={()=>openSidePanel("equip")}>
 				<SettingGear />
 			</button>
 		</div>

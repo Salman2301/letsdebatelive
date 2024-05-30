@@ -1,7 +1,9 @@
 <script lang="ts">
+	import Toast from '$lib/components/toast/Toast.svelte';
 	import Header from '$lib/components/navbar/NavBar.svelte';
 	import ModalAll from '$lib/components/modal/ModalAll.svelte';
-	import Toast from '$lib/components/toast/Toast.svelte';
+	import SidePanelAll from '$lib/components/side-panel/SidePanelAll.svelte';
+
 	import { getContext, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
@@ -27,6 +29,7 @@
 </script>
 
 <ModalAll />
+<SidePanelAll />
 <Toast />
 <Header />
 

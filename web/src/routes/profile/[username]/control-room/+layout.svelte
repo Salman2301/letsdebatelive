@@ -128,6 +128,7 @@
 
 <div class="layout-container">
 	<Sidebar></Sidebar>
+	<!-- svelte-ignore slot_element_deprecated -->
 	<div class="control-room">
 		<slot></slot>
 	</div>
