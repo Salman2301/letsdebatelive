@@ -291,20 +291,6 @@
 
 <div class="flex justify-center w-full">
 	<div class="main-buttons">
-		<button onclick={toggleWebCam} class="btn-main-icon">
-			{#if webcamFeedPlaying}
-				<DeviceCamera />
-			{:else}
-				<DeviceCameraDisabled />
-			{/if}
-		</button>
-		<button onclick={toggleScreenShare} class="btn-main-icon">
-			{#if screenSharePlaying}
-				<DeviceScreen />
-			{:else}
-				<DeviceScreenDisabled />
-			{/if}
-		</button>
 		<button onclick={toggleSpeaker} class="btn-main-icon">
 			{#if speakerPlaying}
 				<DeviceSpeaker />
@@ -320,14 +306,29 @@
 				<DeviceMicDisabled />
 			{/if}
 		</button>
+		<button onclick={toggleWebCam} class="btn-main-icon">
+			{#if webcamFeedPlaying}
+				<DeviceCamera />
+			{:else}
+				<DeviceCameraDisabled />
+			{/if}
+		</button>
+		<button onclick={toggleScreenShare} class="btn-main-icon">
+			{#if screenSharePlaying}
+				<DeviceScreen />
+			{:else}
+				<DeviceScreenDisabled />
+			{/if}
+		</button>
 	</div>
 </div>
 
 <div class="mb-3">
-	<Heading2 content="Advance" textAlign="center" />
+	<Heading2 content="Advance" textAlign="left" />
 </div>
 
 <div class="video-feed">
+	<Heading3 content="Webcam" />
 	<div class="video-title-container">
 		<div class="video-container">
 			{#if !webcamFeedPlaying}
@@ -358,6 +359,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="mt-2">
+		<Heading3 content="Screenshare" />
+	</div>
 	<div class="video-title-container">
 		<div class="video-container">
 			<video bind:this={videoScreenShareInstance} class="video-el" autoplay playsinline>
@@ -376,7 +380,7 @@
 					<DeviceScreenDisabled />
 				{/if}
 			</button>
-			<span>Screen share</span>
+			<button onclick={toggleScreenShare}>Screen share</button>
 			<div class="info-btn">
 				<BubbleError show={!!errorScreenShareFeed} message={errorScreenShareFeed} />
 			</div>
@@ -386,7 +390,7 @@
 
 <div class="audio-container">
 	<div class="audio-mic-container">
-		<Heading3 content="MICROPHONE" />
+		<Heading3 content="Microphone" textAlign="center"/>
 		<div class="audio-select-container">
 			<select class="select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
 				{#each kindMapDevices['audioinput'] as device}
@@ -399,7 +403,7 @@
 	</div>
 
 	<div class="audio-speaker-container">
-		<Heading3 content="SPEAKER" />
+		<Heading3 content="Speaker" textAlign="center"/>
 		<div class="audio-select-container">
 			<select class="select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
 				{#each kindMapDevices['audiooutput'] as device}
@@ -434,7 +438,7 @@
 	}
 
 	.video-feed {
-		@apply flex flex-col items-center justify-center gap-10;
+		@apply flex flex-col items-center justify-center;
 	}
 
 	.header {

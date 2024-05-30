@@ -4,20 +4,19 @@ TODO:
 
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
       ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
-      ☐ Equip page
+      ✔ Equip page @done(24-05-30 15:47)
         ☐ Rethink feeds and control
-      ☐ background image / color uploads
-      ☐ logo upload and corner selection
+      ☐ Overlay
+        ☐ background image / color uploads
+        ☐ logo upload and corner selection
       ☐ Screen sidebar
       ☐ Missing all UI features
         ☐ Flow
     
     
     ☐ WebRTC 
-    ☐ live RTMP stream
-    ☐ Mux Integration frontend
+    ☐ live RTMP docker stream
     ☐ start and stop
-    ☐ integrations to youtube and twitch
     ☐ speed test
     ☐ Stream recording server
 
@@ -25,11 +24,15 @@ TODO:
     ☐ banner
     ☐ live-chat
 
+    ☐ Test stream
+    ☐ Health check
+
+    ☐ Mux Integration frontend
+    ☐ integrations to youtube and twitch
+
     - Full-tutorial
     - Private stream
 
-    - Test stream
-    - Health check
     - CI / CD setup
     - Server with backup setup
     
