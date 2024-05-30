@@ -74,7 +74,7 @@
 			<div class="audience-item">
 				<div
 					class="audience-item-image"
-					style="border-color:{pageData?.teamMapColor?.[participant.team]}"
+					style="border-color:{pageData?.teamMapColor?.[participant?.team?.id]}"
 				>
 					<UserImage user={participant.participant_id}/>
 				</div>

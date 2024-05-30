@@ -1,6 +1,5 @@
 import { fail, redirect, type ActionFailure } from '@sveltejs/kit';
 import type { PageData, ParticipantsWithUserData } from './page.types';
-import type { Tables } from '$src/lib/schema/database.types';
 
 export async function load({ locals, params }) {
 	const PAGE_DATA: PageData = {
@@ -51,7 +50,7 @@ export async function load({ locals, params }) {
 		{ data: live_debate_participants, error: participantsError },
 		{ data: live_debate_team, error: teamError }
 	] = await Promise.all([
-		supabase.from('live_debate_participants').select('*, participant_id("*")').eq('live_debate', liveDebateId).returns<ParticipantsWithUserData[]>(),
+		supabase.from('live_debate_participants').select('*, participant_id(*), team(*)').eq('live_debate', liveDebateId).returns<ParticipantsWithUserData[]>(),
 		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
 	]);
 
@@ -115,13 +114,17 @@ export const actions = {
 
 		// temp fnc to get the team id, This should be sent from the current user
 		// or under live_debate_team
-		async function getAnyTeamId(liveDebateId: string): Promise<string> {
+		async function getAnyTeamId(liveDebateId: string): Promise<string | null> {			
+			if (!userData || !userData.id) return null;
+
 			const { data, error } = await supabase
-				.from('live_debate_team')
-				.select('id')
-				.eq('live_debate', liveDebateId);
-			if (!data?.[0]?.id) console.error(`Invalid team found for ${liveDebateId}`);
-			return data?.[0]?.id || 'invalid';
+				.from('live_debate_user_team')
+				.select('team')
+				.eq('live_debate', liveDebateId)
+				.eq("user_id", userData?.id);
+			
+			if (!data?.[0]?.team) console.error(`Invalid team found for ${liveDebateId}`);
+			return data?.[0]?.team || null;
 		}
 
 		const toInsert = {
@@ -132,6 +135,7 @@ export const actions = {
 			display_name: userData?.username as string,
 			team: await getAnyTeamId(liveDebateId) // must get from the formdata
 		} as const;
+
 		const { data: insert, error: errorInsert } = await supabase
 			.from('live_debate_participants')
 			.insert(toInsert)

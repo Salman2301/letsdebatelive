@@ -72,7 +72,7 @@
 		}
 		const { data: participantsData, error } = await supabase
 			.from('live_debate_participants')
-			.select("*,participant_id(*)")
+			.select("*,participant_id(*),team(*)")
 			.eq('live_debate', data.live_debate.id)
 			.returns<ParticipantsWithUserData[]>();
 

@@ -33,11 +33,11 @@ function executeMigration(migrationName, rl) {
 	const supabaseProcess = spawn('supabase', ['db', 'diff', "--schema", "storage,auth,public", '--file', migrationName]);
 
 	supabaseProcess.stdout.on('data', (data) => {
-		console.log(data.toString());
+		process.stdout.write(data.toString());
 	});
 
 	supabaseProcess.stderr.on('data', (data) => {
-		console.error(data.toString());
+		process.stderr.write(data.toString());
 	});
 
 	supabaseProcess.on('close', () => {

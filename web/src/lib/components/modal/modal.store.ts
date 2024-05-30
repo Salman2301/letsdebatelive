@@ -32,4 +32,4 @@ export function closeModal() {
 
 // openModal({ key: "login"}); // should be ok
 // openModal({ key: "team-select", data: {} }); // should be throw error
-// openModal({ key: "team-select", data: { teams: [], onSelect: console.log } }); // no error
+// openModal({ key: "team-select", data: { teams: [], onSelect: console.error } }); // no error

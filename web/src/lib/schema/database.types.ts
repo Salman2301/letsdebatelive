@@ -339,7 +339,7 @@ export type Database = {
 					speaker_available: boolean | null;
 					speaker_enable: boolean | null;
 					speaker_id: string | null;
-					team: string;
+					team: string | null;
 				};
 				Insert: {
 					cam_available?: boolean | null;
@@ -365,7 +365,7 @@ export type Database = {
 					speaker_available?: boolean | null;
 					speaker_enable?: boolean | null;
 					speaker_id?: string | null;
-					team: string;
+					team?: string | null;
 				};
 				Update: {
 					cam_available?: boolean | null;
@@ -391,7 +391,7 @@ export type Database = {
 					speaker_available?: boolean | null;
 					speaker_enable?: boolean | null;
 					speaker_id?: string | null;
-					team?: string;
+					team?: string | null;
 				};
 				Relationships: [
 					{
@@ -494,6 +494,42 @@ export type Database = {
 						columns: ['live_debate'];
 						isOneToOne: false;
 						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_debate_user_team: {
+				Row: {
+					created_at: string;
+					live_debate: string;
+					team: string;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					live_debate: string;
+					team: string;
+					user_id?: string;
+				};
+				Update: {
+					created_at?: string;
+					live_debate?: string;
+					team?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_debate_user_team_live_debate_fkey';
+						columns: ['live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_debate_user_team_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					}
 				];

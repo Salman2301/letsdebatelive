@@ -12,6 +12,11 @@
 	const supabase = getSupabase(getContext);
 	const ctx = getLiveRoomCtx('pageDataProps');
 	const myBackstageInfo = getLiveRoomCtx('myBackstageInfo');
+	let teamId: string = $state("");
+
+	$effect(()=>{
+		getTeamId();
+	});
 
 	function handleOpenTeamSelect() {
 		if (!ctx) {
@@ -30,18 +35,37 @@
 	}
 
 	async function handleSelectTeam(team: Tables<'live_debate_team'>) {
-		if (!$authUserData?.id) {
+		if (!$authUserData?.id || !ctx.live_debate) {
 			return newToast({
 				type: 'error',
 				message: 'Error failed to get the current user info'
 			});
 		}
-		const { data, error } = await supabase
-			.from('live_debate_participants')
-			.update({
-				team: team.id
+
+		const [
+			{ data, error },
+			{ data: participantUpdate, error: errorUpdate }
+		] = await Promise.all([
+			supabase.from("live_debate_user_team")
+			.upsert({
+				live_debate: ctx.live_debate.id,
+				team: team.id,
+				user_id: $authUserData?.id
 			})
-			.eq('participant_id', $authUserData?.id);
+			.eq("live_debate", ctx.live_debate.id)
+			.eq("user_id", $authUserData.id),
+
+			// Update team if the user is in backstage
+			supabase.from("live_debate_participants")
+			.update({
+				team: team.id,
+			})
+			.eq("live_debate", ctx.live_debate.id)
+			.eq("participant_id", $authUserData.id)
+		])
+
+		teamId = team.id;
+
 		if (error) {
 			console.error(error);
 			return newToast({
@@ -51,6 +75,17 @@
 		}
 
 		closeModal();
+	}
+
+	async function getTeamId() {
+		if( !ctx?.live_debate  || !$authUserData) return;
+
+		const { data, error } = await supabase.from("live_debate_user_team").select()
+		.eq("live_debate", ctx.live_debate.id)
+		.eq("user_id", $authUserData?.id) 
+
+		if(data?.[0]?.team) teamId = data?.[0]?.team;
+		return 
 	}
 </script>
 
@@ -68,8 +103,8 @@
 					<button class="team-circle" onclick={() => handleOpenTeamSelect()}>
 						<div
 							class="circle-icon"
-							style="background-color:{$myBackstageInfo
-								? ctx.teamMapColor[$myBackstageInfo.team]
+							style="background-color:{teamId
+								? ctx.teamMapColor[teamId]
 								: ''}"
 						></div>
 						<span>Change team?</span>
@@ -77,7 +112,7 @@
 				</div>
 				<button
 					class="btn-submit"
-					style="background-color:{$myBackstageInfo ? ctx.teamMapColor[$myBackstageInfo.team] : ''}"
+					style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
 					>Submit</button
 				>
 			</div>
