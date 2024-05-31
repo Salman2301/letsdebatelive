@@ -330,7 +330,7 @@
 </script>
 
 <div class="flex justify-center mb-10">
-	<div class="flex justify-between items-center gap-4 w-[700px]">
+	<div class="main-setting">
 		<div class="in-display-name">
 			<Input
 				rounded="sm"
@@ -344,7 +344,7 @@
 		<Label
 			label="Team"
 		>
-			<select name="team">
+			<select name="team" class="team-select">
 				{#each $teams as team}
 					<option value={team.slug}>{team.title}</option>
 				{/each}
@@ -406,7 +406,7 @@
 					<DeviceCameraDisabled />
 				{/if}
 			</button>
-			<select bind:value={webCamDeviceId}>
+			<select class="device-select" bind:value={webCamDeviceId}>
 				{#each kindMapDevices['videoinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{:else}
@@ -448,7 +448,7 @@
 	<div class="audio-mic-container">
 		<Heading3 content="MICROPHONE" />
 		<div class="audio-select-container">
-			<select class="select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
+			<select class="device-select select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
 				{#each kindMapDevices['audioinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
@@ -461,7 +461,7 @@
 	<div class="audio-speaker-container">
 		<Heading3 content="SPEAKER" />
 		<div class="audio-select-container">
-			<select class="select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
+			<select class="device-select select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
 				{#each kindMapDevices['audiooutput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
@@ -480,6 +480,11 @@
 <style lang="postcss">
 	.video-feed {
 		@apply flex justify-center gap-10;
+	}
+
+	.main-setting {
+		@apply flex justify-between items-center;
+		width: 700px;
 	}
 
 	.header {
@@ -507,7 +512,7 @@
 		width: 330px;
 	}
 
-	select {
+	.device-select {
 		@apply bg-black;
 		width: 290px;
 		height: 40px;
@@ -564,8 +569,8 @@
 
 	.btn-main-icon {
 		@apply text-transparent;
-		height: 40px;
-		width: 40px;
+		height: 46px;
+		width: 46px;
 		@apply border border-light-gray;
 		@apply flex items-center justify-center;
 		@apply rounded;
@@ -575,10 +580,10 @@
 		scale: 1.2;
 	}
 
-	select {
+	.team-select {
 		@apply rounded;
 		@apply border border-light-gray;
-		width: 240px;
+		width: 180px;
 		height: 46px;
 		@apply bg-primary-dark;
 	}

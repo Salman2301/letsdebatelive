@@ -15,11 +15,9 @@
 	let plates: string[] = $state([]);
 
 	onMount(()=>{
-		console.log({ bar })
 		for( let i = startHue; i > endHue; i-=ratio ) {
 			plates.push(`hsl(${i}, 100%, 50%)`);
 		}
-		console.log({ plates });
 	})
 
 </script>
