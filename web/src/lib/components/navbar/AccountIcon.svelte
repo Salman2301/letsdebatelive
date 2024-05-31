@@ -10,7 +10,7 @@
 
 	let showPopup = $state(false);
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function handleCreateDebate() {
 		if (!$authUserData) return;
@@ -22,7 +22,6 @@
 		showPopup = false;
 		goto(link);
 	}
-
 </script>
 
 <div class="icon-container" use:clickOutside={() => (showPopup = false)}>
@@ -34,8 +33,8 @@
 		<div class="popup">
 			<button class="btn-popup" onclick={handleCreateDebate}> Create Debate </button>
 			{#if $authUserData === null}
-				<button class="btn-popup" onclick={() => (openModal({ key: "login"}))}> Login </button>
-				<button class="btn-popup bg-primary/70" onclick={() => (openModal({ key: "register"}))}>
+				<button class="btn-popup" onclick={() => openModal({ key: 'login' })}> Login </button>
+				<button class="btn-popup bg-primary/70" onclick={() => openModal({ key: 'register' })}>
 					Create account
 				</button>
 			{:else}

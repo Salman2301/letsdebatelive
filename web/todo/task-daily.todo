@@ -5,9 +5,12 @@ TODO:
       ☐ Display name
       ☐ Sub-Info Card
       ☐ Select a team
-    ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
+    
+    ☐ Screen sidebar
+    ☐ Sidebar
       ☐ Background
       ☐ Logo
+      ☐ Scene change
       ☐ Overlay
         ☐ background image
         Type:
@@ -19,7 +22,6 @@ TODO:
           ☐ Upload
         ☐ logo upload and corner selection
 
-      ☐ Screen sidebar
 
     ☐ WebRTC 
     ☐ live RTMP docker stream

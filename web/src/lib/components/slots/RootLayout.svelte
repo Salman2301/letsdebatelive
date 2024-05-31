@@ -8,7 +8,7 @@
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	onMount(async () => {
 		const {

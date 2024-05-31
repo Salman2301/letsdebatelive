@@ -4,19 +4,19 @@
 	import { getContext, tick } from 'svelte';
 	import { selectAll } from '$lib/action/selectAll';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	
+
 	import type { Tables } from '$lib/schema/database.types';
 	import type { Writable } from 'svelte/store';
 
 	interface Props {
 		onsubmit: () => void;
 		team: Tables<'live_debate_team'>;
-		live_debate: Writable<Tables<"live_debate"> | null>;
+		live_debate: Writable<Tables<'live_debate'> | null>;
 	}
 
 	let { team, live_debate, onsubmit }: Props = $props();
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	let showSubmitBtn = $state(false);
 	let newTeamValue = $state(team.title);

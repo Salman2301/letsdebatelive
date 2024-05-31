@@ -1,32 +1,35 @@
 <script lang="ts">
-	import Input from "$lib/components/form/input/Input.svelte";
+	import Input from '$lib/components/form/input/Input.svelte';
 	import TeamSetting from '$src/lib/components/group/team-setting/TeamSetting.svelte';
-	import { PageCtx } from "$src/lib/context";
-	import { getSupabase } from "$src/lib/supabase";
-	import { getContext, onMount } from "svelte";
+	import { PageCtx } from '$src/lib/context';
+	import { getSupabase } from '$src/lib/supabase';
+	import { getContext, onMount } from 'svelte';
 
-	const page = new PageCtx("new-debate");
-	const liveDebate = page.get("liveDebate");
-	const teams = page.get("teams");
+	const page = new PageCtx('new-debate');
+	const liveDebate = page.get('liveDebate');
+	const teams = page.get('teams');
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
-	let title = $state("");
+	let title = $state('');
 	export async function beforeOnNext() {
 		// Add all stage to teams and participants table
-		if(!$liveDebate) return;
+		if (!$liveDebate) return;
 
-		const { data, error } =await supabase.from("live_debate").update({
-			title,
-		}).eq("id", $liveDebate.id).select();
+		const { data, error } = await supabase
+			.from('live_debate')
+			.update({
+				title
+			})
+			.eq('id', $liveDebate.id)
+			.select();
 
-		if( data?.[0] ) $liveDebate = data[0];
+		if (data?.[0]) $liveDebate = data[0];
 	}
 
-	onMount(()=>{
-		if($liveDebate?.title) title = $liveDebate?.title;
-	})
-
+	onMount(() => {
+		if ($liveDebate?.title) title = $liveDebate?.title;
+	});
 </script>
 
 <div class="in-title">
@@ -41,10 +44,7 @@
 
 <div class="flex justify-center">
 	<div class="container">
-		<TeamSetting
-			live_debate={liveDebate}
-			teams={teams}
-		/>
+		<TeamSetting live_debate={liveDebate} {teams} />
 	</div>
 </div>
 

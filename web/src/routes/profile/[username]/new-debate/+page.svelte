@@ -19,12 +19,12 @@
 	// @ts-expect-error
 	let stageInstance: [Stage1Init, Stage2Host, Stage3CoHost, Stage4Setting, Stage5Broadcast] = [];
 
-	const supabase = getSupabase(getContext);
-	const pageCtx = new PageCtx("new-debate");
+	const supabase = getSupabase();
+	const pageCtx = new PageCtx('new-debate');
 
-	const title = pageCtx.get("title");
-	const liveDebate = pageCtx.get("liveDebate");
-	const hostParticipant = pageCtx.get("hostParticipant");
+	const title = pageCtx.get('title');
+	const liveDebate = pageCtx.get('liveDebate');
+	const hostParticipant = pageCtx.get('hostParticipant');
 
 	async function handleNext() {
 		await stageInstance[currentState - 1].beforeOnNext();
@@ -41,9 +41,12 @@
 			$liveDebate.published = true;
 			$liveDebate.published_tz = new Date().toISOString();
 
-			sessionStorage.removeItem("store$liveDebateId");
-			await supabase.from("live_debate").update({...$liveDebate}).eq("id", $liveDebate.id)
-			
+			sessionStorage.removeItem('store$liveDebateId');
+			await supabase
+				.from('live_debate')
+				.update({ ...$liveDebate })
+				.eq('id', $liveDebate.id);
+
 			goto(`/profile/${$page.params.username}/control-room`);
 		}
 		currentState += 1;
@@ -66,21 +69,19 @@
 	});
 </script>
 
-
 <div class="action-btn">
 	<div class:invisible={currentState === 1}>
-		<Button
-			label="Prev"
-			color="secondary"
-			fillType="outline-solid"
-			width={120}
-			onclick={handlePrev}
-		/>
+		<Button label="Prev" color="secondary" fillType="hover" width={120} onclick={handlePrev} />
 	</div>
-	
+
 	<Heading2 content={$title as string} textAlign="center" />
 
-	<Button label="{currentState === 5 ? "Publish": "Next"}" color="secondary" width={120} onclick={handleNext} />
+	<Button
+		label={currentState === 5 ? 'Publish' : 'Next'}
+		color="secondary"
+		width={120}
+		onclick={handleNext}
+	/>
 </div>
 
 {#if currentState === 1}
@@ -94,7 +95,6 @@
 {:else if currentState === 5}
 	<Stage5Broadcast bind:this={stageInstance[4]} />
 {/if}
-
 
 <style lang="postcss">
 	.action-btn {

@@ -10,13 +10,13 @@
 	import type { Writable } from 'svelte/store';
 	import type { Tables } from '$src/lib/schema/database.types';
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	interface Props {
-		live_debate: Writable<Tables<"live_debate"> | null>;
-		teams: Writable<Tables<"live_debate_team">[]>
+		live_debate: Writable<Tables<'live_debate'> | null>;
+		teams: Writable<Tables<'live_debate_team'>[]>;
 	}
-	
+
 	let { live_debate, teams }: Props = $props();
 
 	let newTeamValue = $state('');
@@ -36,7 +36,7 @@
 		}
 	}
 
-	onMount(refreshTeamData)
+	onMount(refreshTeamData);
 
 	async function newTeam() {
 		if (!$live_debate?.id) return;
@@ -67,7 +67,7 @@
 
 	async function refreshTeamData() {
 		if (!$live_debate?.id) return;
-		
+
 		const { data: newTeamsData } = await supabase
 			.from('live_debate_team')
 			.select()
@@ -82,11 +82,7 @@
 <p class="team-desc">Split your audience into different teams</p>
 <div class="teams-container" class:empty={!$teams.length}>
 	{#each $teams as team (team.id)}
-		<TeamSettingItem
-			{team}
-			{live_debate}
-			onsubmit={refreshTeamData}
-		/>
+		<TeamSettingItem {team} {live_debate} onsubmit={refreshTeamData} />
 	{/each}
 </div>
 <div class="new-team-container">

@@ -32,7 +32,7 @@
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function toggleDevice(device: keyof typeof participant) {
 		const toUpdate = {

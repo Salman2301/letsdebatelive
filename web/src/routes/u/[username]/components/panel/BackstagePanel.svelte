@@ -51,7 +51,7 @@
 		screenshare_available: myBackstageInfo?.screenshare_available
 	});
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function toggleDevice(device: keyof typeof audienceSetting) {
 		if (!(pageData?.live_debate?.id && pageData?.user?.id)) return;
@@ -77,7 +77,7 @@
 					class="audience-item-image"
 					style="border-color:{pageData?.teamMapColor?.[participant?.team?.id]}"
 				>
-					<UserImage user={participant.participant_id}/>
+					<UserImage user={participant.participant_id} />
 				</div>
 				{#if participant.hand_raised}
 					<div class="audience-hand">
@@ -149,7 +149,7 @@
 					<Phone />
 				</button>
 			</form>
-			<button class="btn-setting" onclick={()=>openSidePanel("equip")}>
+			<button class="btn-setting" onclick={() => openSidePanel('equip')}>
 				<SettingGear />
 			</button>
 		</div>

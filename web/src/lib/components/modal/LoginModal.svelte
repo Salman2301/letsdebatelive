@@ -27,7 +27,7 @@
 		})
 	});
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;

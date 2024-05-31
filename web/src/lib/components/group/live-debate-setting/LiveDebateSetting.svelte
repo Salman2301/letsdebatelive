@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
-	export type InstanceType = { submit: () => Promise<Tables<"live_debate">>};
-	
+	export type InstanceType = { submit: () => Promise<Tables<'live_debate'>> };
 </script>
 
 <script lang="ts">
@@ -13,19 +12,19 @@
 
 	import type { Database, Tables } from '$lib/schema/database.types';
 	import type { Writable } from 'svelte/store';
-	
+
 	interface Props {
-    live_debate: Writable<Tables<"live_debate"> | null>;
-    teams: Writable<Tables<"live_debate_team">[]>;
+		live_debate: Writable<Tables<'live_debate'> | null>;
+		teams: Writable<Tables<'live_debate_team'>[]>;
 		showSubmit: boolean;
 	}
 
 	type audience_service = Database['public']['Enums']['audience_service'];
 	type audience_type = Database['public']['Enums']['audience_type'];
 
-	const supabase = getSupabase(getContext);
-	
-  let { live_debate, teams, showSubmit=$bindable()}: Props = $props();
+	const supabase = getSupabase();
+
+	let { live_debate, teams, showSubmit = $bindable() }: Props = $props();
 
 	let settingForm = $state({
 		maxParticipant: $live_debate?.max_participants,
@@ -36,8 +35,8 @@
 		viewerAudienceType: $live_debate?.viewer_audience?.[0] as string
 	});
 
-	$effect(()=>{
-		showSubmit = isChanged()
+	$effect(() => {
+		showSubmit = isChanged();
 	});
 
 	live_debate.subscribe(() => {
@@ -59,7 +58,7 @@
 		);
 	}
 
-	export async function submit(): Promise<Tables<"live_debate">> {
+	export async function submit(): Promise<Tables<'live_debate'>> {
 		if (!$live_debate || !settingForm) return $live_debate!;
 
 		// Check if the max stage is less than max participant
@@ -237,90 +236,89 @@
 </script>
 
 <div class="setting-item">
-  <label class="label" for="in-max-participant"> Max. number of participant </label>
-  <input
-    class="in-max-number"
-    type="number"
-    id="in-max-participant"
-    bind:value={settingForm.maxParticipant}
-    min="1"
-    max="100"
-  />
+	<label class="label" for="in-max-participant"> Max. number of participant </label>
+	<input
+		class="in-max-number"
+		type="number"
+		id="in-max-participant"
+		bind:value={settingForm.maxParticipant}
+		min="1"
+		max="100"
+	/>
 </div>
 
 <div class="setting-item">
-  <label class="label" for="in-max-stage"> Max. number of stage member </label>
-  <input
-    class="in-max-number"
-    type="number"
-    id="in-max-stage"
-    bind:value={settingForm.maxStage}
-    min="1"
-    max="100"
-  />
+	<label class="label" for="in-max-stage"> Max. number of stage member </label>
+	<input
+		class="in-max-number"
+		type="number"
+		id="in-max-stage"
+		bind:value={settingForm.maxStage}
+		min="1"
+		max="100"
+	/>
 </div>
 
 <div class="setting-item">
-  <label for="in-auto-stage">Auto move everyone to stage when joined backstage</label>
-  <Switch bind:checked={settingForm.autoMoveToStage} />
+	<label for="in-auto-stage">Auto move everyone to stage when joined backstage</label>
+	<Switch bind:checked={settingForm.autoMoveToStage} />
 </div>
 
 <div class="mt-12">
-  <Heading3 content="Audience type" textAlign="center" />
+	<Heading3 content="Audience type" textAlign="center" />
 </div>
 
 <div class="setting-item">
-  <label class="label" for="drop-backstage-audience-type">Backstage open only for</label>
-  <select id="drop-backstage-audience-type" bind:value={settingForm.backstageAudienceType}>
-    <option value="anonymous">Anyone</option>
-    <option value="registered">Logged In</option>
-    <option value="follower">Follower</option>
-    <option value="supporter">Supporter</option>
-    <option value="" disabled>----</option>
-    {#each $teams as team}
-      <option value="team-only-{team.id}">Team - {team.title}</option>
-    {/each}
-    <option value="" disabled>----</option>
-    <option value="none">Disable</option>
-  </select>
+	<label class="label" for="drop-backstage-audience-type">Backstage open only for</label>
+	<select id="drop-backstage-audience-type" bind:value={settingForm.backstageAudienceType}>
+		<option value="anonymous">Anyone</option>
+		<option value="registered">Logged In</option>
+		<option value="follower">Follower</option>
+		<option value="supporter">Supporter</option>
+		<option value="" disabled>----</option>
+		{#each $teams as team}
+			<option value="team-only-{team.id}">Team - {team.title}</option>
+		{/each}
+		<option value="" disabled>----</option>
+		<option value="none">Disable</option>
+	</select>
 </div>
 
 <div class="setting-item">
-  <label class="label" for="drop-chat-audience">Chat open only for</label>
-  <select id="drop-chat-audience" bind:value={settingForm.chatAudienceType}>
-    <option value="anonymous">Anyone</option>
-    <option value="registered">Logged In</option>
-    <option value="follower">Follower</option>
-    <option value="supporter">Supporter</option>
-    <option value="" disabled>----</option>
-    {#each $teams as team}
-      <option value="team-only-{team.id}">Team - {team.title}</option>
-    {/each}
-    <option value="" disabled>----</option>
-    <option value="none">Disable</option>
-  </select>
+	<label class="label" for="drop-chat-audience">Chat open only for</label>
+	<select id="drop-chat-audience" bind:value={settingForm.chatAudienceType}>
+		<option value="anonymous">Anyone</option>
+		<option value="registered">Logged In</option>
+		<option value="follower">Follower</option>
+		<option value="supporter">Supporter</option>
+		<option value="" disabled>----</option>
+		{#each $teams as team}
+			<option value="team-only-{team.id}">Team - {team.title}</option>
+		{/each}
+		<option value="" disabled>----</option>
+		<option value="none">Disable</option>
+	</select>
 </div>
 
 <div class="setting-item">
-  <label class="label" for="drop-view-audience">Stream to viewer</label>
-  <select id="drop-view-audience" bind:value={settingForm.viewerAudienceType}>
-    <option value="anonymous">Anyone</option>
-    <option value="registered">Logged In</option>
-    <option value="follower">Follower</option>
-    <option value="supporter">Supporter</option>
-    <option value="" disabled>----</option>
-    {#each $teams as team}
-      <option value="team-only-{team.id}">Team - {team.title}</option>
-    {/each}
-    <option value="" disabled>----</option>
-    <option value="none">Disable</option>
-  </select>
+	<label class="label" for="drop-view-audience">Stream to viewer</label>
+	<select id="drop-view-audience" bind:value={settingForm.viewerAudienceType}>
+		<option value="anonymous">Anyone</option>
+		<option value="registered">Logged In</option>
+		<option value="follower">Follower</option>
+		<option value="supporter">Supporter</option>
+		<option value="" disabled>----</option>
+		{#each $teams as team}
+			<option value="team-only-{team.id}">Team - {team.title}</option>
+		{/each}
+		<option value="" disabled>----</option>
+		<option value="none">Disable</option>
+	</select>
 </div>
 
-	<!-- Show list of teams below and the user can change the color -->
-	<!-- Show filter chat AUTO MODERATOR? -->
-	<!-- Call for backroom? -->
-
+<!-- Show list of teams below and the user can change the color -->
+<!-- Show filter chat AUTO MODERATOR? -->
+<!-- Call for backroom? -->
 
 <style lang="postcss">
 	.setting-item {

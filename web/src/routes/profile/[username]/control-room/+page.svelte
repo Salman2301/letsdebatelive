@@ -9,8 +9,8 @@
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
 	import { PageCtx } from '$src/lib/context';
 
-	const supabase = getSupabase(getContext);
-	const pageCtx = new PageCtx("control-room");
+	const supabase = getSupabase();
+	const pageCtx = new PageCtx('control-room');
 
 	const live_debate = pageCtx.get('ctx_table$live_debate');
 

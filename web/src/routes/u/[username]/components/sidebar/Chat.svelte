@@ -9,14 +9,14 @@
 	import type { Tables } from '$src/lib/schema/database.types';
 	import { PageCtx } from '$src/lib/context';
 
-	const supabase = getSupabase(getContext);
-	const pageCtx = new PageCtx("live");
+	const supabase = getSupabase();
+	const pageCtx = new PageCtx('live');
 
 	const ctx = pageCtx.get('pageDataProps');
 	const myBackstageInfo = pageCtx.get('myBackstageInfo');
-	let teamId: string = $state("");
+	let teamId: string = $state('');
 
-	$effect(()=>{
+	$effect(() => {
 		getTeamId();
 	});
 
@@ -44,27 +44,26 @@
 			});
 		}
 
-		const [
-			{ data, error },
-			{ data: participantUpdate, error: errorUpdate }
-		] = await Promise.all([
-			supabase.from("live_debate_user_team")
-			.upsert({
-				live_debate: ctx.live_debate.id,
-				team: team.id,
-				user_id: $authUserData?.id
-			})
-			.eq("live_debate", ctx.live_debate.id)
-			.eq("user_id", $authUserData.id),
+		const [{ data, error }, { data: participantUpdate, error: errorUpdate }] = await Promise.all([
+			supabase
+				.from('live_debate_user_team')
+				.upsert({
+					live_debate: ctx.live_debate.id,
+					team: team.id,
+					user_id: $authUserData?.id
+				})
+				.eq('live_debate', ctx.live_debate.id)
+				.eq('user_id', $authUserData.id),
 
 			// Update team if the user is in backstage
-			supabase.from("live_debate_participants")
-			.update({
-				team: team.id,
-			})
-			.eq("live_debate", ctx.live_debate.id)
-			.eq("participant_id", $authUserData.id)
-		])
+			supabase
+				.from('live_debate_participants')
+				.update({
+					team: team.id
+				})
+				.eq('live_debate', ctx.live_debate.id)
+				.eq('participant_id', $authUserData.id)
+		]);
 
 		teamId = team.id;
 
@@ -80,14 +79,16 @@
 	}
 
 	async function getTeamId() {
-		if( !ctx?.live_debate  || !$authUserData) return;
+		if (!ctx?.live_debate || !$authUserData) return;
 
-		const { data, error } = await supabase.from("live_debate_user_team").select()
-		.eq("live_debate", ctx.live_debate.id)
-		.eq("user_id", $authUserData?.id) 
+		const { data, error } = await supabase
+			.from('live_debate_user_team')
+			.select()
+			.eq('live_debate', ctx.live_debate.id)
+			.eq('user_id', $authUserData?.id);
 
-		if(data?.[0]?.team) teamId = data?.[0]?.team;
-		return 
+		if (data?.[0]?.team) teamId = data?.[0]?.team;
+		return;
 	}
 </script>
 
@@ -105,16 +106,12 @@
 					<button class="team-circle" onclick={() => handleOpenTeamSelect()}>
 						<div
 							class="circle-icon"
-							style="background-color:{teamId
-								? ctx.teamMapColor[teamId]
-								: ''}"
+							style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
 						></div>
 						<span>Change team?</span>
 					</button>
 				</div>
-				<button
-					class="btn-submit"
-					style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
+				<button class="btn-submit" style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
 					>Submit</button
 				>
 			</div>

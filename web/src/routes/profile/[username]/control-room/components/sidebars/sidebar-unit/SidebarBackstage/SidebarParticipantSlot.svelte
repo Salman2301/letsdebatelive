@@ -36,8 +36,8 @@
 		title: string;
 	}
 
-	const supabase = getSupabase(getContext);
-	const pageCtx = new PageCtx("control-room");
+	const supabase = getSupabase();
+	const pageCtx = new PageCtx('control-room');
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 

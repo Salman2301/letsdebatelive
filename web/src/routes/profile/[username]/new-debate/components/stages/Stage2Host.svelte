@@ -60,7 +60,7 @@
 		value: string;
 	}
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function getDevices(): Promise<SelectOptions[]> {
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -271,11 +271,10 @@
 		micIsPlaying = !micIsPlaying;
 	}
 
-	const pageCtx = new PageCtx("new-debate");
-	const liveDebate = pageCtx.get("liveDebate");
-	const teams = pageCtx.get("teams");
-	const hostParticipant = pageCtx.get("hostParticipant");
-
+	const pageCtx = new PageCtx('new-debate');
+	const liveDebate = pageCtx.get('liveDebate');
+	const teams = pageCtx.get('teams');
+	const hostParticipant = pageCtx.get('hostParticipant');
 
 	export async function beforeOnNext() {
 		try {
@@ -341,16 +340,14 @@
 			/>
 		</div>
 
-		<Label
-			label="Team"
-		>
+		<Label label="Team">
 			<select name="team" class="team-select">
 				{#each $teams as team}
 					<option value={team.slug}>{team.title}</option>
 				{/each}
 			</select>
 		</Label>
-		
+
 		<div class="flex justify-center my-2">
 			<div class="main-buttons">
 				<button onclick={toggleSpeaker} class="btn-main-icon">
@@ -461,7 +458,11 @@
 	<div class="audio-speaker-container">
 		<Heading3 content="SPEAKER" />
 		<div class="audio-select-container">
-			<select class="device-select select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
+			<select
+				class="device-select select-audio"
+				bind:value={speakerDeviceId}
+				onchange={handleSpeakerChange}
+			>
 				{#each kindMapDevices['audiooutput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}

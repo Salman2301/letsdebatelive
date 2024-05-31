@@ -16,8 +16,7 @@
 	import type { ActionData, PageData } from './$types';
 	import type { ParticipantsWithUserData } from './page.types';
 	import { PageCtx } from '$src/lib/context';
-	
-	
+
 	interface Props {
 		data: PageData;
 		form: ActionData;
@@ -25,11 +24,10 @@
 
 	let { data, form }: Props = $props();
 
-
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 
-	const supabase = getSupabase(getContext);
-	const pageCtx = new PageCtx("live");
+	const supabase = getSupabase();
+	const pageCtx = new PageCtx('live');
 
 	let backstageChannel: RealtimeChannel;
 
@@ -38,7 +36,7 @@
 	let isJoined = writable(data.isJoined);
 
 	pageCtx.set({
-		"pageDataProps": data,
+		pageDataProps: data,
 		myBackstageInfo: myBackstageInfo
 	});
 
@@ -75,13 +73,14 @@
 		}
 		const { data: participantsData, error } = await supabase
 			.from('live_debate_participants')
-			.select("*,participant_id(*),team(*)")
+			.select('*,participant_id(*),team(*)')
 			.eq('live_debate', data.live_debate.id)
 			.returns<ParticipantsWithUserData[]>();
 
 		$participants = participantsData || [];
 
-		$myBackstageInfo = $participants.find((item) => item.participant_id.id === $authUserData.id) || null;
+		$myBackstageInfo =
+			$participants.find((item) => item.participant_id.id === $authUserData.id) || null;
 
 		$isJoined = !!myBackstageInfo;
 		if (!$isJoined) backstageChannel.unsubscribe();
@@ -97,14 +96,18 @@
 	onDestroy(() => {
 		backstageChannel?.unsubscribe();
 	});
-
 </script>
 
 <div class="page-container">
 	<div class="live-video-content">
 		<div class="video-container"></div>
 		{#if $isJoined}
-			<BackstagePanel bind:participants={$participants} myBackstageInfo={$myBackstageInfo} pageData={data} {devicesEnable} />
+			<BackstagePanel
+				bind:participants={$participants}
+				myBackstageInfo={$myBackstageInfo}
+				pageData={data}
+				{devicesEnable}
+			/>
 		{:else}
 			<JoinBackstagePanel />
 		{/if}
@@ -117,7 +120,7 @@
 		</div>
 		<div class="host-header">
 			<div class="host-img">
-				<UserImage user={data.host}/>
+				<UserImage user={data.host} />
 			</div>
 			<div class="host-title-desc">
 				<div class="host-detail">{data.host?.displayName}</div>
@@ -203,7 +206,6 @@
 		@apply bg-white;
 		@apply text-secondary;
 	}
-
 
 	.title-action {
 		@apply flex;

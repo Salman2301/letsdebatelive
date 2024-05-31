@@ -16,7 +16,7 @@
 
 	let isAllEmpty = $derived(newPassword.length === 0 && reEnterPassword.length === 0);
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	function checkAndUpdateValidty() {
 		return {

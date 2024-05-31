@@ -4,7 +4,7 @@
 	import Textarea from '$lib/components/form/textarea/Textarea.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import SocialLink from './component/SocialLink.svelte';
-	import Loader from "$lib/components/icon/Loader.svelte";
+	import Loader from '$lib/components/icon/Loader.svelte';
 	import UpdatePassword from './component/UpdatePassword.svelte';
 	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 
@@ -16,7 +16,7 @@
 	import { goto } from '$app/navigation';
 	import { NO_PROFILE_DEFAULT } from '$src/lib/constatnt/file';
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 	let isUploading = $state(false);
 	let basicForm = $derived({
 		initials: $authUserData?.initials || 'Mr.',
@@ -59,21 +59,20 @@
 			type: 'success',
 			message: 'Basic info updated successfully'
 		});
-	
 	}
 
 	async function handleFileUpload(event: any) {
 		isUploading = true;
-		if(!$authUserData?.id) {
+		if (!$authUserData?.id) {
 			isUploading = false;
-			console.error("Failed to get the user id")
+			console.error('Failed to get the user id');
 			return;
 		}
 		const file = event.target.files[0];
 		let location = `${uuid()}.${file.ext || 'png'}`;
 		if (file) {
 			const { data: fileUploaded, error: fileError } = await supabase.storage
-				.from("profile_image")
+				.from('profile_image')
 				.upload(location, file, {
 					cacheControl: '3600',
 					upsert: true
@@ -88,28 +87,34 @@
 				});
 			}
 
-			const { data, error } = await supabase.from('user_data').update({
-				profile_image: location,
-			}).eq("id", $authUserData.id).select();
+			const { data, error } = await supabase
+				.from('user_data')
+				.update({
+					profile_image: location
+				})
+				.eq('id', $authUserData.id)
+				.select();
 
-			if(data) $authUserData = data[0];
+			if (data) $authUserData = data[0];
 
-			setTimeout(()=>{
+			setTimeout(() => {
 				isUploading = false;
-			}, 1000)
+			}, 1000);
 		}
 	}
 
 	function getProfileImage(): string {
-		if(!$authUserData?.profile_image) return NO_PROFILE_DEFAULT;
-		
-		return supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!, {
-			transform: {
-				height: 400,
-				width: 400,
-				format: "origin"
-			}
-		}).data.publicUrl || NO_PROFILE_DEFAULT;
+		if (!$authUserData?.profile_image) return NO_PROFILE_DEFAULT;
+
+		return (
+			supabase.storage.from('profile_image').getPublicUrl($authUserData?.profile_image!, {
+				transform: {
+					height: 400,
+					width: 400,
+					format: 'origin'
+				}
+			}).data.publicUrl || NO_PROFILE_DEFAULT
+		);
 	}
 </script>
 
@@ -184,17 +189,22 @@
 	</div>
 	<div class="right-content">
 		<div class="profile-img">
-			<img src={getProfileImage()} alt="user image"/>
-			<label
-				for="file-upload"
-				class="upload-icon"
-				class:uploading={isUploading}
-			>
+			<img src={getProfileImage()} alt="user image" />
+			<label for="file-upload" class="upload-icon" class:uploading={isUploading}>
 				{#if isUploading}
 					<Loader />
 				{:else}
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
-						<path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z"/>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						fill="currentColor"
+						class="bi bi-cloud-arrow-up-fill"
+						viewBox="0 0 16 16"
+					>
+						<path
+							d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z"
+						/>
 					</svg>
 				{/if}
 			</label>
@@ -276,7 +286,7 @@
 		@apply mb-4 mt-16;
 		@apply border border-light-gray;
 		@apply relative;
-		
+
 		img {
 			@apply rounded;
 		}
@@ -304,5 +314,4 @@
 			scale: 2;
 		}
 	}
-
 </style>

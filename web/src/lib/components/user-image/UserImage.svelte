@@ -6,13 +6,13 @@
 
 	import type { Tables } from '$src/lib/schema/database.types';
 
-  interface Props {
-    user: Tables<"user_data"> | null;
-  }
+	interface Props {
+		user: Tables<'user_data'> | null;
+	}
 
-  let { user }: Props = $props();
+	let { user }: Props = $props();
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	function getProfileImage(): string {
 		if (!user?.profile_image) return NO_PROFILE_DEFAULT;
@@ -29,31 +29,30 @@
 	}
 </script>
 
-
 {#if user?.profile_image}
-  <img src={getProfileImage()} alt="user profile" />
+	<img src={getProfileImage()} alt="user profile" />
 {:else}
-  <span class="img">
-    {user?.displayName?.[0]?.toUpperCase() || "A"}
-  </span>
+	<span class="img">
+		{user?.displayName?.[0]?.toUpperCase() || 'A'}
+	</span>
 {/if}
 
 <style lang="postcss">
-  img {
+	img {
 		width: 40px;
 		height: 40px;
 		border-radius: 100%;
 		@apply bg-light-gray;
 		overflow: hidden;
-  }
+	}
 
-  .img {
-    width: 40px;
-    height: 40px;
-    user-select: none;
-    @apply cursor-pointer;
-    background-color: rgb(103, 103, 103);
-    @apply flex items-center justify-center;
-    @apply rounded-full;
-  }
+	.img {
+		width: 40px;
+		height: 40px;
+		user-select: none;
+		@apply cursor-pointer;
+		background-color: rgb(103, 103, 103);
+		@apply flex items-center justify-center;
+		@apply rounded-full;
+	}
 </style>

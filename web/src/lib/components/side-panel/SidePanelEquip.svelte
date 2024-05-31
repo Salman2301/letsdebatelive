@@ -45,7 +45,7 @@
 		value: string;
 	}
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function getDevices(): Promise<SelectOptions[]> {
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -390,7 +390,7 @@
 
 <div class="audio-container">
 	<div class="audio-mic-container">
-		<Heading3 content="Microphone" textAlign="center"/>
+		<Heading3 content="Microphone" textAlign="center" />
 		<div class="audio-select-container">
 			<select class="select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
 				{#each kindMapDevices['audioinput'] as device}
@@ -403,7 +403,7 @@
 	</div>
 
 	<div class="audio-speaker-container">
-		<Heading3 content="Speaker" textAlign="center"/>
+		<Heading3 content="Speaker" textAlign="center" />
 		<div class="audio-select-container">
 			<select class="select-audio" bind:value={speakerDeviceId} onchange={handleSpeakerChange}>
 				{#each kindMapDevices['audiooutput'] as device}

@@ -26,7 +26,7 @@
 
 	let { live_debate_id }: Props = $props();
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 	let participantsList: Tables<'live_debate_participants'>[] = $state([]);
 
 	onMount(async () => {

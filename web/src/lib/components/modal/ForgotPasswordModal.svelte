@@ -18,7 +18,7 @@
 		email: z.string().email()
 	});
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 	let parsed: z.SafeParseReturnType<typeof form, typeof form>;
 	let hasErrors: Record<keyof typeof form, boolean>;
 	let isLoading: boolean = false;
@@ -73,7 +73,7 @@
 			hasError={!!hasErrors?.email}
 		/>
 		<div class="text-content">
-			<button class="w-full text-left" onclick={() => openModal({ key: "login" })} type="button">
+			<button class="w-full text-left" onclick={() => openModal({ key: 'login' })} type="button">
 				Login again?
 			</button>
 		</div>

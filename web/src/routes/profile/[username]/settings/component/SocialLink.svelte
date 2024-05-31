@@ -13,7 +13,7 @@
 	let isNotValid: boolean = $derived(showSubmitBtn && !newSocialLink.startsWith('https://'));
 	let socialLinks: Tables<'social_links'>[] = $state([]);
 
-	const supabase = getSupabase(getContext);
+	const supabase = getSupabase();
 
 	async function onKeydownChange(event: KeyboardEvent) {
 		await tick();
@@ -80,9 +80,7 @@
 
 <div class="my-2 mb-4">
 	<Heading2 content="Social Links"></Heading2>
-	<p class="text-white/50 font-semibold">
-		Tell us where people can find you
-	</p> 
+	<p class="text-white/50 font-semibold">Tell us where people can find you</p>
 </div>
 
 {#if socialLinks.length > 0}
