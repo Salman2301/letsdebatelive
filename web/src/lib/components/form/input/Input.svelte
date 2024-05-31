@@ -1,3 +1,7 @@
+<script context="module" lang="ts">
+	export type KBEvent = Event & { currentTarget: EventTarget & HTMLInputElement; };
+</script>
+
 <script lang="ts">
 	import Label from "./Label.svelte";
 
@@ -12,6 +16,7 @@
 		hasError?: boolean;
 		width?: string;
 		rounded?: 'sm' | 'full';
+		oninput?: (e: KBEvent) => void;
 		ariaLabel?: string;
 	}
 	let {
@@ -25,6 +30,7 @@
 		hasError,
 		rounded,
 		ariaLabel,
+		oninput,
 		width
 	}: Props = $props();
 </script>
@@ -42,8 +48,9 @@
 		class:has-error={hasError}
 		style="width:{width ? width : '280px'};border-radius:{rounded === 'sm' ? '4px' : '40px'}"
 		aria-label={ariaLabel}
-		oninput={() => {
+		oninput={(e) => {
 			hasError = false;
+			oninput?.(e);
 		}}
 	/>
 </Label>

@@ -1,5 +1,44 @@
+KNOWN BUGS:
+  ✔ Move the form using form action @done(24-05-30 01:19)
+    ✔ Login user have to refresh to update the UI @done(24-05-30 01:18)
+    ✔ Register user have to refresh to update the UI @done(24-05-30 01:19)
+
+Modal:
+  ✔ User device setup and test @done(24-05-31 23:54)
+
+Setting Page:
+  ✔ Able to change the username @done(24-05-31 23:55)
+  ✔ Able to upload the user image @done(24-05-31 23:55)
+
+Debate Create:
+  ✔ Any user can create a debate @done(24-05-31 23:54)
+  ✔ Able to add title @done(24-05-31 23:54)
+  ✔ Check if the user is not already in live debates @done(24-05-31 23:54)
+  ✔ Only one debate per channel? @done(24-05-31 23:54)
 
 
+✔ Setting page @done(24-05-29 00:44)
+
+✔ Create debate @done(24-05-31 23:49)
+  ✔ Testing @done(24-05-31 22:16)
+    ✔ Host need to select the team too @done(24-05-31 22:16)
+  ✔ Team ( Creation) @done(24-05-31 22:16)
+  ✔ Invite Co-host @done(24-05-31 23:49)
+  ✔ Debate Settings @done(24-05-31 22:16)
+  ✔ Broadcast @done(24-05-31 23:36)
+
+  ✔ Missing all UI features @done(24-05-31 23:36)
+  ✔ Flow @done(24-05-31 23:36)
+    ✔ set Published to true @done(24-05-31 23:36)
+    ✔ Check if the user is already published @done(24-05-31 23:36)
+    ✔ Create a new live_debate @done(24-05-31 23:36)
+    ✔ On Broadcast end, @done(24-05-31 23:36)
+      ✔ Set isPublished to stop @done(24-05-31 23:36)
+
+
+✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
+✔ Equip page @done(24-05-30 15:47)
+  ✔ Rethink feeds and control @done(24-05-31 23:48)
 Modal:
   ✔ Show the list of team for UI @done(24-05-30 04:04)
 

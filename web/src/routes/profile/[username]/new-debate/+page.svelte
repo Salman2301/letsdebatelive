@@ -12,11 +12,14 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { PageCtx } from '$src/lib/context';
+	import { getSupabase } from '$src/lib/supabase';
+	import { getContext } from 'svelte';
 
 	let currentState: number = $state(1);
 	// @ts-expect-error
 	let stageInstance: [Stage1Init, Stage2Host, Stage3CoHost, Stage4Setting, Stage5Broadcast] = [];
 
+	const supabase = getSupabase(getContext);
 	const pageCtx = new PageCtx("new-debate");
 
 	const title = pageCtx.get("title");
@@ -38,6 +41,9 @@
 			$liveDebate.published = true;
 			$liveDebate.published_tz = new Date().toISOString();
 
+			sessionStorage.removeItem("store$liveDebateId");
+			await supabase.from("live_debate").update({...$liveDebate}).eq("id", $liveDebate.id)
+			
 			goto(`/profile/${$page.params.username}/control-room`);
 		}
 		currentState += 1;
@@ -74,7 +80,7 @@
 	
 	<Heading2 content={$title as string} textAlign="center" />
 
-	<Button label="Next" color="secondary" width={120} onclick={handleNext} />
+	<Button label="{currentState === 5 ? "Publish": "Next"}" color="secondary" width={120} onclick={handleNext} />
 </div>
 
 {#if currentState === 1}

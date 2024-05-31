@@ -1,19 +1,9 @@
 TODO:
   Missing core-feature:
-    ✔ Setting page @done(24-05-29 00:44)
-
-    ☐ Create debate
-      ✔ Testing @done(24-05-31 22:16)
-        ✔ Host need to select the team too @done(24-05-31 22:16)
-      ✔ Team ( Creation) @done(24-05-31 22:16)
-      ☐ Invite Co-host
-      ✔ Debate Settings @done(24-05-31 22:16)
-      ☐ Broadcast
-
+    ☐ Invite co-host
+      ☐ Invite user by email
+      ☐ Select a team
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
-      ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
-      ✔ Equip page @done(24-05-30 15:47)
-        ☐ Rethink feeds and control
       ☐ Background
       ☐ Logo
       ☐ Overlay
@@ -26,17 +16,9 @@ TODO:
         Image:
           ☐ Upload
         ☐ logo upload and corner selection
+
       ☐ Screen sidebar
-      ☐ Missing all UI features
-        ☐ Flow
-          ☐ set Published to true
-          ☐ Check if the user is already published
-          ☐ Create a new live_debate
-          ☐ On Broadcast end,
-            ☐ Set isPublished to stop
-            
-    
-    
+
     ☐ WebRTC 
     ☐ live RTMP docker stream
     ☐ start and stop
@@ -64,31 +46,20 @@ TODO:
     - Audience join
     - Audience filter
 
-  Modal:
-    ☐ User device setup and test
-
   Screen:
     ☐ List all the screen
 
   Non-active-user:
     ☐ Check if the user is stil `online`, after 2-mins timeout remove the user.
 
-  Debate Create:
-    ☐ Any user can create a debate
-    ☐ Able to add title
-    ☐ Check if the user is not already in live debates
-    ☐ Only one debate per channel?
-  
   Setting page:
-    ☐ Able to change the username
-    ☐ Able to upload the user image
     ☐ Schedules to display during offline?
 
   Live Page:
-    ☐ Connect title
+    ✔ Connect title @done(24-05-31 23:55)
     ☐ Connect host name
     ☐ Setup image
-      ☐ Update the seed to upload the image in the storage?
+      ✔ Update the seed to upload the image in the storage? @done(24-05-31 23:55)
       ☐ Get the follower count
         ☐ Setup database trigger and function to setup the follower count
     ☐ Check if the backstage panel is open only for selected team / audience type
@@ -136,7 +107,7 @@ TODO:
     ☐ Poll
     ☐ QA
 
-  ☐ Layout Changes and Share webCam and Screenshare
+  ✔ Layout Changes and Share webCam and Screenshare @done(24-05-31 23:56)
   ☐ Create a auto chat to send chat every 10 secs to test the live chat
     ☐ Memory leak handle max chat to 50
       ☐ Auto delete chats older than 50
@@ -149,7 +120,7 @@ TODO:
     ☐ ReWrite the Video feed for cool animation and make it one big HTML instead of splitting into different compoents!
       ☐ Create a dummy participants and Screen list in the database
       ☐ Show the screen and the participants in the sidebar
-      ☐ Add and remove participants
+      ✔ Add and remove participants @done(24-05-31 23:57)
       ☐ Add and remove screenshare
       ☐ Add animation 
 
@@ -158,10 +129,3 @@ TODO:
     ☐ On page reload, request for the screen and webcam share
     ☐ Abiltiy to toggle different user and screen from the panel
     ☐ Ability to disable from app.html showing screen for debug purpose
-
-
-KNOWN BUGS:
-  ✔ Move the form using form action @done(24-05-30 01:19)
-    ✔ Login user have to refresh to update the UI @done(24-05-30 01:18)
-    ✔ Register user have to refresh to update the UI @done(24-05-30 01:19)
-  
