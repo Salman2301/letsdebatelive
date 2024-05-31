@@ -7,11 +7,9 @@
 
 	import { getContext, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
-	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icon';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 
-	import type { Tables } from '$lib/schema/database.types';
 	import Input from '$src/lib/components/form/input/Input.svelte';
 	import {
 		DeviceCamera,
@@ -25,13 +23,12 @@
 	} from '$src/lib/components/icon';
 	import { PageCtx } from '$src/lib/context';
 	import { get } from 'svelte/store';
+	import Label from '$src/lib/components/form/input/Label.svelte';
 
 	let errorWebcamFeed: string = $state('');
 	let errorScreenShareFeed: string = $state('');
 	let webcamFeedPlaying: boolean = $state(false);
 	let screenSharePlaying: boolean = $state(false);
-
-	let inTitle = $state('');
 
 	let webCamDeviceId: string = $state('');
 	let videoInstance: HTMLVideoElement;
@@ -277,6 +274,7 @@
 
 	const pageCtx = new PageCtx("new-debate");
 	const liveDebate = pageCtx.get("liveDebate");
+	const teams = pageCtx.get("teams");
 	const hostParticipant = pageCtx.get("hostParticipant");
 
 
@@ -338,12 +336,22 @@
 			<Input
 				rounded="sm"
 				title="Display name"
-				width="440px"
+				width="240px"
 				placeholder="Enter title for your live debate"
 				value={$authUserData?.displayName || ''}
 			/>
 		</div>
 
+		<Label
+			label="Team"
+		>
+			<select name="team">
+				{#each $teams as team}
+					<option value={team.slug}>{team.title}</option>
+				{/each}
+			</select>
+		</Label>
+		
 		<div class="flex justify-center my-2">
 			<div class="main-buttons">
 				<button onclick={toggleSpeaker} class="btn-main-icon">
@@ -394,9 +402,9 @@
 		<div class="header">
 			<button onclick={toggleWebCam} class="btn-icon">
 				{#if webcamFeedPlaying}
-					<WebCamEnabled />
+					<DeviceCamera />
 				{:else}
-					<WebCamDisabled />
+					<DeviceCameraDisabled />
 				{/if}
 			</button>
 			<select bind:value={webCamDeviceId}>
@@ -424,9 +432,9 @@
 		<div class="header">
 			<button onclick={toggleScreenShare} class="btn-icon">
 				{#if screenSharePlaying}
-					<ScreenShareEnabled />
+					<DeviceScreen />
 				{:else}
-					<ScreenShareDisabled />
+					<DeviceScreenDisabled />
 				{/if}
 			</button>
 			<span>Screen share</span>
@@ -512,6 +520,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		@apply text-transparent;
 	}
 	.btn-icon:hover,
 	.btn-icon:focus {
@@ -565,5 +574,13 @@
 
 	:global(.btn-main-icon > svg) {
 		scale: 1.2;
+	}
+
+	select {
+		@apply rounded;
+		@apply border border-light-gray;
+		width: 240px;
+		height: 46px;
+		@apply bg-primary-dark;
 	}
 </style>

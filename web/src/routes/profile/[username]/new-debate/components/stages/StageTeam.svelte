@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Input from "$lib/components/form/input/Input.svelte";
 
-	import { browser } from '$app/environment';
-	import TeamSetting from '../../control-room/components/sidebars/sidebar-unit/SidebarBackstage/TeamSetting.svelte';
-	import { PageCtx } from "$src/lib/context";
+	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
 
+	import { PageCtx } from "$src/lib/context";
+	import { browser } from '$app/environment';
 	import type { Tables } from '$lib/schema/database.types';
 
 	let teamInfos: Partial<Tables<'live_debate_team'>>[] = [];

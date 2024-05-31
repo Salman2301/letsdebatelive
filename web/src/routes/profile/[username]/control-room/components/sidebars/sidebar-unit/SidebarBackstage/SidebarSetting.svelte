@@ -2,15 +2,16 @@
 	import Button from '$lib/components/button/Button.svelte';
 	import Switch from '$lib/components/form/Switch.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
-	import TeamSetting from './TeamSetting.svelte';
+	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
 	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import type { Database, Tables } from '$lib/schema/database.types';
 	import { PageCtx } from '$src/lib/context';
 
+	import type { Database, Tables } from '$lib/schema/database.types';
+	
 	interface Props {
 		type: 'backstage' | 'stage';
 		onclose?: () => void;

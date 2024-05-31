@@ -9,7 +9,6 @@
 	import { goto } from '$app/navigation';
 	import { PageCtx } from '$src/lib/context';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
-	import { isJson } from '$src/lib/helper';
 	import type { Tables } from '$src/lib/schema/database.types';
 
 	let isLoading: boolean = true;

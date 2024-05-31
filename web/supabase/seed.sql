@@ -195,7 +195,7 @@ INSERT INTO "public"."user_data" ("id", "created_at", "displayName", "email", "f
 -- Data for Name: live_debate; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate" ("id", "created_at", "title", "host", "chat_rules", "debate_type", "chat_filter_words", "backstage_max", "studio_mode", "debater_card_show", "published", "publishedTz", "max_participants", "max_stage", "backstage_audience", "chat_audience", "viewer_audience", "auto_move_to_stage") VALUES
+INSERT INTO "public"."live_debate" ("id", "created_at", "title", "host", "chat_rules", "debate_type", "chat_filter_words", "backstage_max", "studio_mode", "debater_card_show", "published", "published_tz", "max_participants", "max_stage", "backstage_audience", "chat_audience", "viewer_audience", "auto_move_to_stage") VALUES
 	('b39f5e45-df05-42d2-b9b0-53d87e3ab647', '2024-05-21 06:29:27.177735+00', 'test dummy', 'dc81fe33-706b-40eb-962b-14ebf3eadc58', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, 30, NULL, NULL, NULL, NULL),
 	('4167bf11-dc10-46d3-9d32-e5b7ad9d3e67', '2024-05-21 04:02:18.994689+00', 'Test debate', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, 30, '{anonymous}', '{anonymous}', '{anonymous}', false),
 	('9178d46f-3090-4392-85f1-3b5c84867dd7', '2024-05-29 06:22:19.396393+00', NULL, '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, 40, 30, NULL, NULL, NULL, NULL);

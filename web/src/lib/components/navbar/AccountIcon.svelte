@@ -1,11 +1,12 @@
 <script lang="ts">
+	import UserImage from '../user-image/UserImage.svelte';
+
 	import { goto } from '$app/navigation';
 	import { clickOutside } from '$lib/action/clickOutside';
-	import { authUserData, isLoggedIn } from '../../stores/auth.store';
-	import { currentModal, openModal } from '../modal/modal.store';
+	import { authUserData } from '../../stores/auth.store';
+	import { openModal } from '../modal/modal.store';
 	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
-	import UserImage from '../user-image/UserImage.svelte';
 
 	let showPopup = $state(false);
 
@@ -21,15 +22,6 @@
 		goto(link);
 	}
 
-	function getProfileImage(): string {
-		return supabase.storage.from("profile_image").getPublicUrl($authUserData?.profile_image!, {
-			transform: {
-				height: 400,
-				width: 400,
-				format: "origin"
-			}
-		}).data.publicUrl
-	}
 </script>
 
 <div class="icon-container" use:clickOutside={() => (showPopup = false)}>

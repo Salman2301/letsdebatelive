@@ -11,19 +11,19 @@
 	let stages = [
 		{
 			label: 1,
-			info: 'Local Setup'
+			info: 'New Debate'
 		},
 		{
 			label: 2,
-			info: 'Team'
+			info: 'My (Host) Setup'
 		},
 		{
 			label: 3,
-			info: 'Debate Agenda'
+			info: 'Invite Co-host'
 		},
 		{
 			label: 4,
-			info: 'Studio mode'
+			info: 'Setting'
 		},
 		{
 			label: 5,

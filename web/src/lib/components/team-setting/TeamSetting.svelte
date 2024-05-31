@@ -5,19 +5,16 @@
 
 	import { CheckMark } from '$lib/components/icon';
 	import { getSupabase } from '$lib/supabase';
-	import { getContext, tick } from 'svelte';
+	import { getContext, onMount, tick } from 'svelte';
 
 	import type { Writable } from 'svelte/store';
 	import type { Tables } from '$src/lib/schema/database.types';
 
-	// const teams = getControlRoomCtx('ctx_table$live_debate_team');
-	// const live_debate = getControlRoomCtx('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
-
 
 	interface Props {
 		live_debate: Writable<Tables<"live_debate"> | null>;
-		teams: Writable<Tables<"live_debate_team">[]>;
+		teams: Writable<Tables<"live_debate_team">[]>
 	}
 	
 	let { live_debate, teams }: Props = $props();
@@ -38,6 +35,8 @@
 			return;
 		}
 	}
+
+	onMount(refreshTeamData)
 
 	async function newTeam() {
 		if (!$live_debate?.id) return;

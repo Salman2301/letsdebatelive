@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Label from "./Label.svelte";
+
 	interface Props {
 		name?: string;
 		title?: string;
@@ -27,10 +29,10 @@
 	}: Props = $props();
 </script>
 
-<div>
-	<label for="" style="left:{rounded === 'sm' ? '10px' : '20px'}">
-		{title || name}
-	</label>
+<Label
+	label={title || name}
+	left={rounded === 'sm' ? '10px' : '20px'}
+>
 	<input
 		bind:value
 		{placeholder}
@@ -44,8 +46,7 @@
 			hasError = false;
 		}}
 	/>
-</div>
-
+</Label>
 <!-- svelte-ignore a11y_autofocus -->
 
 <style lang="postcss">
@@ -74,21 +75,5 @@
 	input.has-error {
 		border: 1px solid;
 		@apply border-accent-red;
-	}
-	div {
-		position: relative;
-		margin: 10px 0px;
-	}
-	label {
-		/* margin-bottom: -18px; */
-		@apply bg-primary-dark;
-		@apply font-bold;
-		font-size: 10px;
-		z-index: 2;
-		padding: 0px 10px;
-		position: absolute;
-		top: -8px;
-		text-transform: capitalize;
-		border-radius: 10px;
 	}
 </style>

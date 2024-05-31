@@ -2,11 +2,11 @@
 	import Button from '$lib/components/button/Button.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
 	import StageNumber from './components/StageNumber.svelte';
-	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
-	import StageTeam from './stages/StageTeam.svelte';
-	import StageDebate from './stages/StageDebate.svelte';
-	import StageBroadcast from './stages/StageBroadcast.svelte';
-	import StageStudio from './stages/StageStudio.svelte';
+	import StageTestingFeeds from './components/stages/StageTestingFeeds.svelte';
+	import StageTeam from './components/stages/StageTeam.svelte';
+	import StageDebate from './components/stages/StageDebate.svelte';
+	import StageBroadcast from './components/stages/StageBroadcast.svelte';
+	import StageStudio from './components/stages/StageStudio.svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -14,7 +14,7 @@
 
 	let currentState: number = 1;
 	// @ts-expect-error
-	let stageInstance: [StageTestingFeeds, StageTeam, StageDebate, StageStudio, StageBroadcast] = [];
+	let stageInstance: [StageTeam, StageTestingFeeds, StageDebate, StageStudio, StageBroadcast] = [];
 
 	const pageCtx = new PageCtx("new-debate");
 
@@ -56,9 +56,9 @@
 
 
 {#if currentState === 1}
-	<StageTestingFeeds bind:this={stageInstance[0]} />
+	<StageTeam bind:this={stageInstance[0]} />
 {:else if currentState === 2}
-	<StageTeam bind:this={stageInstance[1]} />
+	<StageTestingFeeds bind:this={stageInstance[1]} />
 {:else if currentState === 3}
 	<StageDebate bind:this={stageInstance[2]} />
 {:else if currentState === 4}
