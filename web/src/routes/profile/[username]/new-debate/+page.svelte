@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
 	import Heading2 from '$lib/components/form/Heading2.svelte';
-	import StageNumber  from "./components/StageNumber.svelte";
 	import {
 		Stage1Init,
 		Stage2Host,
@@ -49,30 +48,15 @@
 	}
 
 	let stages = [
-		{
-			label: 1,
-			info: 'New Debate (1 / 5)'
-		},
-		{
-			label: 2,
-			info: 'My (Host) Setup (2 / 5)'
-		},
-		{
-			label: 3,
-			info: 'Invite Co-host (3 / 5)'
-		},
-		{
-			label: 4,
-			info: 'Setting (4 / 5)'
-		},
-		{
-			label: 5,
-			info: 'Broadcast'
-		}
+		'New Debate (1 / 5)',
+		'My (Host) Setup (2 / 5)',
+		'Invite Co-host (3 / 5)',
+		'Setting (4 / 5)',
+		'Broadcast'
 	];
 
 	$effect(() => {
-		$title = stages[currentState - 1].info;
+		$title = stages[currentState - 1];
 	});
 </script>
 
@@ -107,9 +91,6 @@
 
 
 <style lang="postcss">
-	.stage-margin {
-		@apply my-8;
-	}
 	.action-btn {
 		width: 700px;
 		margin: 10px auto;
