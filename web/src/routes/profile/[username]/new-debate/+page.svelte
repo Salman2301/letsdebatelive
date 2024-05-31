@@ -41,7 +41,7 @@
 			}
 
 			$liveDebate.published = true;
-			$liveDebate.publishedTz = new Date().toISOString();
+			$liveDebate.published_tz = new Date().toISOString();
 
 			goto(`/profile/${$page.params.username}/control-room`);
 		}

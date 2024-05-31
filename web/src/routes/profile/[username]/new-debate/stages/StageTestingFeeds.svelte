@@ -18,21 +18,50 @@
 	import { getSupabase } from '$lib/supabase';
 
 	import type { Tables } from '$lib/schema/database.types';
+	import Input from '$src/lib/components/form/input/Input.svelte';
+	import {
+		DeviceCamera,
+		DeviceCameraDisabled,
+		DeviceMic,
+		DeviceMicDisabled,
+		DeviceScreen,
+		DeviceScreenDisabled,
+		DeviceSpeaker,
+		DeviceSpeakerDisabled
+	} from '$src/lib/components/icon';
 
-	let errorWebcamFeed: string = '';
-	let errorScreenShareFeed: string = '';
-	let webcamFeedPlaying: boolean = false;
-	let screenSharePlaying: boolean = false;
+	let errorWebcamFeed: string = $state('');
+	let errorScreenShareFeed: string = $state('');
+	let webcamFeedPlaying: boolean = $state(false);
+	let screenSharePlaying: boolean = $state(false);
 
-	let webCamDeviceId: string;
+	let inTitle = $state('');
+
+	let webCamDeviceId: string = $state('');
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
 
-	let kindMapDevices: Record<MediaDeviceKind, MediaDeviceInfo[]> = {
+	let micVolume = $state(0);
+	let micDeviceId: string = $state('default');
+
+	let micCtx: AudioContext;
+	let micStream: MediaStream | null;
+	let currentMicSource: MediaStreamAudioSourceNode;
+	let clearIntervalMic: NodeJS.Timeout;
+
+	let speakerCtx: AudioContext;
+	let speakerDeviceId: string = $state('default');
+	let speakerNode: GainNode;
+	let audioBuffer: AudioBufferSourceNode | null;
+
+	let speakerIsPlaying = $state(false);
+	let micIsPlaying = $state(false);
+
+	let kindMapDevices: Record<MediaDeviceKind, MediaDeviceInfo[]> = $state({
 		audioinput: [],
 		videoinput: [],
 		audiooutput: []
-	};
+	});
 
 	interface SelectOptions {
 		label: string;
@@ -139,19 +168,6 @@
 		}
 	}
 
-	let micVolume = 0;
-	let micDeviceId: string = 'default';
-
-	let micCtx: AudioContext;
-	let micStream: MediaStream | null;
-	let currentMicSource: MediaStreamAudioSourceNode;
-	let clearIntervalMic: NodeJS.Timeout;
-
-	let speakerCtx: AudioContext;
-	let speakerDeviceId: string = 'default';
-	let speakerNode: GainNode;
-	let audioBuffer: AudioBufferSourceNode | null;
-
 	onMount(async () => {
 		micCtx = new (window.AudioContext || window.webkitAudioContext)();
 		speakerCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -221,7 +237,6 @@
 		updateValue();
 	}
 
-	let speakerIsPlaying = false;
 	async function toggleSound() {
 		if (audioBuffer) {
 			audioBuffer.stop();
@@ -256,6 +271,14 @@
 		audioOutput.play();
 	}
 
+	function toggleSpeaker() {
+		speakerIsPlaying = !speakerIsPlaying;
+	}
+
+	function toggleMic() {
+		micIsPlaying = !micIsPlaying;
+	}
+
 	const liveDebate = getContext<CTX_KEY_NEW_DEBATE_TYPE>(CTX_KEY_NEW_DEBATE);
 	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
 	export async function beforeOnNext() {
@@ -268,8 +291,10 @@
 					.from('live_debate')
 					.insert([
 						{
-							host: $authUserData?.id as string,
-							studio_mode: true
+							host: $authUserData?.id as string
+							// studio_mode: true,
+							// published: true,
+							// published_tz: new Date().toISOString(),
 						}
 					])
 					.select();
@@ -325,10 +350,53 @@
 	}
 </script>
 
-<!-- TODO: Display Name?  -->
-<!-- TODO: UI MIC Mute -->
-<!-- TODO: UI SPEAKER VOLUME -->
-<!-- TODO: UI MIC FEEDBACK AFTER SPOKEN -->
+<div class="flex justify-center mb-10">
+	<div class="flex justify-between items-center gap-4 w-[700px]">
+		<div class="in-display-name">
+			<Input
+				rounded="sm"
+				title="Display name"
+				width="440px"
+				placeholder="Enter title for your live debate"
+				value={$authUserData?.displayName || ''}
+			/>
+		</div>
+
+		<div class="flex justify-center my-2">
+			<div class="main-buttons">
+				<button onclick={toggleSpeaker} class="btn-main-icon">
+					{#if speakerIsPlaying}
+						<DeviceSpeaker />
+					{:else}
+						<DeviceSpeakerDisabled />
+					{/if}
+				</button>
+
+				<button onclick={toggleMic} class="btn-main-icon">
+					{#if micIsPlaying}
+						<DeviceMic />
+					{:else}
+						<DeviceMicDisabled />
+					{/if}
+				</button>
+				<button onclick={toggleWebCam} class="btn-main-icon">
+					{#if webcamFeedPlaying}
+						<DeviceCamera />
+					{:else}
+						<DeviceCameraDisabled />
+					{/if}
+				</button>
+				<button onclick={toggleScreenShare} class="btn-main-icon">
+					{#if screenSharePlaying}
+						<DeviceScreen />
+					{:else}
+						<DeviceScreenDisabled />
+					{/if}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="video-feed">
 	<div class="video-title-container">
@@ -495,5 +563,25 @@
 	}
 	.audio-speaker-container {
 		@apply mt-8;
+	}
+
+	.in-display-name {
+		@apply flex items-center justify-center;
+	}
+	.main-buttons {
+		@apply flex gap-4;
+	}
+
+	.btn-main-icon {
+		@apply text-transparent;
+		height: 40px;
+		width: 40px;
+		@apply border border-light-gray;
+		@apply flex items-center justify-center;
+		@apply rounded;
+	}
+
+	:global(.btn-main-icon > svg) {
+		scale: 1.2;
 	}
 </style>

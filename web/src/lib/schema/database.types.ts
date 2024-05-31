@@ -3,6 +3,24 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
 	public: {
 		Tables: {
+			host_stream_key: {
+				Row: {
+					created_at: string;
+					id: string;
+					stream_key: string;
+				};
+				Insert: {
+					created_at?: string;
+					id?: string;
+					stream_key: string;
+				};
+				Update: {
+					created_at?: string;
+					id?: string;
+					stream_key?: string;
+				};
+				Relationships: [];
+			};
 			live_debate: {
 				Row: {
 					auto_move_to_stage: boolean | null;
@@ -14,12 +32,14 @@ export type Database = {
 					created_at: string;
 					debate_type: string | null;
 					debater_card_show: boolean | null;
+					ended: boolean | null;
+					ended_tz: string | null;
 					host: string | null;
 					id: string;
 					max_participants: number;
 					max_stage: number;
 					published: boolean | null;
-					publishedTz: string | null;
+					published_tz: string | null;
 					studio_mode: boolean | null;
 					title: string | null;
 					viewer_audience: Database['public']['Enums']['audience_type'][] | null;
@@ -34,12 +54,14 @@ export type Database = {
 					created_at?: string;
 					debate_type?: string | null;
 					debater_card_show?: boolean | null;
+					ended?: boolean | null;
+					ended_tz?: string | null;
 					host?: string | null;
 					id?: string;
 					max_participants?: number;
 					max_stage?: number;
 					published?: boolean | null;
-					publishedTz?: string | null;
+					published_tz?: string | null;
 					studio_mode?: boolean | null;
 					title?: string | null;
 					viewer_audience?: Database['public']['Enums']['audience_type'][] | null;
@@ -54,12 +76,14 @@ export type Database = {
 					created_at?: string;
 					debate_type?: string | null;
 					debater_card_show?: boolean | null;
+					ended?: boolean | null;
+					ended_tz?: string | null;
 					host?: string | null;
 					id?: string;
 					max_participants?: number;
 					max_stage?: number;
 					published?: boolean | null;
-					publishedTz?: string | null;
+					published_tz?: string | null;
 					studio_mode?: boolean | null;
 					title?: string | null;
 					viewer_audience?: Database['public']['Enums']['audience_type'][] | null;
@@ -856,7 +880,7 @@ export type Database = {
 				| 'question_answer'
 				| 'activity_feed';
 			participant_location: 'stage' | 'backstage';
-			roles: 'host' | 'co-host' | 'mods';
+			roles: 'host' | 'co-host' | 'mod' | 'guest';
 		};
 		CompositeTypes: {
 			[_ in never]: never;

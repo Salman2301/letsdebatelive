@@ -5,14 +5,16 @@
 	import {
 		CTX_KEY_NEW_DEBATE,
 		CTX_KEY_HOST_PARTICIPANT,
+		CTX_KEY_TITLE,
 		type CTX_KEY_NEW_DEBATE_TYPE,
 		type CTX_KEY_HOST_PARTICIPANT_TYPE,
-		CTX_KEY_TITLE,
 		type CTX_KEY_TITLE_TYPE
 	} from './new-debate.constant';
 	import { browser } from '$app/environment';
 	import { onMount, getContext } from 'svelte';
 	import Loader from '$lib/components/icon/Loader.svelte';
+	import { authUserData } from '$src/lib/stores/auth.store';
+	import { goto } from '$app/navigation';
 
 	let isLoading: boolean = true;
 
@@ -34,29 +36,22 @@
 	});
 
 	onMount(async () => {
-		const stored$newDebateId = sessionStorage.getItem('store$newDebateId');
-
-		if (stored$newDebateId && typeof stored$newDebateId === 'string') {
-			const { data, error } = await supabase
-				.from('live_debate')
-				.select('*')
-				.eq('id', stored$newDebateId);
-
-			if (error) {
-				isLoading = false;
-				return;
-			}
-
-			if (data && data.length > 0) {
-				// Get the host details
-				// Team details
-				// Update the
-
-				isLoading = false;
-			}
-		} else {
-			isLoading = false;
+		if(!$authUserData?.id) {
+			goto("/?error=FAILED_LIVE_DEBATE_NO_USER")
+			return;
 		}
+		const { data, error } = await supabase.from('live_debate')
+			.select('*')
+			.eq('ended', false)
+			.eq("host", $authUserData?.id!);
+
+		if (error) {
+			console.error(error);
+			goto("/?error=FAILED_LIVE_DEBATE_DB_ERROR")
+			return;
+		}
+
+		isLoading = false;
 	});
 </script>
 
