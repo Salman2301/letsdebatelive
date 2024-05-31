@@ -14,6 +14,7 @@
 
 	async function handleCreateDebate() {
 		if (!$authUserData) return;
+		showPopup = false;
 		goto(`/profile/${$authUserData.username}/new-debate`);
 	}
 
