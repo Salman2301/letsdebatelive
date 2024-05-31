@@ -4,7 +4,6 @@
 	import StageNumber from './components/StageNumber.svelte';
 	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
 	import StageTeam from './stages/StageTeam.svelte';
-	import { getContext } from 'svelte';
 	import StageDebate from './stages/StageDebate.svelte';
 	import StageBroadcast from './stages/StageBroadcast.svelte';
 	import StageStudio from './stages/StageStudio.svelte';
@@ -48,11 +47,13 @@
 	}
 </script>
 
-<Heading2 content={$title as string} textAlign="center" />
 
 <div class="stage-margin">
 	<StageNumber active={currentState} />
 </div>
+
+<Heading2 content={$title as string} textAlign="center" />
+
 
 {#if currentState === 1}
 	<StageTestingFeeds bind:this={stageInstance[0]} />

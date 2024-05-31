@@ -285,26 +285,11 @@
 			// add host to the current  participants table
 			// Create a live debate If the debate didn't exist in the store
 			//
-			if (!$liveDebate?.id) {
-				const { data, error } = await supabase
-					.from('live_debate')
-					.insert([
-						{
-							host: $authUserData?.id as string
-							// studio_mode: true,
-							// published: true,
-							// published_tz: new Date().toISOString(),
-						}
-					])
-					.select();
-
-				if (error || !data) throw new Error('Failed create debate');
-
-				$liveDebate = data[0] as Tables<'live_debate'>;
-
+			if ($liveDebate?.id) {
+				// Move this after the user created team
 				const { data: hostData, error: hostError } = await supabase
 					.from('live_debate_participants')
-					.insert([
+					.upsert([
 						{
 							live_debate: $liveDebate.id as string,
 							is_host: true,
@@ -321,8 +306,6 @@
 							cam_id: webCamDeviceId,
 							speaker_id: speakerDeviceId,
 							mic_id: micDeviceId,
-
-							team: '5932f887-2683-4489-b659-2024f57fd80d',
 							display_name: 'Host',
 							location: 'stage'
 						}

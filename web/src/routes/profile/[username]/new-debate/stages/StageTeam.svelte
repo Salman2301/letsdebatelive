@@ -1,11 +1,11 @@
 <script lang="ts">
-	// import TeamCard from '../components/TeamCard.svelte';
 	import Input from "$lib/components/form/input/Input.svelte";
 
 	import { browser } from '$app/environment';
-	import type { Tables } from '$lib/schema/database.types';
 	import TeamSetting from '../../control-room/components/sidebars/sidebar-unit/SidebarBackstage/TeamSetting.svelte';
 	import { PageCtx } from "$src/lib/context";
+
+	import type { Tables } from '$lib/schema/database.types';
 
 	let teamInfos: Partial<Tables<'live_debate_team'>>[] = [];
 

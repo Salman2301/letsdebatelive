@@ -844,13 +844,19 @@ export type Database = {
 				Args: Record<PropertyKey, never>;
 				Returns: string;
 			};
-			user_atleast_co_host: {
+			user_atleast_co_host_role: {
 				Args: {
 					live_debate_id: string;
 				};
 				Returns: boolean;
 			};
-			user_atleast_mod: {
+			user_atleast_mod_role: {
+				Args: {
+					live_debate_id: string;
+				};
+				Returns: boolean;
+			};
+			user_is_host: {
 				Args: {
 					live_debate_id: string;
 				};

@@ -83,7 +83,11 @@
 <p class="team-desc">Split your audience into different teams</p>
 <div class="teams-container">
 	{#each $teams as team (team.id)}
-		<TeamSettingItem {team} onsubmit={refreshTeamData} />
+		<TeamSettingItem
+			{team}
+			{live_debate}
+			onsubmit={refreshTeamData}
+		/>
 	{/each}
 </div>
 <div class="new-team-container">

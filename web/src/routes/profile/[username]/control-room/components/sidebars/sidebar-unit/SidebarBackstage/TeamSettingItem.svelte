@@ -6,27 +6,20 @@
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	
 	import type { Tables } from '$lib/schema/database.types';
-	import { PageCtx } from '$src/lib/context';
+	import type { Writable } from 'svelte/store';
 
 	interface Props {
 		onsubmit: () => void;
 		team: Tables<'live_debate_team'>;
+		live_debate: Writable<Tables<"live_debate"> | null>;
 	}
 
-	let { team, onsubmit }: Props = $props();
+	let { team, live_debate, onsubmit }: Props = $props();
 
-	const pageCtx = new PageCtx("control-room");
-
-	const teams = pageCtx.get('ctx_table$live_debate_team');
-	const live_debate = pageCtx.get('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	let showSubmitBtn = $state(false);
 	let newTeamValue = $state(team.title);
-	// Add a new team
-	// Update the current name of the team
-	// Delete team
-	// Set it mark as default
 
 	async function onKeydownChange(event: KeyboardEvent) {
 		await tick();
