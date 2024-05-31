@@ -8,12 +8,6 @@
 	import { getContext, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { ScreenShareDisabled, ScreenShareEnabled, WebCamDisabled, WebCamEnabled } from '../icon';
-	import {
-		CTX_KEY_HOST_PARTICIPANT,
-		CTX_KEY_NEW_DEBATE,
-		type CTX_KEY_HOST_PARTICIPANT_TYPE,
-		type CTX_KEY_NEW_DEBATE_TYPE
-	} from '../new-debate.constant';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 
@@ -29,6 +23,8 @@
 		DeviceSpeaker,
 		DeviceSpeakerDisabled
 	} from '$src/lib/components/icon';
+	import { PageCtx } from '$src/lib/context';
+	import { get } from 'svelte/store';
 
 	let errorWebcamFeed: string = $state('');
 	let errorScreenShareFeed: string = $state('');
@@ -279,8 +275,11 @@
 		micIsPlaying = !micIsPlaying;
 	}
 
-	const liveDebate = getContext<CTX_KEY_NEW_DEBATE_TYPE>(CTX_KEY_NEW_DEBATE);
-	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
+	const pageCtx = new PageCtx("new-debate");
+	const liveDebate = pageCtx.get("liveDebate");
+	const hostParticipant = pageCtx.get("hostParticipant");
+
+
 	export async function beforeOnNext() {
 		try {
 			// add host to the current  participants table

@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { PageCtx } from '$src/lib/context';
-	import { getContext } from 'svelte';
-	// import type { CTX_KEY_TITLE_TYPE } from '../new-debate.constant';
 
 	interface Props {
 		active: number;

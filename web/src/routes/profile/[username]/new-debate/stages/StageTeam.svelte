@@ -5,8 +5,13 @@
 	import { browser } from '$app/environment';
 	import type { Tables } from '$lib/schema/database.types';
 	import TeamSetting from '../../control-room/components/sidebars/sidebar-unit/SidebarBackstage/TeamSetting.svelte';
+	import { PageCtx } from "$src/lib/context";
 
 	let teamInfos: Partial<Tables<'live_debate_team'>>[] = [];
+
+	const page = new PageCtx("new-debate");
+	const liveDebate = page.get("liveDebate");
+	const teams = page.get("teams");
 
 	if (browser) {
 		if (teamInfos.length === 0) createNeutralTeam();
@@ -39,7 +44,7 @@
 <div class="flex justify-center">
 	<div class="container">
 		<TeamSetting
-			live_debate={live_debate}
+			live_debate={liveDebate}
 			teams={teams}
 		/>
 	</div>

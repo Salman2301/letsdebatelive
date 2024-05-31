@@ -17,7 +17,8 @@
 	pageCtx.set({
 		liveDebate: writable(null),
 		hostParticipant: writable(null),
-		title: writable("")
+		title: writable(""),
+		teams: writable([])
 	});
 
 	// set session of the live debate and host info and get the latest info on page reload
