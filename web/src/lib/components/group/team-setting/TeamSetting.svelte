@@ -80,7 +80,7 @@
 
 <Heading3 content="Team" textAlign="center" />
 <p class="team-desc">Split your audience into different teams</p>
-<div class="teams-container">
+<div class="teams-container" class:empty={!$teams.length}>
 	{#each $teams as team (team.id)}
 		<TeamSettingItem
 			{team}
@@ -111,6 +111,9 @@
 		@apply border border-light-gray;
 		@apply rounded;
 	}
+	.teams-container.empty {
+		@apply border-transparent;
+	}
 	.new-team-container {
 		@apply relative;
 	}
@@ -120,7 +123,7 @@
 		@apply w-full;
 		@apply px-2 mt-2;
 		@apply outline-none border-0 bg-transparent;
-		@apply border-b border-b-light-gray;
+		@apply border-b border-b-light-gray focus:border-white hover:border-white;
 		@apply mb-12;
 	}
 
