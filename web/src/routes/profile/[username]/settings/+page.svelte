@@ -276,7 +276,10 @@
 		@apply mb-4 mt-16;
 		@apply border border-light-gray;
 		@apply relative;
-
+		
+		img {
+			@apply rounded;
+		}
 		.upload-icon.uploading {
 			opacity: 1;
 		}
