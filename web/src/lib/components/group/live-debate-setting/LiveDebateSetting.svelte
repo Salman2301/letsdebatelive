@@ -54,8 +54,8 @@
 		);
 	}
 
-	async function handleSubmit() {
-		if (!$live_debate || !settingForm) return;
+	export async function submit(): Promise<Tables<"live_debate">> {
+		if (!$live_debate || !settingForm) return $live_debate!;
 
 		// Check if the max stage is less than max participant
 		const toUpdate: Partial<Tables<'live_debate'>> = {};
@@ -65,7 +65,7 @@
 				type: 'error',
 				message: "Max participants can't be less than max. stage member"
 			});
-			return;
+			return $live_debate!;
 		}
 
 		if (
@@ -94,7 +94,7 @@
 					'backstage',
 					settingForm.backstageAudienceType
 				);
-				if (teamError) return;
+				if (teamError) return $live_debate!;
 				toUpdate.backstage_audience = ['team-only'];
 			} else {
 				toUpdate.backstage_audience = [settingForm.backstageAudienceType as audience_type];
@@ -107,7 +107,7 @@
 		) {
 			if (settingForm.chatAudienceType.startsWith('team-only-')) {
 				const { error: teamError } = await setTeamOnly('chat', settingForm.chatAudienceType);
-				if (teamError) return;
+				if (teamError) return $live_debate!;
 				toUpdate.chat_audience = ['team-only'];
 			} else {
 				toUpdate.chat_audience = [settingForm.chatAudienceType as audience_type];
@@ -120,7 +120,7 @@
 		) {
 			if (settingForm.viewerAudienceType.startsWith('team-only-')) {
 				const { error: teamError } = await setTeamOnly('viewer', settingForm.viewerAudienceType);
-				if (teamError) return;
+				if (teamError) return $live_debate!;
 				toUpdate.viewer_audience = ['team-only'];
 			} else {
 				toUpdate.viewer_audience = [settingForm.viewerAudienceType as audience_type];
@@ -147,6 +147,7 @@
 		}
 
 		if (data?.[0]) $live_debate = data[0];
+		return $live_debate;
 	}
 	type TeamService = Record<audience_service, string | undefined>;
 
