@@ -1,31 +1,11 @@
 <script lang="ts">
 	import Input from "$lib/components/form/input/Input.svelte";
-
 	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
-
 	import { PageCtx } from "$src/lib/context";
-	import { browser } from '$app/environment';
-	import type { Tables } from '$lib/schema/database.types';
-
-	let teamInfos: Partial<Tables<'live_debate_team'>>[] = [];
 
 	const page = new PageCtx("new-debate");
 	const liveDebate = page.get("liveDebate");
 	const teams = page.get("teams");
-
-	if (browser) {
-		if (teamInfos.length === 0) createNeutralTeam();
-	}
-
-	async function createNeutralTeam() {
-		teamInfos = [
-			{
-				color: '#ccc',
-				title: 'Neutral',
-				// user_id: '123'
-			}
-		];
-	}
 
 	export function beforeOnNext() {
 		// Add all stage to teams and participants table
@@ -51,7 +31,6 @@
 </div>
 
 <style lang="postcss">
-
 	.container {
 		width: 480px;
 	}

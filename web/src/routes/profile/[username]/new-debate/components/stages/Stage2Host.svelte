@@ -1,7 +1,9 @@
 <script lang="ts">
-	import NoFeedCard from '$lib/components/feed/NoFeedCard.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
+	import Input from '$src/lib/components/form/input/Input.svelte';
+	import Label from '$src/lib/components/form/input/Label.svelte';
+	import NoFeedCard from '$lib/components/feed/NoFeedCard.svelte';
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
 
@@ -10,7 +12,6 @@
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 
-	import Input from '$src/lib/components/form/input/Input.svelte';
 	import {
 		DeviceCamera,
 		DeviceCameraDisabled,
@@ -22,8 +23,6 @@
 		DeviceSpeakerDisabled
 	} from '$src/lib/components/icon';
 	import { PageCtx } from '$src/lib/context';
-	import { get } from 'svelte/store';
-	import Label from '$src/lib/components/form/input/Label.svelte';
 
 	let errorWebcamFeed: string = $state('');
 	let errorScreenShareFeed: string = $state('');

@@ -22,6 +22,7 @@ GOOD PRACTICE:
   ☐ Make sure all the `throw redirect(300, "/")` contains the unique error message `throw redirect(300, '/error=ERROR_UNIQUE')`
 
 Re-Write:
+  ☐ Stage2Host component need a rewrite. Too long
   ✔ Auth flow use backend-form @done(24-05-29 13:17)
     One issue, I dont want the password to be sent through network. That is not something i like,
     I am fine with the current setup, Will need to rethink this later
