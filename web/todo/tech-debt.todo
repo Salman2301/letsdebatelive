@@ -49,4 +49,8 @@ Optimization:
   ```
 
   ☐ Add Index optimization for all the slow query
+
+Database:
+  ☐ Merge all the migrations
+  ☐ Look for the Index and Audit
   

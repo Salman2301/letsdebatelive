@@ -24,6 +24,7 @@
 			smallLetter: /[a-z]/g.test(newPassword + reEnterPassword),
 			number: /\d/g.test(newPassword + reEnterPassword),
 			symbol: /[#?!@$%^&*-]/g.test(newPassword + reEnterPassword),
+			min8: Math.max(newPassword.length, reEnterPassword.length) >= 8,
 			match: newPassword.length > 0 && newPassword === reEnterPassword
 		};
 	}
@@ -75,6 +76,9 @@
 				</p>
 				<p class="password-valid-text" class:is-valid={isValid.symbol}>
 					<span class="check-mark">{getCheckMark(isValid.symbol)}</span>Atleast one symbol
+				</p>
+				<p class="password-valid-text" class:is-valid={isValid.min8}>
+					<span class="check-mark">{getCheckMark(isValid.min8)}</span>Min. 8 character
 				</p>
 				<p class="password-valid-text" class:is-valid={isValid.match}>
 					<span class="check-mark">{getCheckMark(isValid.match)}</span>Password must watch
