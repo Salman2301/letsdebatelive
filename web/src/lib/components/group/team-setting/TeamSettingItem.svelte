@@ -121,6 +121,10 @@
 
 		@apply focus-within:outline-secondary focus-within:outline;
 
+		&:hover {
+			@apply outline-white outline;
+		}
+
 		&:hover .btn-team-default {
 			opacity: 1;
 		}

@@ -517,6 +517,9 @@
 		width: 290px;
 		height: 40px;
 	}
+	.device-select:hover {
+		@apply border-white;
+	}
 
 	.btn-icon {
 		width: 40px;
@@ -575,6 +578,9 @@
 		@apply flex items-center justify-center;
 		@apply rounded;
 	}
+	.btn-main-icon:hover {
+		@apply border-white;
+	}
 
 	:global(.btn-main-icon > svg) {
 		scale: 1.2;
@@ -586,5 +592,9 @@
 		width: 180px;
 		height: 46px;
 		@apply bg-primary-dark;
+	}
+
+	.team-select:hover {
+		@apply border-white;
 	}
 </style>

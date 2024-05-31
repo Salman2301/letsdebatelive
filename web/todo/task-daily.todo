@@ -3,11 +3,11 @@ TODO:
     ✔ Setting page @done(24-05-29 00:44)
 
     ☐ Create debate
-      ☐ Testing
-        ☐ Host need to select the team too
-      ☐ Team ( Creation)
+      ✔ Testing @done(24-05-31 22:16)
+        ✔ Host need to select the team too @done(24-05-31 22:16)
+      ✔ Team ( Creation) @done(24-05-31 22:16)
       ☐ Invite Co-host
-      ☐ Debate Settings
+      ✔ Debate Settings @done(24-05-31 22:16)
       ☐ Broadcast
 
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)

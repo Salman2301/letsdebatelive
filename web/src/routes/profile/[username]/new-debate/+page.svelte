@@ -14,9 +14,9 @@
 	import { page } from '$app/stores';
 	import { PageCtx } from '$src/lib/context';
 
-	let currentState: number = 1;
+	let currentState: number = $state(1);
 	// @ts-expect-error
-	let stageInstance: [Stage1Init, Stage2Host, Stage4Setting, Stage3CoHost, Stage5Broadcast] = [];
+	let stageInstance: [Stage1Init, Stage2Host, Stage3CoHost, Stage4Setting, Stage5Broadcast] = [];
 
 	const pageCtx = new PageCtx("new-debate");
 
@@ -47,15 +47,51 @@
 	function handlePrev() {
 		currentState -= 1;
 	}
+
+	let stages = [
+		{
+			label: 1,
+			info: 'New Debate (1 / 5)'
+		},
+		{
+			label: 2,
+			info: 'My (Host) Setup (2 / 5)'
+		},
+		{
+			label: 3,
+			info: 'Invite Co-host (3 / 5)'
+		},
+		{
+			label: 4,
+			info: 'Setting (4 / 5)'
+		},
+		{
+			label: 5,
+			info: 'Broadcast'
+		}
+	];
+
+	$effect(() => {
+		$title = stages[currentState - 1].info;
+	});
 </script>
 
 
-<div class="stage-margin">
-	<StageNumber active={currentState} />
+<div class="action-btn">
+	<div class:invisible={currentState === 1}>
+		<Button
+			label="Prev"
+			color="secondary"
+			fillType="outline-solid"
+			width={120}
+			onclick={handlePrev}
+		/>
+	</div>
+	
+	<Heading2 content={$title as string} textAlign="center" />
+
+	<Button label="Next" color="secondary" width={120} onclick={handleNext} />
 </div>
-
-<Heading2 content={$title as string} textAlign="center" />
-
 
 {#if currentState === 1}
 	<Stage1Init bind:this={stageInstance[0]} />
@@ -69,19 +105,6 @@
 	<Stage5Broadcast bind:this={stageInstance[4]} />
 {/if}
 
-<div class="action-btn">
-	<div class:invisible={currentState === 1}>
-		<Button
-			label="Prev"
-			color="secondary"
-			fillType="outline-solid"
-			width={120}
-			onclick={handlePrev}
-		/>
-	</div>
-
-	<Button label="Next" color="secondary" width={120} onclick={handleNext} />
-</div>
 
 <style lang="postcss">
 	.stage-margin {
@@ -90,6 +113,7 @@
 	.action-btn {
 		width: 700px;
 		margin: 10px auto;
+		@apply mb-8;
 
 		@apply flex justify-between;
 	}
