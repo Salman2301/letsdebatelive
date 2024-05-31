@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
-	import Switch from '$lib/components/form/Switch.svelte';
-	import Heading3 from '$lib/components/form/Heading3.svelte';
+	import LiveDebateSetting from './LiveDebateSetting.svelte';
 	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
@@ -28,6 +27,8 @@
 	
 	const { onclose, type }: Props = $props();
 
+	let showSubmit: boolean = $state(false);
+
 	let settingForm = $state({
 		maxParticipant: $live_debate?.max_participants,
 		maxStage: $live_debate?.max_stage,
@@ -37,7 +38,7 @@
 		viewerAudienceType: $live_debate?.viewer_audience?.[0] as string
 	});
 
-	let showSubmit: boolean = $derived(isChanged());
+	// let showSubmit: boolean = $derived(isChanged());
 
 	live_debate.subscribe(() => {
 		getLatestSetting();
@@ -250,85 +251,11 @@
 		{/if}
 	</div>
 
-	<div class="setting-item">
-		<label class="label" for="in-max-participant"> Max. number of participant </label>
-		<input
-			class="in-max-number"
-			type="number"
-			id="in-max-participant"
-			bind:value={settingForm.maxParticipant}
-			min="1"
-			max="100"
-		/>
-	</div>
-
-	<div class="setting-item">
-		<label class="label" for="in-max-stage"> Max. number of stage member </label>
-		<input
-			class="in-max-number"
-			type="number"
-			id="in-max-stage"
-			bind:value={settingForm.maxStage}
-			min="1"
-			max="100"
-		/>
-	</div>
-
-	<div class="setting-item">
-		<label for="in-auto-stage">Auto move everyone to stage when joined backstage</label>
-		<Switch bind:checked={settingForm.autoMoveToStage} />
-	</div>
-
-	<div class="mt-12">
-		<Heading3 content="Audience type" textAlign="center" />
-	</div>
-	<div class="setting-item">
-		<label class="label" for="drop-backstage-audience-type">Backstage open only for</label>
-		<select id="drop-backstage-audience-type" bind:value={settingForm.backstageAudienceType}>
-			<option value="anonymous">Anyone</option>
-			<option value="registered">Logged In</option>
-			<option value="follower">Follower</option>
-			<option value="supporter">Supporter</option>
-			<option value="" disabled>----</option>
-			{#each $teams as team}
-				<option value="team-only-{team.id}">Team - {team.title}</option>
-			{/each}
-			<option value="" disabled>----</option>
-			<option value="none">Disable</option>
-		</select>
-	</div>
-
-	<div class="setting-item">
-		<label class="label" for="drop-chat-audience">Chat open only for</label>
-		<select id="drop-chat-audience" bind:value={settingForm.chatAudienceType}>
-			<option value="anonymous">Anyone</option>
-			<option value="registered">Logged In</option>
-			<option value="follower">Follower</option>
-			<option value="supporter">Supporter</option>
-			<option value="" disabled>----</option>
-			{#each $teams as team}
-				<option value="team-only-{team.id}">Team - {team.title}</option>
-			{/each}
-			<option value="" disabled>----</option>
-			<option value="none">Disable</option>
-		</select>
-	</div>
-
-	<div class="setting-item">
-		<label class="label" for="drop-view-audience">Stream to viewer</label>
-		<select id="drop-view-audience" bind:value={settingForm.viewerAudienceType}>
-			<option value="anonymous">Anyone</option>
-			<option value="registered">Logged In</option>
-			<option value="follower">Follower</option>
-			<option value="supporter">Supporter</option>
-			<option value="" disabled>----</option>
-			{#each $teams as team}
-				<option value="team-only-{team.id}">Team - {team.title}</option>
-			{/each}
-			<option value="" disabled>----</option>
-			<option value="none">Disable</option>
-		</select>
-	</div>
+	<LiveDebateSetting
+		live_debate={live_debate}
+		teams={teams}
+		bind:showSubmit={showSubmit}
+	/>
 
 	<div class="mt-12">
 		<TeamSetting
@@ -343,23 +270,4 @@
 </div>
 
 <style lang="postcss">
-	.setting-item {
-		@apply w-full flex justify-between items-center;
-		@apply my-2;
-	}
-
-	.in-max-number {
-		@apply py-2;
-		width: 60px;
-		text-align: center;
-		@apply rounded;
-		@apply my-2;
-	}
-
-	select {
-		@apply py-2;
-		@apply my-2;
-		@apply bg-primary;
-		@apply rounded;
-	}
 </style>
