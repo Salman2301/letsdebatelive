@@ -31,7 +31,7 @@
 
 <svelte:window onresize={handleScreenResize} />
 
-{#if $page.url.pathname.includes('/record-view')}
+{#if $page.url.pathname.includes('/video-feed')}
 	<slot />
 {:else}
 	<RootLayout>

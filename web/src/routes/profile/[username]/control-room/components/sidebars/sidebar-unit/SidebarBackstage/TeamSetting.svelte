@@ -44,7 +44,7 @@
 	}
 
 	function getAvailableColor(): string {
-		const availableColors = ['#32DE8A', '#EF7674', '#F2AF29', '#ff0000', '#00ff00', '#0000ff'];
+		const availableColors = ['#32DE8A', '#EF7674', '#F2AF29', '#31DDC1', '#EFA076', '#F2F226'];
 
 		const currentColorsUsed = $teams.map((item) => item.color);
 

@@ -19,7 +19,7 @@ roles:
   ☐ host
   ☐ co-host
   ☐ moderator
-  ☐ audience
+  ☐ audience (guest)
   
 backstage_type:
   ☐ supporter

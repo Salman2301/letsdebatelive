@@ -6,12 +6,27 @@ TODO:
       ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
       ✔ Equip page @done(24-05-30 15:47)
         ☐ Rethink feeds and control
+      ☐ Background
+      ☐ Logo
       ☐ Overlay
-        ☐ background image / color uploads
+        ☐ background image
+        Type:
+          ☐ Fill
+          ☐ Tile
+          ☐ Cover
+          ☐ pin to corner
+        Image:
+          ☐ Upload
         ☐ logo upload and corner selection
       ☐ Screen sidebar
       ☐ Missing all UI features
         ☐ Flow
+          ☐ set Published to true
+          ☐ Check if the user is already published
+          ☐ Create a new live_debate
+          ☐ On Broadcast end,
+            ☐ Set isPublished to stop
+            
     
     
     ☐ WebRTC 

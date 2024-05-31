@@ -397,7 +397,7 @@
 				{/each}
 			</select>
 
-			<VolumeProgress percent={micVolume} />
+			<VolumeProgress percent={micVolume} bar={36} />
 		</div>
 	</div>
 
