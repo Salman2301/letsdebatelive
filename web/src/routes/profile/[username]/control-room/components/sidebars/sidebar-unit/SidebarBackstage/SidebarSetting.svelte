@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
-	import LiveDebateSetting from './LiveDebateSetting.svelte';
-	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
+	import LiveDebateSetting from '$lib/components/group/live-debate-setting/LiveDebateSetting.svelte';
+	import TeamSetting from '$src/lib/components/group/team-setting/TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
 	import { getContext } from 'svelte';

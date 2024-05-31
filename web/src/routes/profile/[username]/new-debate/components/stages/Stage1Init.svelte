@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Input from "$lib/components/form/input/Input.svelte";
-	import TeamSetting from '$lib/components/team-setting/TeamSetting.svelte';
+	import TeamSetting from '$src/lib/components/group/team-setting/TeamSetting.svelte';
 	import { PageCtx } from "$src/lib/context";
 
 	const page = new PageCtx("new-debate");
