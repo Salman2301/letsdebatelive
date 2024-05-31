@@ -1,9 +1,10 @@
 <script lang="ts">
-	import TeamCard from '../components/TeamCard.svelte';
+	// import TeamCard from '../components/TeamCard.svelte';
 	import Input from "$lib/components/form/input/Input.svelte";
 
 	import { browser } from '$app/environment';
 	import type { Tables } from '$lib/schema/database.types';
+	import TeamSetting from '../../control-room/components/sidebars/sidebar-unit/SidebarBackstage/TeamSetting.svelte';
 
 	let teamInfos: Partial<Tables<'live_debate_team'>>[] = [];
 
@@ -35,13 +36,20 @@
 	/>
 </div>
 
-<div class="flex justify-center gap-4">
-	{#each teamInfos as team}
-		<TeamCard {team} />
-	{/each}
+<div class="flex justify-center">
+	<div class="container">
+		<TeamSetting
+			live_debate={live_debate}
+			teams={teams}
+		/>
+	</div>
 </div>
 
 <style lang="postcss">
+
+	.container {
+		width: 480px;
+	}
 
 	.in-title {
 		@apply flex items-center justify-center;

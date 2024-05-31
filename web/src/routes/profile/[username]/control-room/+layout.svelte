@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Sidebar from './components/Sidebar.svelte';
 	import { getContext, onDestroy, setContext } from 'svelte';
-	import { setControlRoomCtx } from '$lib/context/control-room';
 	import { onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { derived, writable, type Readable, type Writable } from 'svelte/store';
@@ -9,8 +8,10 @@
 
 	import type { Tables } from '$lib/schema/database.types';
 	import type { SubscriptionCB } from '$lib/schema/subscription.types';
+	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
+	const page = new PageCtx("control-room");
 
 	interface Props {
 		data: PageData;
@@ -40,17 +41,14 @@
 		}, {});
 	});
 
-	setControlRoomCtx('ctx_table$live_debate', liveDebate);
-
-	setControlRoomCtx('ctx_table$live_debate_participants', participants);
-	setControlRoomCtx('ctx_table$live_debate_participants_stage', participantsOnStage);
-	setControlRoomCtx(
-		'ctx_table$live_debate_participants_backstage',
-		participantsBackStage
-	);
-
-	setControlRoomCtx('ctx_table$live_debate_team', teams);
-	setControlRoomCtx('ctx_map$teamColor', teamMapColor);
+	page.setContext({
+		ctx_table$live_debate: liveDebate,
+		ctx_table$live_debate_participants: participants,
+		ctx_table$live_debate_participants_stage: participantsOnStage,
+		ctx_table$live_debate_participants_backstage: participantsBackStage,
+		ctx_table$live_debate_team: teams,
+		ctx_map$teamColor: teamMapColor
+	});
 
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 

@@ -27,8 +27,8 @@
 	import { currentSidebar } from '$lib/stores/sidebar.store';
 	import { getSupabase } from '$lib/supabase';
 
-	import { getControlRoomCtx } from '$lib/context/control-room';
 	import type { Tables } from '$lib/schema/database.types';
+	import { PageCtx } from '$src/lib/context';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -37,12 +37,13 @@
 	}
 
 	const supabase = getSupabase(getContext);
+	const page = new PageCtx("control-room");
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants = getControlRoomCtx('ctx_table$live_debate_participants');
-	let live_debate = getControlRoomCtx('ctx_table$live_debate');
-	let teamMapColor = getControlRoomCtx('ctx_map$teamColor');
+	let participants = page.getContext('ctx_table$live_debate_participants');
+	let live_debate = page.getContext('ctx_table$live_debate');
+	let teamMapColor = page.getContext('ctx_map$teamColor');
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []

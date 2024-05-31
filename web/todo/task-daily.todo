@@ -2,6 +2,13 @@ TODO:
   Missing core-feature:
     ✔ Setting page @done(24-05-29 00:44)
 
+    ☐ Create debate
+      ☐ Testing
+      ☐ Team ( Creation)
+      ☐ Add Co-host
+      ☐ Settings
+      ☐ Broadcast
+
     ☐ Basic UI @est(2 days) @started(24-05-30 01:20)
       ✔ Get the team info from the live_participant_team @done(24-05-30 06:29)
       ✔ Equip page @done(24-05-30 15:47)

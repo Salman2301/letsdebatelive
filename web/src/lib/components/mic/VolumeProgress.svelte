@@ -7,8 +7,8 @@
 	}
 	let { bar = 20, percent = 0.1 }: Props = $props();
 
-	const startHue = 72;
-	const endHue = 10;
+	const startHue = 82;
+	const endHue = -10;
 
 	const ratio = (startHue - endHue) / bar;
 

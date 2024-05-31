@@ -7,7 +7,6 @@
 	import Chat from './components/sidebar/Chat.svelte';
 
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import { setLiveRoomCtx } from '$src/lib/context/live-page';
 	import { getContext, onDestroy, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
@@ -16,6 +15,7 @@
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
 	import type { ParticipantsWithUserData } from './page.types';
+	import { PageCtx } from '$src/lib/context';
 	
 	
 	interface Props {
@@ -29,15 +29,18 @@
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 
 	const supabase = getSupabase(getContext);
+	const page = new PageCtx("live");
+
 	let backstageChannel: RealtimeChannel;
 
 	let myBackstageInfo = writable(data.myBackstageInfo);
 	let participants = writable(data.participants || []);
 	let isJoined = writable(data.isJoined);
 
-	setLiveRoomCtx("pageDataProps", data);
-	setLiveRoomCtx("myBackstageInfo", myBackstageInfo);
-
+	page.setContext({
+		"pageDataProps": data,
+		myBackstageInfo: myBackstageInfo
+	});
 
 	let devicesEnable: DevicesEnable = $derived({
 		cam_enable: !!$myBackstageInfo?.cam_enable,

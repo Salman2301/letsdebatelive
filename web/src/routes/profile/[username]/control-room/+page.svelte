@@ -7,11 +7,12 @@
 
 	import { getSupabase } from '$lib/supabase';
 	import { emitBroadcastEvent, emitSceneChange } from './channel';
-
-	import { getControlRoomCtx } from '$lib/context/control-room';
+	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	const live_debate = getControlRoomCtx('ctx_table$live_debate');
+	const pageCtx = new PageCtx("control-room");
+
+	const live_debate = pageCtx.getContext('ctx_table$live_debate');
 
 	onMount(async () => {
 		if (!$live_debate?.id) return;

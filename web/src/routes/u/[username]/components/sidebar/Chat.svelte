@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { closeModal, currentModal, openModal } from '$lib/components/modal/modal.store';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
-	import { getLiveRoomCtx } from '$src/lib/context/live-page';
 
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
 	import { getContext } from 'svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	const ctx = getLiveRoomCtx('pageDataProps');
-	const myBackstageInfo = getLiveRoomCtx('myBackstageInfo');
+	const page = new PageCtx("live");
+
+	const ctx = page.getContext('pageDataProps');
+	const myBackstageInfo = page.getContext('myBackstageInfo');
 	let teamId: string = $state("");
 
 	$effect(()=>{

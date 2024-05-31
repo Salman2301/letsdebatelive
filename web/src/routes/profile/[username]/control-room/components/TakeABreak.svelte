@@ -2,10 +2,12 @@
 	import { getContext } from 'svelte';
 	import { emitSceneChange } from '../channel';
 	import { getSupabase } from '$lib/supabase';
-	import { getControlRoomCtx } from '$lib/context/control-room';
+	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	let live_debate = getControlRoomCtx('ctx_table$live_debate');
+	const page = new PageCtx("control-room");
+
+	let live_debate = page.getContext('ctx_table$live_debate');
 
 	let timeout = $state('5min');
 	function handleLayoutShift() {

@@ -5,11 +5,11 @@
 	import TeamSetting from './TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
-	import { getControlRoomCtx } from '$lib/context/control-room';
 	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Database, Tables } from '$lib/schema/database.types';
+	import { PageCtx } from '$src/lib/context';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -20,8 +20,10 @@
 	type audience_type = Database['public']['Enums']['audience_type'];
 
 	const supabase = getSupabase(getContext);
-	const live_debate = getControlRoomCtx('ctx_table$live_debate');
-	const teams = getControlRoomCtx('ctx_table$live_debate_team');
+	const page = new PageCtx("control-room");
+	
+	const live_debate = page.getContext('ctx_table$live_debate');
+	const teams = page.getContext('ctx_table$live_debate_team');
 	
 	const { onclose, type }: Props = $props();
 
@@ -328,7 +330,10 @@
 	</div>
 
 	<div class="mt-12">
-		<TeamSetting />
+		<TeamSetting
+			live_debate={live_debate}
+			teams={teams}
+		/>
 	</div>
 
 	<!-- Show list of teams below and the user can change the color -->

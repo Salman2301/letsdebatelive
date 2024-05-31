@@ -4,13 +4,23 @@
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 
 	import { CheckMark } from '$lib/components/icon';
-	import { getControlRoomCtx } from '$lib/context/control-room';
 	import { getSupabase } from '$lib/supabase';
 	import { getContext, tick } from 'svelte';
 
-	const teams = getControlRoomCtx('ctx_table$live_debate_team');
-	const live_debate = getControlRoomCtx('ctx_table$live_debate');
+	import type { Writable } from 'svelte/store';
+	import type { Tables } from '$src/lib/schema/database.types';
+
+	// const teams = getControlRoomCtx('ctx_table$live_debate_team');
+	// const live_debate = getControlRoomCtx('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
+
+
+	interface Props {
+		live_debate: Writable<Tables<"live_debate"> | null>;
+		teams: Writable<Tables<"live_debate_team">[]>;
+	}
+	
+	let { live_debate, teams }: Props = $props();
 
 	let newTeamValue = $state('');
 	let showSubmitBtn = $derived(!!newTeamValue);
@@ -58,7 +68,7 @@
 
 	async function refreshTeamData() {
 		if (!$live_debate?.id) return;
-
+		
 		const { data: newTeamsData } = await supabase
 			.from('live_debate_team')
 			.select()

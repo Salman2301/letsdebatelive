@@ -10,12 +10,14 @@
 
 	import { lastScreenPayloadContent } from '$lib/components/video-feed/scenes/store/scene';
 	import { getSupabase } from '$lib/supabase';
-	import { getControlRoomCtx } from '$lib/context/control-room';
 
 	import type { LayerIdContent } from '$lib/components/video-feed/video-feed.types';
+	import { PageCtx } from '$src/lib/context';
 
 	let layerIdContent: LayerIdContent;
-	const live_debate = getControlRoomCtx('ctx_table$live_debate');
+	const page = new PageCtx("control-room");
+	
+	const live_debate = page.getContext('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
