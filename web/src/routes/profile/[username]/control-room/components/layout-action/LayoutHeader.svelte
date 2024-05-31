@@ -15,9 +15,9 @@
 	import { PageCtx } from '$src/lib/context';
 
 	let layerIdContent: LayerIdContent;
-	const page = new PageCtx("control-room");
+	const pageCtx = new PageCtx("control-room");
 	
-	const live_debate = page.getContext('ctx_table$live_debate');
+	const live_debate = pageCtx.get('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader

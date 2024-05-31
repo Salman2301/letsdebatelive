@@ -5,9 +5,9 @@
 	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	const page = new PageCtx("control-room");
+	const pageCtx = new PageCtx("control-room");
 
-	let live_debate = page.getContext('ctx_table$live_debate');
+	let live_debate = pageCtx.get('ctx_table$live_debate');
 
 	let timeout = $state('5min');
 	function handleLayoutShift() {

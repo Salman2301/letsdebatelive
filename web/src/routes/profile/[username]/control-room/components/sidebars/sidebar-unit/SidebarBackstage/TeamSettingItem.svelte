@@ -15,10 +15,10 @@
 
 	let { team, onsubmit }: Props = $props();
 
-	const page = new PageCtx("control-room");
+	const pageCtx = new PageCtx("control-room");
 
-	const teams = page.getContext('ctx_table$live_debate_team');
-	const live_debate = page.getContext('ctx_table$live_debate');
+	const teams = pageCtx.get('ctx_table$live_debate_team');
+	const live_debate = pageCtx.get('ctx_table$live_debate');
 	const supabase = getSupabase(getContext);
 
 	let showSubmitBtn = $state(false);

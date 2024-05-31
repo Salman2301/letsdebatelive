@@ -10,10 +10,10 @@
 	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	const page = new PageCtx("live");
+	const pageCtx = new PageCtx("live");
 
-	const ctx = page.getContext('pageDataProps');
-	const myBackstageInfo = page.getContext('myBackstageInfo');
+	const ctx = pageCtx.get('pageDataProps');
+	const myBackstageInfo = pageCtx.get('myBackstageInfo');
 	let teamId: string = $state("");
 
 	$effect(()=>{

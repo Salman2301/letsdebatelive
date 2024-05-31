@@ -12,7 +12,7 @@
 	const supabase = getSupabase(getContext);
 	const pageCtx = new PageCtx("control-room");
 
-	const live_debate = pageCtx.getContext('ctx_table$live_debate');
+	const live_debate = pageCtx.get('ctx_table$live_debate');
 
 	onMount(async () => {
 		if (!$live_debate?.id) return;

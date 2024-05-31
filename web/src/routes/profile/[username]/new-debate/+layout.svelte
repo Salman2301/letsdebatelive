@@ -1,38 +1,30 @@
 <script lang="ts">
+	import Loader from '$lib/components/icon/Loader.svelte';
+
 	import { getSupabase } from '$lib/supabase';
-	import { setContext } from 'svelte';
-	import { writable, type Writable } from 'svelte/store';
-	import {
-		CTX_KEY_NEW_DEBATE,
-		CTX_KEY_HOST_PARTICIPANT,
-		CTX_KEY_TITLE,
-		type CTX_KEY_NEW_DEBATE_TYPE,
-		type CTX_KEY_HOST_PARTICIPANT_TYPE,
-		type CTX_KEY_TITLE_TYPE
-	} from './new-debate.constant';
+	import { writable } from 'svelte/store';
 	import { browser } from '$app/environment';
 	import { onMount, getContext } from 'svelte';
-	import Loader from '$lib/components/icon/Loader.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { goto } from '$app/navigation';
+	import { PageCtx } from '$src/lib/context';
 
 	let isLoading: boolean = true;
 
-	let newDebate: CTX_KEY_NEW_DEBATE_TYPE = writable({});
-	let hostParticipant: CTX_KEY_HOST_PARTICIPANT_TYPE = writable({});
-	let title: CTX_KEY_TITLE_TYPE = writable('New debate');
-
 	const supabase = getSupabase(getContext);
+	const pageCtx = new PageCtx("new-debate");
 
-	setContext(CTX_KEY_NEW_DEBATE, newDebate);
-	setContext(CTX_KEY_HOST_PARTICIPANT, hostParticipant);
-	setContext(CTX_KEY_TITLE, title);
+	pageCtx.set({
+		liveDebate: writable(null),
+		hostParticipant: writable(null),
+		title: writable("")
+	});
 
 	// set session of the live debate and host info and get the latest info on page reload
 
-	newDebate.subscribe(($newDebate) => {
-		if ($newDebate && $newDebate.id && browser)
-			sessionStorage.setItem('store$newDebateId', $newDebate.id);
+	pageCtx.get("liveDebate").subscribe(($liveDebate) => {
+		if ($liveDebate && $liveDebate.id && browser)
+			sessionStorage.setItem('store$newDebateId', $liveDebate.id);
 	});
 
 	onMount(async () => {

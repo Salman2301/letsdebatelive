@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { PageCtx } from '$src/lib/context';
 	import { getContext } from 'svelte';
-	import type { CTX_KEY_TITLE_TYPE } from '../new-debate.constant';
+	// import type { CTX_KEY_TITLE_TYPE } from '../new-debate.constant';
 
 	interface Props {
 		active: number;
 	}
 	let { active }: Props = $props();
-
-	const title = getContext<CTX_KEY_TITLE_TYPE>('CTX_KEY_TITLE');
+	const pageCtx = new PageCtx("new-debate");
+	const title = pageCtx.get("title");
 
 	let stages = [
 		{

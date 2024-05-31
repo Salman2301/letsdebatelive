@@ -37,13 +37,13 @@
 	}
 
 	const supabase = getSupabase(getContext);
-	const page = new PageCtx("control-room");
+	const pageCtx = new PageCtx("control-room");
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants = page.getContext('ctx_table$live_debate_participants');
-	let live_debate = page.getContext('ctx_table$live_debate');
-	let teamMapColor = page.getContext('ctx_map$teamColor');
+	let participants = pageCtx.get('ctx_table$live_debate_participants');
+	let live_debate = pageCtx.get('ctx_table$live_debate');
+	let teamMapColor = pageCtx.get('ctx_map$teamColor');
 
 	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []

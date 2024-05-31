@@ -5,28 +5,23 @@
 	import StageTestingFeeds from './stages/StageTestingFeeds.svelte';
 	import StageTeam from './stages/StageTeam.svelte';
 	import { getContext } from 'svelte';
-	import {
-		CTX_KEY_HOST_PARTICIPANT,
-		CTX_KEY_NEW_DEBATE,
-		CTX_KEY_TITLE,
-		type CTX_KEY_HOST_PARTICIPANT_TYPE,
-		type CTX_KEY_NEW_DEBATE_TYPE,
-		type CTX_KEY_TITLE_TYPE
-	} from './new-debate.constant';
 	import StageDebate from './stages/StageDebate.svelte';
 	import StageBroadcast from './stages/StageBroadcast.svelte';
 	import StageStudio from './stages/StageStudio.svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { PageCtx } from '$src/lib/context';
 
 	let currentState: number = 1;
 	// @ts-expect-error
 	let stageInstance: [StageTestingFeeds, StageTeam, StageDebate, StageStudio, StageBroadcast] = [];
 
-	let title = getContext<CTX_KEY_TITLE_TYPE>(CTX_KEY_TITLE);
-	const liveDebate = getContext<CTX_KEY_NEW_DEBATE_TYPE>(CTX_KEY_NEW_DEBATE);
-	const hostParticipant = getContext<CTX_KEY_HOST_PARTICIPANT_TYPE>(CTX_KEY_HOST_PARTICIPANT);
+	const pageCtx = new PageCtx("new-debate");
+
+	const title = pageCtx.get("title");
+	const liveDebate = pageCtx.get("liveDebate");
+	const hostParticipant = pageCtx.get("hostParticipant");
 
 	async function handleNext() {
 		await stageInstance[currentState - 1].beforeOnNext();

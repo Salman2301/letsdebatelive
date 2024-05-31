@@ -20,13 +20,13 @@ export class PageCtx<T extends keyof AllPageCtx> {
     this.page = page;
   }
 
-  setContext(obj: AllPageCtx[T]) {
+  set(obj: AllPageCtx[T]) {
     for (const [key, value] of Object.entries(obj)) {
       setContext(key, value);
     }
   }
 
-  getContext<K extends keyof AllPageCtx[T]>(key: K): AllPageCtx[T][K] {
+  get<K extends keyof AllPageCtx[T]>(key: K): AllPageCtx[T][K] {
     return getContext(key);
   }
 }

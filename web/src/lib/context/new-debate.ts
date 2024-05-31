@@ -1,4 +1,8 @@
+import type { Writable } from "svelte/store";
+import type { Tables } from "../schema/database.types";
 
 export type ContextTypes = {
-  test: string
+  liveDebate: Writable<Tables<"live_debate"> | null >;
+  hostParticipant: Writable<Tables<"live_debate_participants"> | null >;
+  title: Writable<string>;
 };

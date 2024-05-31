@@ -29,7 +29,7 @@
 	let sidebar: 'chat' | 'agenda' | 'qa' | 'backstage-chat' = $state('chat');
 
 	const supabase = getSupabase(getContext);
-	const page = new PageCtx("live");
+	const pageCtx = new PageCtx("live");
 
 	let backstageChannel: RealtimeChannel;
 
@@ -37,7 +37,7 @@
 	let participants = writable(data.participants || []);
 	let isJoined = writable(data.isJoined);
 
-	page.setContext({
+	pageCtx.set({
 		"pageDataProps": data,
 		myBackstageInfo: myBackstageInfo
 	});

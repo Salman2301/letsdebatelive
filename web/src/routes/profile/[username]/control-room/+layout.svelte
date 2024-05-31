@@ -11,7 +11,7 @@
 	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase(getContext);
-	const page = new PageCtx("control-room");
+	const pageCtx = new PageCtx("control-room");
 
 	interface Props {
 		data: PageData;
@@ -41,7 +41,7 @@
 		}, {});
 	});
 
-	page.setContext({
+	pageCtx.set({
 		ctx_table$live_debate: liveDebate,
 		ctx_table$live_debate_participants: participants,
 		ctx_table$live_debate_participants_stage: participantsOnStage,
