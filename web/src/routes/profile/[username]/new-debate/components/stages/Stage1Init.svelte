@@ -16,9 +16,11 @@
 		// Add all stage to teams and participants table
 		if(!$liveDebate) return;
 
-		await supabase.from("live_debate").update({
+		const { data, error } =await supabase.from("live_debate").update({
 			title,
-		}).eq("id", $liveDebate.id);
+		}).eq("id", $liveDebate.id).select();
+
+		if( data?.[0] ) $liveDebate = data[0];
 	}
 
 	onMount(()=>{
