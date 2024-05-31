@@ -1,3 +1,8 @@
+<script context="module" lang="ts">
+	export type InstanceType = { submit: () => Promise<Tables<"live_debate">>};
+	
+</script>
+
 <script lang="ts">
 	import Switch from '$lib/components/form/Switch.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
