@@ -1,0 +1,7 @@
+
+invite co-host:
+  ☐ If the user is registered, Show a profile pic
+	☐ Show display name
+	☐ Host able to add it via username
+	☐ Host able to add it based on history of previous co-hosts
+	☐ Host able to select from fav. team

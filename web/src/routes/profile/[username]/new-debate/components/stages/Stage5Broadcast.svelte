@@ -14,21 +14,21 @@
 		<div class="item youtube">
 			YouTube
 		</div>
+		<div class="item twitch">
+			Twitch
+		</div>
 		<div class="item facebook">
 			Facebook
 			<span>Live
 		</span></div>
-		<div class="item twitch">
-			Twitch
-		</div>
-		<div class="item linkedin">
-			LinkedIn
+		<div class="item twitter-x">
+			X (Twitter)
 		</div>
 		<div class="item instagram">
 			Instagram
 		</div>
-		<div class="item twitter-x">
-			X (Twitter)
+		<div class="item linkedin">
+			LinkedIn
 		</div>
 		<div class="item custom">
 			Custom RTMP

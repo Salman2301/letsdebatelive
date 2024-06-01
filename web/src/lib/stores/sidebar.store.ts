@@ -1,6 +1,7 @@
 import { type Writable, writable } from 'svelte/store';
 
 export type SidebarKey =
+	| 'screen'
 	| 'participants'
 	| 'backstage'
 	| 'chatLive'

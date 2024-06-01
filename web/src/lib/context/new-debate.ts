@@ -6,4 +6,5 @@ export type ContextTypes = {
   hostParticipant: Writable<Tables<"live_debate_participants"> | null>;
   teams: Writable<Tables<"live_debate_team">[]>;
   title: Writable<string>;
+  inviteCohost: Writable<Tables<"live_debate_invite_co_host">[]>;
 };

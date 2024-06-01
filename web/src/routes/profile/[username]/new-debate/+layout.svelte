@@ -20,12 +20,15 @@
 		liveDebate: writable(null),
 		hostParticipant: writable(null),
 		title: writable(''),
-		teams: writable([])
+		teams: writable([]),
+		inviteCohost: writable([])
 	});
 
 	// set session of the live debate and host info and get the latest info on page reload
 
 	const liveDebate = pageCtx.get('liveDebate');
+	const hostParticipant = pageCtx.get('hostParticipant');
+	
 	pageCtx.get('liveDebate').subscribe(($liveDebate) => {
 		if ($liveDebate && $liveDebate.id && browser)
 			sessionStorage.setItem('store$liveDebateId', $liveDebate.id);
@@ -51,22 +54,43 @@
 		const storedLiveDebateId = sessionStorage.getItem('store$liveDebateId');
 
 		if (typeof storedLiveDebateId === 'string' && storedLiveDebateId.includes('-')) {
-			const { data, error } = await supabase
-				.from('live_debate')
-				.select()
-				.eq('id', storedLiveDebateId)
-				.single();
-			$liveDebate = data;
-			if (error) {
+			
+			const [
+				{ data: liveDebateData, error },
+				{ data: hostParticipantData, error: hostParticipantError }
+			] = await Promise.all([
+					supabase
+					.from('live_debate')
+					.select()
+					.eq('id', storedLiveDebateId)
+					.single(),
+					supabase
+						.from('live_debate_participants')
+						.select()
+						.eq('live_debate', storedLiveDebateId)
+						.eq('role', "host")
+						.single()
+			]);
+
+			if ( error || !liveDebateData || !hostParticipantData || hostParticipantError  ) {
 				sessionStorage.removeItem('store$liveDebateId');
-				$liveDebate = await createLiveDebate();
-				return newToast({
-					type: 'error',
-					message: 'Failed to fetch the live debate, try again'
-				});
+				const res = await createLiveDebate();
+				$liveDebate = res.liveDebate;
+				$hostParticipant = res.hostParticipant;
+				// return newToast({
+				// 	type: 'error',
+				// 	message: 'Failed to fetch the live debate, try again'
+				// });
+			} else {
+				console.info("Fetched from session storage");
+				$liveDebate = liveDebateData;
+				$hostParticipant = hostParticipantData;
 			}
+
 		} else {
-			$liveDebate = await createLiveDebate();
+			const res = await createLiveDebate();
+			$liveDebate = res.liveDebate;
+			$hostParticipant = res.hostParticipant;
 		}
 
 		if ($liveDebate === null) {
@@ -76,8 +100,12 @@
 		isLoading = false;
 	});
 
-	async function createLiveDebate(): Promise<Tables<'live_debate'> | null> {
-		if (!$authUserData?.id) return null;
+	type ReturnCreateLiveDebate = {
+		liveDebate: Tables<'live_debate'> | null;
+		hostParticipant: Tables<'live_debate_participants'> | null;
+	}
+	async function createLiveDebate(): Promise<ReturnCreateLiveDebate> {
+		if (!$authUserData?.id) throw new Error('User not logged in');
 
 		const { data: newLiveDebate, error: newLiveDebateError } = await supabase
 			.from('live_debate')
@@ -91,27 +119,42 @@
 				type: 'error',
 				message: 'Failed to craete a new live debate'
 			});
-			return null;
+			return { liveDebate: null, hostParticipant: null };
 		}
-		const { data: liveDebateRole, error: liveDebateError } = await supabase
-			.from('live_debate_roles')
+
+
+		const { data: hostData, error: hostDataError} = await supabase
+			.from('live_debate_participants')
 			.insert({
+				participant_id: $authUserData.id!,
 				role: 'host',
 				live_debate: newLiveDebate[0].id,
-				user_id: $authUserData.id
+				display_name: $authUserData.displayName || "",
+				is_host: true,
+				location: "stage",
 			})
 			.select();
 
-		if (!newLiveDebate || newLiveDebateError) {
+		if (!hostData?.[0]?.participant_id) {
+			console.error(newLiveDebateError);
+			newToast({
+				type: 'error',
+				message: 'Failed to craete a new live debate'
+			});
+			return { liveDebate: null, hostParticipant: null };
+		}
+		
+		if (!newLiveDebate || newLiveDebateError || !hostData || hostDataError) {
 			newToast({
 				type: 'error',
 				message: 'Failed to create a new live debate'
 			});
 
-			return null;
+			return { liveDebate: null, hostParticipant: null };
+
 		}
 
-		return newLiveDebate[0];
+		return { liveDebate: newLiveDebate[0], hostParticipant: hostData[0] };
 	}
 </script>
 

@@ -5,7 +5,6 @@
 	import { clickOutside } from '$lib/action/clickOutside';
 	import { authUserData } from '../../stores/auth.store';
 	import { openModal } from '../modal/modal.store';
-	import { getContext } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
 
 	let showPopup = $state(false);
@@ -22,6 +21,16 @@
 		showPopup = false;
 		goto(link);
 	}
+
+	function openLogin() {
+		showPopup = false;
+		openModal({ key: 'login' });
+	}
+
+	function openRegister() {
+		showPopup = false;
+		openModal({ key: 'register' });
+	}
 </script>
 
 <div class="icon-container" use:clickOutside={() => (showPopup = false)}>
@@ -33,8 +42,8 @@
 		<div class="popup">
 			<button class="btn-popup" onclick={handleCreateDebate}> Create Debate </button>
 			{#if $authUserData === null}
-				<button class="btn-popup" onclick={() => openModal({ key: 'login' })}> Login </button>
-				<button class="btn-popup bg-primary/70" onclick={() => openModal({ key: 'register' })}>
+				<button class="btn-popup" onclick={openLogin}> Login </button>
+				<button class="btn-popup bg-primary/70" onclick={openRegister}>
 					Create account
 				</button>
 			{:else}

@@ -15,7 +15,7 @@
 		CheckMark
 	} from '$lib/components/icon';
 
-	import { getContext, tick } from 'svelte';
+	import { tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Tables } from '$lib/schema/database.types';
 
@@ -132,7 +132,7 @@
 		</div>
 	</div>
 	<div class="username-text">
-		<div class="team-circle" style="background-color:{teamMapColor[participant.team]}"></div>
+		<div class="team-circle" style="background-color:{teamMapColor[participant.team as string]}"></div>
 		<div class="input-container">
 			<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
 			{#if showNameSubmitBtn}

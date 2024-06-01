@@ -9,7 +9,8 @@
 		ICON_QA,
 		ICON_BANNER,
 		ICON_CHAT_LIVE,
-		ICON_CHAT_MODERATION
+		ICON_CHAT_MODERATION,
+		ICON_SCREEN
 	} from './sidebars/sidebar-icons';
 
 	import {
@@ -24,6 +25,7 @@
 		SidebarParticipant
 	} from './sidebars/sidebar-unit';
 	import { currentSidebar, type SidebarKey } from '$lib/stores/sidebar.store';
+	import SidebarScreen from './sidebars/sidebar-unit/SidebarScreen.svelte';
 
 	type SidebarSmall = {
 		[index in SidebarKey]: {
@@ -35,11 +37,11 @@
 	};
 
 	const sidebarSmall: SidebarSmall = {
-		// setting: {
-		// 	label: "Setting",
-		// 	icon: ICON_SETTINGS,
-		// 	sidebar: SidebarSetting
-		// },
+		screen: {
+			label: 'Screen',
+			icon: ICON_SCREEN,
+			sidebar: SidebarScreen
+		},
 		participants: {
 			label: 'Participants',
 			icon: ICON_PARTICIPANTS,

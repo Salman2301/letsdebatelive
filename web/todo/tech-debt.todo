@@ -52,5 +52,5 @@ Optimization:
 
 Database:
   ☐ Merge all the migrations
+    ☐ All database function name must be sentence case
   ☐ Look for the Index and Audit
-  

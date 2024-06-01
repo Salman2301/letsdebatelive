@@ -257,6 +257,58 @@ export type Database = {
 					}
 				];
 			};
+			live_debate_invite_co_host: {
+				Row: {
+					created_at: string;
+					email: string;
+					id: string;
+					invited_by: string;
+					live_debate: string;
+					status: string;
+					team: string | null;
+				};
+				Insert: {
+					created_at?: string;
+					email: string;
+					id?: string;
+					invited_by: string;
+					live_debate: string;
+					status: string;
+					team?: string | null;
+				};
+				Update: {
+					created_at?: string;
+					email?: string;
+					id?: string;
+					invited_by?: string;
+					live_debate?: string;
+					status?: string;
+					team?: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_debate_invite_co_host_invited_by_live_debate_fkey';
+						columns: ['invited_by', 'live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate_participants';
+						referencedColumns: ['participant_id', 'live_debate'];
+					},
+					{
+						foreignKeyName: 'live_debate_invite_co_host_live_debate_fkey';
+						columns: ['live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_debate_invite_co_host_team_fkey';
+						columns: ['team'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate_team';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			live_debate_kick: {
 				Row: {
 					created_at: string;
@@ -349,7 +401,6 @@ export type Database = {
 					hand_raised: boolean | null;
 					hand_raised_at: string | null;
 					host_id: string | null;
-					is_host: boolean;
 					is_kicked: boolean | null;
 					live_debate: string;
 					location: Database['public']['Enums']['participant_location'];
@@ -358,6 +409,7 @@ export type Database = {
 					mic_id: string | null;
 					participant_id: string;
 					profile_image_enable: boolean | null;
+					role: Database['public']['Enums']['role'];
 					screenshare_available: boolean | null;
 					screenshare_enable: boolean | null;
 					speaker_available: boolean | null;
@@ -375,7 +427,6 @@ export type Database = {
 					hand_raised?: boolean | null;
 					hand_raised_at?: string | null;
 					host_id?: string | null;
-					is_host: boolean;
 					is_kicked?: boolean | null;
 					live_debate: string;
 					location: Database['public']['Enums']['participant_location'];
@@ -384,6 +435,7 @@ export type Database = {
 					mic_id?: string | null;
 					participant_id?: string;
 					profile_image_enable?: boolean | null;
+					role: Database['public']['Enums']['role'];
 					screenshare_available?: boolean | null;
 					screenshare_enable?: boolean | null;
 					speaker_available?: boolean | null;
@@ -401,7 +453,6 @@ export type Database = {
 					hand_raised?: boolean | null;
 					hand_raised_at?: string | null;
 					host_id?: string | null;
-					is_host?: boolean;
 					is_kicked?: boolean | null;
 					live_debate?: string;
 					location?: Database['public']['Enums']['participant_location'];
@@ -410,6 +461,7 @@ export type Database = {
 					mic_id?: string | null;
 					participant_id?: string;
 					profile_image_enable?: boolean | null;
+					role?: Database['public']['Enums']['role'];
 					screenshare_available?: boolean | null;
 					screenshare_enable?: boolean | null;
 					speaker_available?: boolean | null;
@@ -444,42 +496,6 @@ export type Database = {
 						columns: ['team'];
 						isOneToOne: false;
 						referencedRelation: 'live_debate_team';
-						referencedColumns: ['id'];
-					}
-				];
-			};
-			live_debate_roles: {
-				Row: {
-					created_at: string;
-					live_debate: string;
-					role: Database['public']['Enums']['roles'];
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					live_debate: string;
-					role: Database['public']['Enums']['roles'];
-					user_id: string;
-				};
-				Update: {
-					created_at?: string;
-					live_debate?: string;
-					role?: Database['public']['Enums']['roles'];
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'live_debate_roles_live_debate_fkey';
-						columns: ['live_debate'];
-						isOneToOne: false;
-						referencedRelation: 'live_debate';
-						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'live_debate_roles_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					}
 				];
@@ -844,13 +860,13 @@ export type Database = {
 				Args: Record<PropertyKey, never>;
 				Returns: string;
 			};
-			user_atleast_co_host_role: {
+			user_atleast_co_host: {
 				Args: {
 					live_debate_id: string;
 				};
 				Returns: boolean;
 			};
-			user_atleast_mod_role: {
+			user_atleast_mod: {
 				Args: {
 					live_debate_id: string;
 				};
@@ -886,7 +902,7 @@ export type Database = {
 				| 'question_answer'
 				| 'activity_feed';
 			participant_location: 'stage' | 'backstage';
-			roles: 'host' | 'co-host' | 'mod' | 'guest';
+			role: 'host' | 'co-host' | 'mod' | 'guest';
 		};
 		CompositeTypes: {
 			[_ in never]: never;

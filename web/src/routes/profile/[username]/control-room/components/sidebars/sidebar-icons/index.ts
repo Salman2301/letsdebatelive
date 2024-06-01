@@ -8,3 +8,4 @@ export { default as ICON_QA } from './ICON_QA.svelte';
 export { default as ICON_BANNER } from './ICON_BANNER.svelte';
 export { default as ICON_CHAT_LIVE } from './ICON_CHAT_LIVE.svelte';
 export { default as ICON_CHAT_MODERATION } from './ICON_CHAT_MODERATION.svelte';
+export { default as ICON_SCREEN } from './ICON_SCREEN.svelte';

@@ -62,6 +62,14 @@
 
 	const supabase = getSupabase();
 
+	const pageCtx = new PageCtx('new-debate');
+	const liveDebate = pageCtx.get('liveDebate');
+	const teams = pageCtx.get('teams');
+	const hostParticipant = pageCtx.get('hostParticipant');
+
+	let hostDisplayName = $state($hostParticipant?.display_name || $authUserData?.displayName || "");
+	let hostTeamId = $state($hostParticipant?.team || null);
+
 	async function getDevices(): Promise<SelectOptions[]> {
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -271,11 +279,6 @@
 		micIsPlaying = !micIsPlaying;
 	}
 
-	const pageCtx = new PageCtx('new-debate');
-	const liveDebate = pageCtx.get('liveDebate');
-	const teams = pageCtx.get('teams');
-	const hostParticipant = pageCtx.get('hostParticipant');
-
 	export async function beforeOnNext() {
 		try {
 			// add host to the current  participants table
@@ -285,10 +288,8 @@
 				// Move this after the user created team
 				const { data: hostData, error: hostError } = await supabase
 					.from('live_debate_participants')
-					.upsert([
-						{
-							live_debate: $liveDebate.id as string,
-							is_host: true,
+					.update({
+							// ...hostParticipant,
 
 							cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
 							mic_available: kindMapDevices.audioinput.length > 0,
@@ -302,10 +303,12 @@
 							cam_id: webCamDeviceId,
 							speaker_id: speakerDeviceId,
 							mic_id: micDeviceId,
-							display_name: 'Host',
-							location: 'stage'
-						}
-					])
+							
+							display_name: hostDisplayName,
+							team: hostTeamId
+						})
+					.eq('live_debate', $liveDebate.id)
+					.eq('participant_id', $hostParticipant?.participant_id!)
 					.select();
 
 				if (hostError || !hostData) {
@@ -336,14 +339,14 @@
 				title="Display name"
 				width="240px"
 				placeholder="Enter title for your live debate"
-				value={$authUserData?.displayName || ''}
+				bind:value={hostDisplayName}
 			/>
 		</div>
 
 		<Label label="Team">
-			<select name="team" class="team-select">
+			<select name="team" class="team-select" bind:value={hostTeamId} >
 				{#each $teams as team}
-					<option value={team.slug}>{team.title}</option>
+					<option value={team.id}>{team.title}</option>
 				{/each}
 			</select>
 		</Label>
