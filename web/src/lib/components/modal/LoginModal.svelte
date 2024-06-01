@@ -9,9 +9,9 @@
 	import { getSupabase } from '$lib/supabase';
 	import { closeModal, currentModal } from './modal.store';
 	import { onMount, getContext } from 'svelte';
-	import { hasErrorParse } from '$lib/utils/type';
+	import { hasErrorParse } from '$lib/utils/type.utils';
 	import { newToast } from '../toast/Toast.svelte';
-	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
+	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx.utils';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { authUserData } from '$lib/stores/auth.store';
 

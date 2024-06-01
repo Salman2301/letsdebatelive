@@ -4,7 +4,7 @@
 	import BigButton from '$lib/components/button/BigButton.svelte';
 	import { closeModal, currentModal } from './modal.store';
 	import { z } from 'zod';
-	import { hasErrorParse } from '$lib/utils/type';
+	import { hasErrorParse } from '$lib/utils/type.utils';
 	import ZodError from '../form/ZodError.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';

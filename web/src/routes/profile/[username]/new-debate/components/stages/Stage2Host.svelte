@@ -7,7 +7,7 @@
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
 
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
@@ -23,6 +23,16 @@
 		DeviceSpeakerDisabled
 	} from '$src/lib/components/icon';
 	import { PageCtx } from '$src/lib/context';
+	import { getDevices } from '$lib/utils/media.utils';
+	import {
+		micDeviceId,
+		micEnabled,
+		micWavPercent,
+		speakerDeviceId,
+		speakerEnabled,
+		speakerIsPlaying
+	} from '$src/lib/stores/media.store';
+	import { extractAndPlay } from '$lib/utils/sampleSound.utils';
 
 	let errorWebcamFeed: string = $state('');
 	let errorScreenShareFeed: string = $state('');
@@ -32,22 +42,6 @@
 	let webCamDeviceId: string = $state('');
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
-
-	let micVolume = $state(0);
-	let micDeviceId: string = $state('default');
-
-	let micCtx: AudioContext;
-	let micStream: MediaStream | null;
-	let currentMicSource: MediaStreamAudioSourceNode;
-	let clearIntervalMic: NodeJS.Timeout;
-
-	let speakerCtx: AudioContext;
-	let speakerDeviceId: string = $state('default');
-	let speakerNode: GainNode;
-	let audioBuffer: AudioBufferSourceNode | null;
-
-	let speakerIsPlaying = $state(false);
-	let micIsPlaying = $state(false);
 
 	let kindMapDevices: Record<MediaDeviceKind, MediaDeviceInfo[]> = $state({
 		audioinput: [],
@@ -67,28 +61,8 @@
 	const teams = pageCtx.get('teams');
 	const hostParticipant = pageCtx.get('hostParticipant');
 
-	let hostDisplayName = $state($hostParticipant?.display_name || $authUserData?.displayName || "");
+	let hostDisplayName = $state($hostParticipant?.display_name || $authUserData?.displayName || '');
 	let hostTeamId = $state($hostParticipant?.team || null);
-
-	async function getDevices(): Promise<SelectOptions[]> {
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-		const devices = await navigator.mediaDevices.enumerateDevices();
-		devices.sort((a, b) => (a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1));
-
-		for (const key of Object.keys(kindMapDevices)) {
-			kindMapDevices[key as MediaDeviceKind] = devices.filter((device) => device.kind === key);
-		}
-
-		// We need to call getUserMedia media in order to enumerateDevices with labels.
-		// Then we have to stop the audio track, since Firefox thinks we're still using
-		// the stream if we try to switch devices later.
-		for (const track of stream.getAudioTracks()) {
-			track.stop();
-		}
-
-		return devices.map((e) => ({ label: e.label, value: e.deviceId }));
-	}
 
 	async function toggleWebCam() {
 		try {
@@ -169,114 +143,18 @@
 	}
 
 	onMount(async () => {
-		micCtx = new (window.AudioContext || window.webkitAudioContext)();
-		speakerCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-		await getDevices();
-
-		micAnalyser();
+		kindMapDevices = await getDevices();
 		webCamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
-
-		speakerNode = speakerCtx.createGain();
-		speakerNode.connect(speakerCtx.destination);
-
-		document.addEventListener(
-			'click',
-			() => {
-				if (micCtx.state === 'suspended') micCtx.resume();
-				if (speakerCtx.state === 'suspended') speakerCtx.resume();
-			},
-			{ once: true }
-		);
+		$speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
+		$micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
 	});
 
-	let decodedAudioData: AudioBuffer;
-	async function getDecodedAudioData(): Promise<AudioBuffer> {
-		if (decodedAudioData) return decodedAudioData;
-		const audioData = await fetch('/sounds/test/guitar.mp3').then((resp) => resp.arrayBuffer());
-		decodedAudioData = await speakerCtx.decodeAudioData(audioData);
-		return decodedAudioData;
-	}
-
-	async function micAnalyser() {
-		if (micStream) {
-			await Promise.all(micStream.getTracks().map((track) => track.stop()));
-			micStream = null;
-			clearInterval(clearIntervalMic);
-			currentMicSource?.disconnect?.();
-		}
-
-		micStream = await navigator.mediaDevices.getUserMedia({
-			audio: { deviceId: micDeviceId, echoCancellation: true }
-		});
-
-		currentMicSource = micCtx.createMediaStreamSource(micStream);
-
-		let analyser = micCtx.createAnalyser();
-
-		analyser.fftSize = 32;
-		let analyserData = new Uint8Array(analyser.frequencyBinCount);
-
-		currentMicSource.connect(analyser);
-
-		function getAnalyserLevel() {
-			analyser.getByteFrequencyData(analyserData);
-			let sum = 0;
-			for (let i = 0; i < analyserData.length; i++) {
-				sum += analyserData[i] / 255;
-			}
-			sum = sum / analyserData.length;
-			return sum;
-		}
-
-		function updateValue() {
-			micVolume = getAnalyserLevel();
-			clearIntervalMic = setTimeout(updateValue, 30);
-		}
-
-		updateValue();
-	}
-
-	async function toggleSound() {
-		if (audioBuffer) {
-			audioBuffer.stop();
-			audioBuffer = null;
-			speakerIsPlaying = false;
-			return;
-		}
-		audioBuffer = speakerCtx.createBufferSource();
-
-		let decodedAudioData = await getDecodedAudioData();
-		audioBuffer.buffer = decodedAudioData;
-
-		audioBuffer.connect(speakerNode);
-
-		audioBuffer.onended = () => {
-			speakerIsPlaying = false;
-		};
-
-		speakerIsPlaying = true;
-		audioBuffer.start();
-	}
-
-	function handleSpeakerChange() {
-		speakerNode.disconnect();
-		const dest = speakerCtx.createMediaStreamDestination();
-		speakerNode.connect(dest);
-
-		const audioOutput = new Audio();
-		audioOutput.srcObject = dest.stream;
-		audioOutput.setSinkId(speakerDeviceId);
-
-		audioOutput.play();
-	}
-
 	function toggleSpeaker() {
-		speakerIsPlaying = !speakerIsPlaying;
+		$speakerEnabled = !$speakerEnabled;
 	}
 
 	function toggleMic() {
-		micIsPlaying = !micIsPlaying;
+		$micEnabled = !$micEnabled;
 	}
 
 	export async function beforeOnNext() {
@@ -289,24 +167,22 @@
 				const { data: hostData, error: hostError } = await supabase
 					.from('live_debate_participants')
 					.update({
-							// ...hostParticipant,
+						cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
+						mic_available: kindMapDevices.audioinput.length > 0,
+						speaker_available: kindMapDevices.audiooutput.length > 0,
+						screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
 
-							cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
-							mic_available: kindMapDevices.audioinput.length > 0,
-							speaker_available: kindMapDevices.audiooutput.length > 0,
-							screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
+						cam_enable: webcamFeedPlaying,
+						mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
+						speaker_enable: kindMapDevices.audiooutput.length > 0,
 
-							cam_enable: webcamFeedPlaying,
-							mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
-							speaker_enable: kindMapDevices.audiooutput.length > 0,
+						cam_id: webCamDeviceId,
+						speaker_id: $speakerDeviceId,
+						mic_id: $micDeviceId!,
 
-							cam_id: webCamDeviceId,
-							speaker_id: speakerDeviceId,
-							mic_id: micDeviceId,
-							
-							display_name: hostDisplayName,
-							team: hostTeamId
-						})
+						display_name: hostDisplayName,
+						team: hostTeamId
+					})
 					.eq('live_debate', $liveDebate.id)
 					.eq('participant_id', $hostParticipant?.participant_id!)
 					.select();
@@ -344,7 +220,7 @@
 		</div>
 
 		<Label label="Team">
-			<select name="team" class="team-select" bind:value={hostTeamId} >
+			<select name="team" class="team-select" bind:value={hostTeamId}>
 				{#each $teams as team}
 					<option value={team.id}>{team.title}</option>
 				{/each}
@@ -354,7 +230,7 @@
 		<div class="flex justify-center my-2">
 			<div class="main-buttons">
 				<button onclick={toggleSpeaker} class="btn-main-icon">
-					{#if speakerIsPlaying}
+					{#if $speakerEnabled}
 						<DeviceSpeaker />
 					{:else}
 						<DeviceSpeakerDisabled />
@@ -362,7 +238,7 @@
 				</button>
 
 				<button onclick={toggleMic} class="btn-main-icon">
-					{#if micIsPlaying}
+					{#if $micEnabled}
 						<DeviceMic />
 					{:else}
 						<DeviceMicDisabled />
@@ -448,34 +324,29 @@
 	<div class="audio-mic-container">
 		<Heading3 content="MICROPHONE" />
 		<div class="audio-select-container">
-			<select class="device-select select-audio" bind:value={micDeviceId} onchange={micAnalyser}>
+			<select class="device-select select-audio" bind:value={$micDeviceId}>
 				{#each kindMapDevices['audioinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
 			</select>
 
-			<VolumeProgress percent={micVolume} bar={36} />
+			<VolumeProgress percent={$micWavPercent} bar={36} />
 		</div>
 	</div>
 
 	<div class="audio-speaker-container">
 		<Heading3 content="SPEAKER" />
 		<div class="audio-select-container">
-			<select
-				class="device-select select-audio"
-				bind:value={speakerDeviceId}
-				onchange={handleSpeakerChange}
-			>
+			<select class="device-select select-audio" bind:value={$speakerDeviceId}>
 				{#each kindMapDevices['audiooutput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{/each}
 			</select>
-
 			<Button
-				label={speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
-				onclick={toggleSound}
-				color={speakerIsPlaying ? 'accent-red' : 'secondary'}
-				fillType={speakerIsPlaying ? 'solid' : 'outline-solid'}
+				label={$speakerIsPlaying ? 'Playing... Stop?' : 'Play Sound'}
+				onclick={extractAndPlay}
+				color={$speakerIsPlaying ? 'accent-red' : 'secondary'}
+				fillType={$speakerIsPlaying ? 'solid' : 'outline-solid'}
 			/>
 		</div>
 	</div>

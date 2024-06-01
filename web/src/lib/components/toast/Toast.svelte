@@ -25,7 +25,7 @@
 
 <script lang="ts">
 	import ToastItem from './ToastItem.svelte';
-	import { genId } from '$lib/utils/gen';
+	import { genId } from '$lib/utils/gen.utils';
 </script>
 
 <div class="toast-container">

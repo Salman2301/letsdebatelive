@@ -2,6 +2,8 @@
 	import Button from '$src/lib/components/button/Button.svelte';
 	import Input from '$src/lib/components/form/input/Input.svelte';
 	import CloseX from '$src/lib/components/icon/CloseX.svelte';
+	import Label from '$src/lib/components/form/input/Label.svelte';
+
 
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { PageCtx } from '$src/lib/context';
@@ -9,6 +11,7 @@
 	import { z } from 'zod';
 	import { getSupabase } from '$src/lib/supabase';
 	
+
 	import type { Tables } from '$src/lib/schema/database.types';
 
 	const supabase = getSupabase();
@@ -99,17 +102,19 @@
 			<div class="inputs-container">
 				<Input
 					rounded="sm"
-					title="Co-host"
+					title="Email"
 					type="email"
 					width="440px"
 					bind:value={email}
 					placeholder="Enter email address"
 				/>
-				<select class="team-select" style="width: 240px" bind:value={team}>
-					{#each $teams as team}
-						<option value={team.id}>{team.title}</option>
-					{/each}
-				</select>
+				<Label label="Team">
+					<select class="team-select" style="width: 240px" bind:value={team}>
+						{#each $teams as team}
+							<option value={team.id}>{team.title}</option>
+						{/each}
+					</select>
+				</Label>
 			</div>
 			<div class="self-end">
 				<Button label="Add Co-host" width={240} color="secondary" onclick={handleSubmit} />
@@ -141,6 +146,7 @@
 		width: 180px;
 		height: 46px;
 		@apply bg-primary-dark;
+		@apply px-4;
 	}
 
 	.team-select:hover {

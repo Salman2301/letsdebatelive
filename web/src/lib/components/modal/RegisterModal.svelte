@@ -4,9 +4,9 @@
 	import BigButton from '$lib/components/button/BigButton.svelte';
 	import { closeModal, currentModal } from './modal.store';
 	import { z } from 'zod';
-	import { hasErrorParse } from '$lib/utils/type';
+	import { hasErrorParse } from '$lib/utils/type.utils';
 	import ZodError from '../form/ZodError.svelte';
-	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx';
+	import { REGEX_PASSWORD_VALIDATION } from '$lib/utils/regEx.utils';
 	import InPassword from '../form/input/InPassword.svelte';
 	import { getContext, onMount } from 'svelte';
 	import { newToast } from '../toast/Toast.svelte';

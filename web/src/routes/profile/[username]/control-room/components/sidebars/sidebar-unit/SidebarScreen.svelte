@@ -1,11 +1,12 @@
 <script lang="ts">
-	import Heading3 from "$src/lib/components/form/Heading3.svelte";
-
+	import Heading2 from "$src/lib/components/form/Heading2.svelte";
  
 </script>
 
-<Heading3 content="Screen" />
+<div class="p-4">
+	<Heading2 content="Screen" />
 
+</div>
 <style lang="postcss">
 
 </style>

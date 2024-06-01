@@ -4,11 +4,12 @@
 	import { getSupabase } from '$lib/supabase';
 	import { writable } from 'svelte/store';
 	import { browser } from '$app/environment';
-	import { onMount, getContext } from 'svelte';
+	import { onMount} from 'svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { goto } from '$app/navigation';
 	import { PageCtx } from '$src/lib/context';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
+
 	import type { Tables } from '$src/lib/schema/database.types';
 
 	let isLoading: boolean = true;
@@ -94,7 +95,7 @@
 		}
 
 		if ($liveDebate === null) {
-			goto('/error=FAILED_TO_CREATE_OR_FETCH_LIVE_DEBATE');
+			goto('/?error=FAILED_TO_CREATE_OR_FETCH_LIVE_DEBATE');
 		}
 
 		isLoading = false;
@@ -130,7 +131,6 @@
 				role: 'host',
 				live_debate: newLiveDebate[0].id,
 				display_name: $authUserData.displayName || "",
-				is_host: true,
 				location: "stage",
 			})
 			.select();

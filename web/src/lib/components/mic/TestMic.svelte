@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AudioDeviceManager } from '$lib/utils/audioManager';
+	import { AudioDeviceManager } from '$lib/utils/audioManager.utils';
 	import { onMount } from 'svelte';
 	import VolumeProgress from './VolumeProgress.svelte';
 
