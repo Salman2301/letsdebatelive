@@ -3,6 +3,9 @@ KNOWN BUGS:
     ✔ Login user have to refresh to update the UI @done(24-05-30 01:18)
     ✔ Register user have to refresh to update the UI @done(24-05-30 01:19)
 
+✔ Extract function is space left @done(24-06-01 18:03)
+
+
 Modal:
   ✔ User device setup and test @done(24-05-31 23:54)
 

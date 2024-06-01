@@ -856,6 +856,12 @@ export type Database = {
 			[_ in never]: never;
 		};
 		Functions: {
+			is_space_left: {
+				Args: {
+					live_debate_id: string;
+				};
+				Returns: boolean;
+			};
 			turn_on_realtime: {
 				Args: Record<PropertyKey, never>;
 				Returns: string;
