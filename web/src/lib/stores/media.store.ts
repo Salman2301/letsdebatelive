@@ -41,7 +41,10 @@ export const micWavPercent: Writable<number> = writable(0);
 let clearIntervalMic: NodeJS.Timeout;
 let currentMicSource: MediaStreamAudioSourceNode;
 
-micEnabled.subscribe(setMicrophoneStream);
+micEnabled.subscribe(($micEnabled) => {
+  setMicrophoneStream();
+  if(!$micEnabled) micWavPercent.set(0);
+});
 
 export function initCtx() {
   // Browser require mouse event to enable mic and speaker context.
