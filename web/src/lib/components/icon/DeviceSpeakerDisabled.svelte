@@ -8,4 +8,5 @@
 		stroke-linejoin="round"
 	/>
 	<path d="M21 13L25 17M25 13L21 17" stroke="white" stroke-linecap="round" />
+	<path d="M7 7.25L21 22.25" stroke="#FF0000" stroke-width="2" stroke-linecap="round" />
 </svg>
