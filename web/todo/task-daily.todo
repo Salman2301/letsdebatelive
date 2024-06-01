@@ -1,5 +1,8 @@
+Extract function is space left
+
+
 TODO:
-  Missing core-feature:
+  New Debate:
     ☐ Invite co-host
       ☐ Invite user by email
       ☐ Display name
@@ -7,7 +10,12 @@ TODO:
       ☐ Select a team
     
     ☐ Screen sidebar
-    ☐ Sidebar
+
+    
+
+    Sidebar:
+      Bulk Action:
+        ☐ Have a dropdown that says include / exclude co-host
       ☐ Background
       ☐ Logo
       ☐ Scene change
@@ -22,22 +30,29 @@ TODO:
           ☐ Upload
         ☐ logo upload and corner selection
 
+    Stream: 
+      ☐ WebRTC 
+      ☐ live RTMP docker stream
+      ☐ start and stop
+      ☐ speed test
+      ☐ Stream recording server
+      ☐ Test stream
+      ☐ Health check
+    
+    Sidebar:
+      ☐ banner
+      ☐ live-chat
 
-    ☐ WebRTC 
-    ☐ live RTMP docker stream
-    ☐ start and stop
-    ☐ speed test
-    ☐ Stream recording server
 
-    ☐ overlay
-    ☐ banner
-    ☐ live-chat
-
-    ☐ Test stream
-    ☐ Health check
-
-    ☐ Mux Integration frontend
-    ☐ integrations to youtube and twitch
+    Integration:
+      ☐ Mux Integration frontend
+      ☐ integrations
+        ☐ Youtube
+        ☐ Facebook
+        ☐ Twitch
+        ☐ Twitter
+        ☐ LinkedIn
+        ☐ Instagram
 
     - Full-tutorial
     - Private stream
