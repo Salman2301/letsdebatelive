@@ -52,7 +52,9 @@
 			.update({ is_default: false })
 			.eq('live_debate', $live_debate.id);
 
-		await supabase.from('live_debate_team').update({ is_default: true }).eq('id', team.id);
+		if (!team.is_default) {
+			await supabase.from('live_debate_team').update({ is_default: true }).eq('id', team.id);
+		}
 
 		onsubmit?.();
 		showSubmitBtn = false;

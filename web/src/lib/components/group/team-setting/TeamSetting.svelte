@@ -12,6 +12,8 @@
 
 	const supabase = getSupabase();
 
+	let inputRef: HTMLInputElement;
+
 	interface Props {
 		live_debate: Writable<Tables<'live_debate'> | null>;
 		teams: Writable<Tables<'live_debate_team'>[]>;
@@ -50,6 +52,7 @@
 		});
 		newTeamValue = '';
 		refreshTeamData();
+		inputRef?.focus?.();
 	}
 
 	function getAvailableColor(): string {
@@ -91,6 +94,7 @@
 		placeholder="+ Create new team"
 		bind:value={newTeamValue}
 		onkeydown={onKeydownChange}
+		bind:this={inputRef}
 	/>
 
 	<button class="btn-new-team" onclick={newTeam} class:hidden={!showSubmitBtn}>
