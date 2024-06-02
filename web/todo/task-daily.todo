@@ -16,6 +16,11 @@ TODO:
     ☐ Screen share feed
   So, different video element can tap into the stream, 
 
+  ☐ Flow
+    ☐ User can have only one active live debate
+    ☐ Redirect the user to non-live page if the user is not live atm
+    
+
   ☐ Create a webRTC group feed stream
     ☐ Each participant can have their own stream
 

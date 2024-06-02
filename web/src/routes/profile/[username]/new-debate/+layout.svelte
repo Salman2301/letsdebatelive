@@ -12,7 +12,7 @@
 
 	import type { Tables } from '$src/lib/schema/database.types';
 
-	let isLoading: boolean = true;
+	let isLoading: boolean = $state(true);
 
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('new-debate');
@@ -35,19 +35,19 @@
 			sessionStorage.setItem('store$liveDebateId', $liveDebate.id);
 	});
 
+	let { data } = $props();
+
 	onMount(async () => {
-		if (!$authUserData?.id) {
-			goto('/?error=FAILED_LIVE_DEBATE_NO_USER');
-			return;
-		}
-		const { data, error } = await supabase
+		if (!$authUserData?.id) $authUserData = data.userData;
+
+		const { data: liveDebateEndedData, error: errorData } = await supabase
 			.from('live_debate')
 			.select('*')
 			.eq('ended', false)
 			.eq('host', $authUserData?.id!);
 
-		if (error) {
-			console.error(error);
+		if (errorData) {
+			console.error(errorData);
 			goto('/?error=FAILED_LIVE_DEBATE_DB_ERROR');
 			return;
 		}

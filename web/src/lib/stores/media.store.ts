@@ -139,7 +139,6 @@ async function micAnalyser($micStream: MediaStream | null) {
   }
 
   function updateWaveLoop() {
-    console.log("mic update")
     micWavPercent.set(getAnalyserLevel());
     clearIntervalMic = setTimeout(updateWaveLoop, 60);
   }
