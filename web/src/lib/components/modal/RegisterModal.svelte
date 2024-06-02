@@ -12,7 +12,7 @@
 	import { newToast } from '../toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 	import { authUserData } from '../../stores/auth.store';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	const form = {
 		email: '',
@@ -66,6 +66,7 @@
 				.eq('id', res.data.user.id);
 			if (userData?.[0]) $authUserData = userData?.[0];
 			invalidateAll();
+			window.location.href = window.location.href;
 			isLoading = false;
 			closeModal();
 		} catch (e) {
