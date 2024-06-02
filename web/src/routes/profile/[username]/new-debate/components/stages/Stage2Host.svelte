@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
+	import Heading2 from '$src/lib/components/form/Heading2.svelte';
 	import Input from '$src/lib/components/form/input/Input.svelte';
 	import Label from '$src/lib/components/form/input/Label.svelte';
 	import NoFeedCard from '$lib/components/feed/NoFeedCard.svelte';
@@ -25,21 +26,32 @@
 	import { PageCtx } from '$src/lib/context';
 	import { getDevices } from '$lib/utils/media.utils';
 	import {
+		errorScreenShareFeed,
+		errorWebcamFeed,
+
+		toggleMedia,
+
 		micDeviceId,
 		micEnabled,
 		micWavPercent,
+
+		screenShareEnable,
+		screenShareStream,
+
 		speakerDeviceId,
 		speakerEnabled,
-		speakerIsPlaying
+		speakerIsPlaying,
+
+		webcamDeviceId,
+		webcamEnable,
+		webcamStream,
+
+		webcamIsPlaying,
+		screenShareIsPlaying
 	} from '$src/lib/stores/media.store';
 	import { extractAndPlay } from '$lib/utils/sampleSound.utils';
 
-	let errorWebcamFeed: string = $state('');
-	let errorScreenShareFeed: string = $state('');
-	let webcamFeedPlaying: boolean = $state(false);
-	let screenSharePlaying: boolean = $state(false);
 
-	let webCamDeviceId: string = $state('');
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
 
@@ -48,11 +60,6 @@
 		videoinput: [],
 		audiooutput: []
 	});
-
-	interface SelectOptions {
-		label: string;
-		value: string;
-	}
 
 	const supabase = getSupabase();
 
@@ -64,98 +71,35 @@
 	let hostDisplayName = $state($hostParticipant?.display_name || $authUserData?.displayName || '');
 	let hostTeamId = $state($hostParticipant?.team || null);
 
-	async function toggleWebCam() {
-		try {
-			if (!webcamFeedPlaying) {
-				await playWebCam();
-				webcamFeedPlaying = true;
-			} else {
-				if (videoInstance && videoInstance.srcObject) {
-					const streams = videoInstance.srcObject as MediaStream;
-					streams.getTracks().forEach((str) => str.stop());
-				}
-				webcamFeedPlaying = false;
-			}
-		} catch (e) {
-			console.error(e);
-			webcamFeedPlaying = false;
-		}
-	}
-
-	async function toggleScreenShare() {
-		try {
-			if (!screenSharePlaying) {
-				await playScreenShare();
-				screenSharePlaying = true;
-			} else {
-				if (videoScreenShareInstance && videoScreenShareInstance.srcObject) {
-					const streams = videoScreenShareInstance.srcObject as MediaStream;
-					streams.getTracks().forEach((str) => str.stop());
-				}
-				screenSharePlaying = false;
-			}
-		} catch (e) {
-			console.error(e);
-			screenSharePlaying = false;
-		}
-	}
-
-	async function playScreenShare() {
-		try {
-			let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
-			if (feedNotAvailable) errorScreenShareFeed = 'Unsupported browser try different browser';
-
-			const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-			errorScreenShareFeed = '';
-			videoScreenShareInstance.srcObject = stream;
-			videoScreenShareInstance.play();
-
-			stream.getVideoTracks()[0].onended = function () {
-				screenSharePlaying = false;
-			};
-		} catch (e) {
-			errorScreenShareFeed = 'Permission denied!';
-			console.error(e);
-			throw e;
-		}
-	}
-
-	async function playWebCam() {
-		try {
-			let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-			if (feedNotAvailable) errorWebcamFeed = 'Unsupported browser try different browser';
-
-			const stream = await navigator.mediaDevices.getUserMedia({
-				video: { deviceId: webCamDeviceId }
-			});
-			errorWebcamFeed = '';
+	webcamStream.subscribe((stream) => {
+		if (stream && videoInstance) {
 			videoInstance.srcObject = stream;
 			videoInstance.play();
-
-			stream.getVideoTracks()[0].onended = function () {
-				webcamFeedPlaying = false;
-			};
-		} catch (e) {
-			errorWebcamFeed = 'Permission denied!';
-			console.error(e);
-			throw e;
 		}
-	}
+	});
+	screenShareStream.subscribe((stream) => {
+		if (stream && videoInstance) {
+			videoScreenShareInstance.srcObject = stream;
+			videoScreenShareInstance.play();
+		}
+	});
 
 	onMount(async () => {
 		kindMapDevices = await getDevices();
-		webCamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
-		$speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
-		$micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
+		if(!$webcamDeviceId) $webcamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
+		if(!$speakerDeviceId) $speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
+		if(!$micDeviceId) $micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
+
+		if($webcamStream) {
+			videoInstance.srcObject = $webcamStream;
+			videoInstance.play();
+		}
+
+		if ($screenShareStream) {
+			videoScreenShareInstance.srcObject = $screenShareStream;
+			videoScreenShareInstance.play();
+		}
 	});
-
-	function toggleSpeaker() {
-		$speakerEnabled = !$speakerEnabled;
-	}
-
-	function toggleMic() {
-		$micEnabled = !$micEnabled;
-	}
 
 	export async function beforeOnNext() {
 		try {
@@ -167,16 +111,16 @@
 				const { data: hostData, error: hostError } = await supabase
 					.from('live_debate_participants')
 					.update({
-						cam_available: Boolean(errorWebcamFeed || webcamFeedPlaying),
+						cam_available: Boolean($errorWebcamFeed || $webcamEnable),
 						mic_available: kindMapDevices.audioinput.length > 0,
 						speaker_available: kindMapDevices.audiooutput.length > 0,
-						screenshare_available: Boolean(errorScreenShareFeed || screenSharePlaying),
+						screenshare_available: Boolean($errorScreenShareFeed || $screenShareEnable),
 
-						cam_enable: webcamFeedPlaying,
+						cam_enable: $webcamEnable,
 						mic_enable: kindMapDevices.audioinput.length > 0, // TODO: set it as mute or unmute
 						speaker_enable: kindMapDevices.audiooutput.length > 0,
 
-						cam_id: webCamDeviceId,
+						cam_id: $webcamDeviceId,
 						speaker_id: $speakerDeviceId,
 						mic_id: $micDeviceId!,
 
@@ -229,7 +173,7 @@
 
 		<div class="flex justify-center my-2">
 			<div class="main-buttons">
-				<button onclick={toggleSpeaker} class="btn-main-icon">
+				<button onclick={()=>toggleMedia("speaker")} class="btn-main-icon">
 					{#if $speakerEnabled}
 						<DeviceSpeaker />
 					{:else}
@@ -237,22 +181,22 @@
 					{/if}
 				</button>
 
-				<button onclick={toggleMic} class="btn-main-icon">
+				<button onclick={()=>toggleMedia("mic")} class="btn-main-icon">
 					{#if $micEnabled}
 						<DeviceMic />
 					{:else}
 						<DeviceMicDisabled />
 					{/if}
 				</button>
-				<button onclick={toggleWebCam} class="btn-main-icon">
-					{#if webcamFeedPlaying}
+				<button onclick={()=>toggleMedia("webcam")} class="btn-main-icon">
+					{#if $webcamEnable}
 						<DeviceCamera />
 					{:else}
 						<DeviceCameraDisabled />
 					{/if}
 				</button>
-				<button onclick={toggleScreenShare} class="btn-main-icon">
-					{#if screenSharePlaying}
+				<button onclick={()=>toggleMedia("screenShare")} class="btn-main-icon">
+					{#if $screenShareEnable}
 						<DeviceScreen />
 					{:else}
 						<DeviceScreenDisabled />
@@ -263,11 +207,15 @@
 	</div>
 </div>
 
+<div class="my-4">
+	<Heading2 content="Adavance setup" textAlign="center"></Heading2>
+</div>
+
 <div class="video-feed">
 	<div class="video-title-container">
 		<div class="video-container">
-			{#if !webcamFeedPlaying}
-				<NoFeedCard label="No web camera feed" feedType="profile" onclick={toggleWebCam} />
+			{#if !$webcamIsPlaying}
+				<NoFeedCard label="No web camera feed" feedType="profile" onclick={()=>toggleMedia("webcam")} />
 			{/if}
 
 			<video bind:this={videoInstance} class="video-el" autoplay playsinline>
@@ -275,14 +223,14 @@
 			</video>
 		</div>
 		<div class="header">
-			<button onclick={toggleWebCam} class="btn-icon">
-				{#if webcamFeedPlaying}
+			<button onclick={()=>toggleMedia("webcam")} class="btn-icon">
+				{#if $webcamEnable}
 					<DeviceCamera />
 				{:else}
 					<DeviceCameraDisabled />
 				{/if}
 			</button>
-			<select class="device-select" bind:value={webCamDeviceId}>
+			<select class="device-select" bind:value={$webcamDeviceId}>
 				{#each kindMapDevices['videoinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{:else}
@@ -290,7 +238,7 @@
 				{/each}
 			</select>
 			<div class="info-btn">
-				<BubbleError show={!!errorWebcamFeed} message={errorWebcamFeed} />
+				<BubbleError show={!!$errorWebcamFeed} message={$errorWebcamFeed} />
 			</div>
 		</div>
 	</div>
@@ -299,14 +247,14 @@
 			<video bind:this={videoScreenShareInstance} class="video-el" autoplay playsinline>
 				<track kind="captions" />
 			</video>
-			{#if !screenSharePlaying}
-				<NoFeedCard label="No screen share feed" onclick={toggleScreenShare} feedType="screen" />
+			{#if !$screenShareIsPlaying}
+				<NoFeedCard label="No screen share feed" onclick={()=>toggleMedia("screenShare")} feedType="screen" />
 			{/if}
 		</div>
 
 		<div class="header">
-			<button onclick={toggleScreenShare} class="btn-icon">
-				{#if screenSharePlaying}
+			<button onclick={()=>toggleMedia("screenShare")} class="btn-icon">
+				{#if $screenShareEnable}
 					<DeviceScreen />
 				{:else}
 					<DeviceScreenDisabled />
@@ -314,7 +262,7 @@
 			</button>
 			<span>Screen share</span>
 			<div class="info-btn">
-				<BubbleError show={!!errorScreenShareFeed} message={errorScreenShareFeed} />
+				<BubbleError show={!!$errorScreenShareFeed} message={$errorScreenShareFeed} />
 			</div>
 		</div>
 	</div>

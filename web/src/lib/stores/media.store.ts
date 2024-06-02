@@ -1,22 +1,12 @@
-/***
-  Clean up the code, feed only works if the device is
-  enabled / disabled, based on that the feed is created
-  and streamd to the respective device stream,
-  Any element can tap into the stream and use it.
-
-  Use device id to create the stream from different device id's
-  On device change stop the stream, and create a new stream
-*/
-
-import { get, writable, type Writable } from 'svelte/store';
+import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import { stopStream } from '../utils/media.utils';
 
-export const webCamEnable: Writable<boolean> = writable(false);
+export const webcamEnable: Writable<boolean> = writable(false);
 export const screenShareEnable: Writable<boolean> = writable(false);
 export const micEnabled: Writable<boolean> = writable(false);
 export const speakerEnabled: Writable<boolean> = writable(false);
 
-export const webCamDeviceId: Writable<string | null> = writable(null);
+export const webcamDeviceId: Writable<string | null> = writable(null);
 export const screenShareDeviceId: Writable<string | null> = writable(null);
 export const micDeviceId: Writable<string | null> = writable(null);
 export const speakerDeviceId: Writable<string | null> = writable(null);
@@ -30,12 +20,15 @@ export const errorScreenShareFeed: Writable<string> = writable('');
 export const errorMicrophoneFeed: Writable<string> = writable('');
 export const errorSpeakerFeed: Writable<string> = writable('');
 
-
 export const speakerIsPlaying: Writable<boolean> = writable(false);
 export const speakerNode: Writable<GainNode |  null> = writable(null);
 
 export const micCtx: Writable<AudioContext | null> = writable(null);
 export const speakerCtx: Writable<AudioContext | null> = writable(null);
+
+
+export const webcamIsPlaying: Readable<boolean> = derived([webcamEnable, errorWebcamFeed], ([$webcamEnable, $errorWebcamFeed]) => $webcamEnable && !$errorWebcamFeed);
+export const screenShareIsPlaying: Readable<boolean> = derived([screenShareEnable, errorScreenShareFeed], ([$screenShareEnable, $errorScreenShareFeed]) => $screenShareEnable && !$errorScreenShareFeed);
 
 export const micWavPercent: Writable<number> = writable(0);
 let clearIntervalMic: NodeJS.Timeout;
@@ -45,6 +38,22 @@ micEnabled.subscribe(($micEnabled) => {
   setMicrophoneStream();
   if(!$micEnabled) micWavPercent.set(0);
 });
+
+webcamEnable.subscribe(($webCamEnable) => {
+  if ($webCamEnable) setWebcamStream()
+  else stopWebcamStream();
+});
+
+webcamDeviceId.subscribe(($webCamDeviceId) => {
+  stopWebcamStream();
+  if ($webCamDeviceId) setWebcamStream();
+});
+
+screenShareEnable.subscribe(($screenShareEnable) => {
+  if ($screenShareEnable) setScreenShareStream()
+  else stopScreenShareStream();
+});
+
 
 export function initCtx() {
   // Browser require mouse event to enable mic and speaker context.
@@ -62,36 +71,51 @@ export function initCtx() {
 }
 
 export async function setWebcamStream() {
-  if (typeof window === 'undefined') return errorWebcamFeed.set('Unsupported browser try different browser');
-  if (typeof window.navigator === 'undefined') return errorWebcamFeed.set('Unsupported browser try different browser');
+  try {
+      
+    if (typeof window === 'undefined') throw errorWebcamFeed.set('Unsupported browser try different browser');
+    if (typeof window.navigator === 'undefined') throw errorWebcamFeed.set('Unsupported browser try different browser');
+    if (!get(webcamEnable)) return;
+    const $webCamDeviceId = get(webcamDeviceId);
 
-  const $webCamDeviceId = get(webCamDeviceId);
+    if (!$webCamDeviceId) {
+      // TODO: If there is any stream end the stream immediately
+      throw errorWebcamFeed.set('No device selected');
+    }
+    
+    let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    if (feedNotAvailable) throw errorWebcamFeed.set('Unsupported browser try different browser');
 
-  if (!$webCamDeviceId) {
-    // TODO: If there is any stream end the stream immediately
-    return errorWebcamFeed.set('No device selected');
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: $webCamDeviceId }
+    });
+    
+    errorWebcamFeed.set('');
+    webcamStream.set(stream);
   }
-  
-  let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-  if (feedNotAvailable) errorWebcamFeed.set('Unsupported browser try different browser');
-
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { deviceId: $webCamDeviceId }
-  });
-
-  errorWebcamFeed.set('');
-  webcamStream.set(stream);
+  catch (e) {
+    errorWebcamFeed.set('');
+    webcamEnable.set(false);
+  }
 }
 
 export async function setScreenShareStream() {
-  if (typeof window === 'undefined') return errorWebcamFeed.set('Unsupported browser try different browser');
-  if (typeof window.navigator === 'undefined') return errorWebcamFeed.set('Unsupported browser try different browser');
+  try {
+    
+    if (typeof window === 'undefined') throw errorScreenShareFeed.set('Unsupported browser try different browser');
+    if (typeof window.navigator === 'undefined') throw errorScreenShareFeed.set('Unsupported browser try different browser');
 
-  let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
-  if (feedNotAvailable) errorScreenShareFeed.set('Unsupported browser try different browser');
+    let feedNotAvailable = !(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
+    if (feedNotAvailable) throw errorScreenShareFeed.set('Unsupported browser try different browser');
 
-  const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-  screenShareStream.set(stream);
+    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    errorScreenShareFeed.set('');
+    screenShareStream.set(stream);
+  }
+  catch (e) {
+    screenShareEnable.set(false);
+    errorScreenShareFeed.set('Permission denied');
+  }
 }
 
 async function setMicrophoneStream() {
@@ -111,7 +135,39 @@ async function setMicrophoneStream() {
   micStream.set($micStream);
 }
 
+export async function stopWebcamStream() {
+  const $webCamStream = get(webcamStream);
+  if (!$webCamStream) return;
+  stopStream($webCamStream);
+}
 
+export async function stopScreenShareStream() {
+  const $screenShareStream = get(screenShareStream);
+  if (!$screenShareStream) return;
+  stopStream($screenShareStream);
+}
+
+export function disconnectMic() {
+  const $micStream = get(micStream);
+  clearInterval(clearIntervalMic);
+  stopStream($micStream);
+  currentMicSource?.disconnect?.();
+  return;
+}
+
+type MediaType = 'webcam' | 'screenShare' | 'mic' | 'speaker';
+export function toggleMedia(media: MediaType) {
+  switch (media) {
+    case 'webcam':
+      return webcamEnable.set(!get(webcamEnable));
+    case 'screenShare':
+      return screenShareEnable.set(!get(screenShareEnable));
+    case 'mic':
+      return micEnabled.set(!get(micEnabled));
+    case 'speaker':
+      return speakerEnabled.set(!get(speakerEnabled));
+  }
+}
 
 async function micAnalyser($micStream: MediaStream | null) {
   // let $micStream = get(micStream)!;
@@ -145,32 +201,3 @@ async function micAnalyser($micStream: MediaStream | null) {
 
   updateWaveLoop();
 }
-
-
-export function disconnectMic() {
-  const $micStream = get(micStream);
-  clearInterval(clearIntervalMic);
-  stopStream($micStream);
-  currentMicSource?.disconnect?.();
-  return;
-}
-
-
-// navigator.permissions.query(
-//   // { name: 'camera' }
-//   { name: 'microphone' }
-//   // { name: 'geolocation' }
-//   // { name: 'notifications' } 
-//   // { name: 'midi', sysex: false }
-//   // { name: 'midi', sysex: true }
-//   // { name: 'push', userVisibleOnly: true }
-//   // { name: 'push' } // without userVisibleOnly isn't supported in chrome M45, yet
-// ).then(function(permissionStatus){
-
-//   console.log(permissionStatus.state); // granted, denied, prompt
-
-//   permissionStatus.onchange = function(){
-//       console.log("Permission changed to " + this.state);
-//   }
-
-// })

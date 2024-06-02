@@ -3,7 +3,22 @@ KNOWN BUGS:
     ✔ Login user have to refresh to update the UI @done(24-05-30 01:18)
     ✔ Register user have to refresh to update the UI @done(24-05-30 01:19)
 
-✔ Extract function is space left @done(24-06-01 18:03)
+
+    ✔ Invite co-host @done(24-06-01 20:47)
+      ✔ Invite user by email @done(24-06-01 20:47)
+      ✘ Display name @cancelled(24-06-02 12:18)
+      ✘ Sub-Info Card @cancelled(24-06-02 12:18)
+      ✔ Select a team @done(24-06-01 20:47)
+
+
+    ✔ Move to single source of feed @done(24-06-02 12:17)
+    ✔ Webcam feed @done(24-06-02 12:17)
+    ✔ Audio input feed @done(24-06-02 03:57)
+    ✔ Audio output feed @done(24-06-02 03:57)
+    ✔ Screen share feed @done(24-06-02 12:17)
+  So, different video element can tap into the stream, 
+
+  ✔ Extract function is space left @done(24-06-01 18:03)
 
 
 Modal:

@@ -1,20 +1,7 @@
 
 TODO:
-  New Debate:
-    ✔ Invite co-host @done(24-06-01 20:47)
-      ✔ Invite user by email @done(24-06-01 20:47)
-      ✔ Display name @done(24-06-01 20:47)
-      ✔ Sub-Info Card @done(24-06-01 20:47)
-      ✔ Select a team @done(24-06-01 20:47)
-    
+  New Debate:    
     ☐ Screen sidebar
-
-  ☐ Move to single source of feed
-    ☐ Webcam feed
-    ✔ Audio input feed @done(24-06-02 03:57)
-    ✔ Audio output feed @done(24-06-02 03:57)
-    ☐ Screen share feed
-  So, different video element can tap into the stream, 
 
   ☐ Flow
     ☐ User can have only one active live debate
