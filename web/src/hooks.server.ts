@@ -18,7 +18,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			remove: (key, options) => {
 				event.cookies.delete(key, { ...options, path: '/' });
 			}
-		}
+		},
+		realtime: {
+			log_level: 'info',
+		},
 	});
 
 	/**

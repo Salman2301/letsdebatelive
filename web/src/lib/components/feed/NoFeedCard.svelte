@@ -1,6 +1,4 @@
 <script lang="ts">
-	import NoFeed from './NoFeed.svelte';
-
 	interface Props {
 		label: string;
 		feedType?: 'profile' | 'screen';

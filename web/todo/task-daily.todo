@@ -1,16 +1,15 @@
 
 TODO:
-  New Debate:    
-    ☐ Screen sidebar
 
   ☐ Flow
     ☐ User can have only one active live debate
     ☐ Redirect the user to non-live page if the user is not live atm
-    
+
+  New Debate:    
+    ☐ Screen sidebar
 
   ☐ Create a webRTC group feed stream
     ☐ Each participant can have their own stream
-
 
     Sidebar:
       Bulk Action:

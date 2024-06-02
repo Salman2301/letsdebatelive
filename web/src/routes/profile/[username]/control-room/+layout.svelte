@@ -1,14 +1,15 @@
 <script lang="ts">
 	import Sidebar from './components/Sidebar.svelte';
-	import { getContext, onDestroy, setContext } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { onMount } from 'svelte';
 	import { getSupabase } from '$lib/supabase';
+	import { PageCtx } from '$src/lib/context';
+	import { authUserData } from '$src/lib/stores/auth.store';
 	import { derived, writable, type Readable, type Writable } from 'svelte/store';
-	import type { PageData } from './$types';
 
+	import type { PageData } from './$types';
 	import type { Tables } from '$lib/schema/database.types';
 	import type { SubscriptionCB } from '$lib/schema/subscription.types';
-	import { PageCtx } from '$src/lib/context';
 
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('control-room');
@@ -53,22 +54,20 @@
 	const liveDebateChannel = supabase.channel('custom-all-channel');
 
 	onMount(async () => {
-		const { data: liveDebateData, error: liveDebateError } = await supabase
-			.from('live_debate')
-			.select()
-			.eq('id', '4167bf11-dc10-46d3-9d32-e5b7ad9d3e67')
-			.single();
+		if(!$authUserData?.id) {
+			throw new Error('You must be logged in to see the control room');
+		}
 
-		liveDebate.set(liveDebateData);
-		const liveDebateIdStr = liveDebateData?.id;
+		liveDebate.set(data.live_debate);
+		const liveDebateIdStr = data.live_debate?.id;
 
 		if (!liveDebateIdStr) throw new Error('Did you seed the database?');
 
-		const [{ data: participantsData }, { data: teamsData }] = await Promise.all([
+		const [{ data: participantsData, error: participantsError }, { data: teamsData, error: teamsError }] = await Promise.all([
 			supabase.from('live_debate_participants').select().eq('live_debate', liveDebateIdStr),
 			supabase.from('live_debate_team').select().eq('live_debate', liveDebateIdStr)
 		]);
-
+		
 		if (!participantsData || !participantsData[0]) throw new Error('No new participants');
 		if (!teamsData || !teamsData[0]) throw new Error('No team');
 

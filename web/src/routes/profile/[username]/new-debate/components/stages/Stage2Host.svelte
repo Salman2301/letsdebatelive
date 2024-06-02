@@ -16,12 +16,8 @@
 	import {
 		DeviceCamera,
 		DeviceCameraDisabled,
-		DeviceMic,
-		DeviceMicDisabled,
 		DeviceScreen,
 		DeviceScreenDisabled,
-		DeviceSpeaker,
-		DeviceSpeakerDisabled
 	} from '$src/lib/components/icon';
 	import { PageCtx } from '$src/lib/context';
 	import { getDevices } from '$lib/utils/media.utils';
@@ -32,14 +28,12 @@
 		toggleMedia,
 
 		micDeviceId,
-		micEnabled,
 		micWavPercent,
 
 		screenShareEnable,
 		screenShareStream,
 
 		speakerDeviceId,
-		speakerEnabled,
 		speakerIsPlaying,
 
 		webcamDeviceId,
@@ -50,7 +44,7 @@
 		screenShareIsPlaying
 	} from '$src/lib/stores/media.store';
 	import { extractAndPlay } from '$lib/utils/sampleSound.utils';
-
+	import DeviceMainFeed from '$src/lib/components/feed/DeviceMainFeed.svelte';
 
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
@@ -172,37 +166,7 @@
 		</Label>
 
 		<div class="flex justify-center my-2">
-			<div class="main-buttons">
-				<button onclick={()=>toggleMedia("speaker")} class="btn-main-icon">
-					{#if $speakerEnabled}
-						<DeviceSpeaker />
-					{:else}
-						<DeviceSpeakerDisabled />
-					{/if}
-				</button>
-
-				<button onclick={()=>toggleMedia("mic")} class="btn-main-icon">
-					{#if $micEnabled}
-						<DeviceMic />
-					{:else}
-						<DeviceMicDisabled />
-					{/if}
-				</button>
-				<button onclick={()=>toggleMedia("webcam")} class="btn-main-icon">
-					{#if $webcamEnable}
-						<DeviceCamera />
-					{:else}
-						<DeviceCameraDisabled />
-					{/if}
-				</button>
-				<button onclick={()=>toggleMedia("screenShare")} class="btn-main-icon">
-					{#if $screenShareEnable}
-						<DeviceScreen />
-					{:else}
-						<DeviceScreenDisabled />
-					{/if}
-				</button>
-			</div>
+			<DeviceMainFeed />
 		</div>
 	</div>
 </div>
@@ -388,25 +352,6 @@
 
 	.in-display-name {
 		@apply flex items-center justify-center;
-	}
-	.main-buttons {
-		@apply flex gap-4;
-	}
-
-	.btn-main-icon {
-		@apply text-transparent;
-		height: 46px;
-		width: 46px;
-		@apply border border-light-gray;
-		@apply flex items-center justify-center;
-		@apply rounded;
-	}
-	.btn-main-icon:hover {
-		@apply border-white;
-	}
-
-	:global(.btn-main-icon > svg) {
-		scale: 1.2;
 	}
 
 	.team-select {
