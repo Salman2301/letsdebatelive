@@ -30,8 +30,12 @@ test('user able to register', async ({ page }) => {
   await page.getByRole('button').click();
   await page.waitForTimeout(300);
 
-  // await page
-	await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible();
+	await page.getByRole('button', { name: 'Logout' }).click();
+	await page.waitForTimeout(300);
+
+	// check if the page is / redirected to home page
+	await expect(new URL(page.url()).pathname, "Should be redirected to home page").toBe('/');
 });
 
 

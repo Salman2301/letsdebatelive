@@ -11,7 +11,7 @@ test('anon control-room should be redirect back home', async ({ page }) => {
 	await expect(page.getByRole('heading', { name: 'Backstage' })).toBeHidden();
 });
 
-test('page login and control room should be visible', async ({ page }) => {
+test('user login, goto control room and logout', async ({ page }) => {
 	await page.goto('/');
 	await expect(page.getByRole('link', { name: 'LETSDEBATE LIVE' })).toBeVisible();
 
@@ -31,4 +31,13 @@ test('page login and control room should be visible', async ({ page }) => {
 	await page.waitForLoadState('domcontentloaded');
 	await page.waitForTimeout(300);
 	await expect(page.getByRole('heading', { name: 'Backstage' })).toBeVisible();
+
+	await page.getByRole('button', { name: 'user profile' }).click();
+	await expect(page.getByRole('button', { name: 'Logout' }), "Logout button should be visible").toBeVisible();
+
+	await page.getByRole('button', { name: 'Logout' }).click();
+	await page.waitForTimeout(300);
+
+	// check if the page is / redirected to home page
+	await expect(new URL(page.url()).pathname, "Should be redirected to home page").toBe('/');
 });
