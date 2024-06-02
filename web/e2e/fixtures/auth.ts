@@ -1,7 +1,8 @@
+import { SupabaseClient, createClient } from '@supabase/supabase-js'; 
 import type { Page } from '@playwright/test';
-import { createClient } from '@supabase/supabase-js'; 
+import type { Database } from '../../src/lib/schema/database.types';
 
-const supabase = createClient(
+const supabase: SupabaseClient<Database> = createClient(
   process.env.PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SECRET_KEY!
 );
@@ -12,15 +13,14 @@ function getRandomEmail() {
 }
 
 export class AuthPage {
-  private readonly email: string;
-  private readonly password: string;
+  public readonly email: string;
+  public readonly password: string;
 
   constructor(public readonly page: Page) {
     const { email, password } = getRandomEmail();
     this.email = email;
     this.password = password;
   }
-
 
   async register() {
     await this.page.goto('/');
@@ -34,6 +34,7 @@ export class AuthPage {
     await this.page.locator('input[name="password"]').fill(this.password);
     await this.page.getByRole('button', { name: 'Register', exact: true }).click();
     await this.page.waitForTimeout(500);
+    await this.page.goto('/');
   }
 
   async login() {
@@ -46,6 +47,7 @@ export class AuthPage {
     await this.page.locator('input[name="password"]').fill(this.password);
     await this.page.locator('form').getByRole('button', { name: 'Login', exact: true }).click();
     await this.page.waitForTimeout(500);
+    await this.page.goto('/');
   }
 
   async logout() {
@@ -54,24 +56,43 @@ export class AuthPage {
   }
 
   async deleteAccount() {
-    deleteUserByEmail(this.email);
+    return await deleteUserByEmail(this.email);
   }
 
   async openAccountMenu() {
     await this.page.getByRole('button').first().click();
   }
+
+  async getUser() {  
+    const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
+
+    if(!getUserError) throw new Error('Error getting user');
+    const user = users.find(e=>e.email === this.email.toLowerCase())
+    if (!user) throw new Error('User not found');
+    return user; 
+  }
 }
 
 const deleteUserByEmail = async (email) => {
   try {
+      
     const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
 
     const user = users.find(e=>e.email === email.toLowerCase())
-    if (!user) return;
+    if (!user) return true;
     
     const userId = user.id;
 
+    // Delete reference to user in all table
+    await supabase.from("live_debate_participants").delete().eq("participant_id", userId);
+    await supabase.from("live_debate").delete().eq("host", userId);
+
     const { error: deleteUserError } = await supabase.auth.admin.deleteUser(userId);
-    if(!deleteUserError) console.log('User deleted successfully');
-  } catch { }
+
+    if(deleteUserError) throw new Error('User not deleted');
+    return true;
+  }
+  catch (e) {
+    return false;
+  }
 };

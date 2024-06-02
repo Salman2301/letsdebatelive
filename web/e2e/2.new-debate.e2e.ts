@@ -5,7 +5,7 @@ const test = base.extend<{ authPage: AuthPage }>({
   authPage: async ({ page }, use) => {
     const authPage = new AuthPage(page);
     await use(authPage);
-    await authPage.deleteAccount();
+    expect(await authPage.deleteAccount(), `Should delete account email: ${authPage.email}`).toBeTruthy();
   },
 });
 
