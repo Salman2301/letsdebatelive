@@ -43,6 +43,7 @@ export async function load({ locals, params }) {
 	return {
 		live_debate: data[0],
 		teamData,
+		userData: locals.userData,
 		participantsData
 	};
 }

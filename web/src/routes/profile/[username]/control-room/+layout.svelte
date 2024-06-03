@@ -55,7 +55,8 @@
 
 	onMount(async () => {
 		if(!$authUserData?.id) {
-			throw new Error('You must be logged in to see the control room');
+			$authUserData = data.userData;
+			// throw new Error('You must be logged in to see the control room');
 		}
 
 		liveDebate.set(data.live_debate);
@@ -69,10 +70,10 @@
 		]);
 		
 		if (!participantsData || !participantsData[0]) throw new Error('No new participants');
-		if (!teamsData || !teamsData[0]) throw new Error('No team');
+		// if (!teamsData || !teamsData[0]) throw new Error('No team');
 
 		participants.set(participantsData);
-		teams.set(teamsData);
+		teams.set(teamsData || []);
 
 		liveDebateChannel
 			.on(

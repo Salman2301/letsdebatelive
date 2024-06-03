@@ -20,6 +20,10 @@ Design:
     ☐ Add ICON
 
 
+Error:
+  ☐ Standardize the error handling accross application
+    ☐ Use unique error code
+
 Test:
   ☐ Add full complete test using playwright
   ☐ Setup database test seed
