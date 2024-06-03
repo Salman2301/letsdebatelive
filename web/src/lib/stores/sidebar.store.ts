@@ -12,4 +12,4 @@ export type SidebarKey =
 	| 'chatModerator'
 	| 'broadcast';
 
-export let currentSidebar: Writable<SidebarKey> = writable('backstage');
+export let currentSidebar: Writable<SidebarKey> = writable('participants');

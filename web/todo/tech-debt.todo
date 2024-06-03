@@ -13,6 +13,12 @@ Design:
   ☐ Sidebar
     ☐ Remove unwanted sidebar, keep only sidebar that we will release before the prototype
     ☐ Rethink the sidebar so, backstage / stage area is easy to use.
+  ☐ Redesign Nav bar to show'
+    ☐ User display name
+    ☐ User email
+    ☐ Expand and improve style UI / UX
+    ☐ Add ICON
+
 
 Test:
   ☐ Add full complete test using playwright

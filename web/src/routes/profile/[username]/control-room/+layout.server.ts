@@ -10,14 +10,16 @@ export async function load({ locals, params }) {
 		.from('live_debate')
 		.select('*, host(*)')
 		.eq('host.username', username)
-		.not('host', 'is', null);
+		.not('host', 'is', null)
+		.not('published', 'is', null)
+		.not("ended", "is", true);
 
 	if (error) {
 		console.error(error);
 		throw redirect(303, '/?error=SERVER_ERROR_LIVE_DEBATE');
 	}
 
-	if (!data || data.length === 0) throw redirect(303, '/?error=NO_LIVE_DEBATE');
+	if (!data || data.length === 0) throw redirect(303, `/profile/${username}/new-debate?error=NO_DEBATE_CREATE_ONE`);
 
 	const liveDebateId = data[0].id;
 

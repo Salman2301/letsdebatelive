@@ -23,8 +23,15 @@
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
 	// made sense to use LayoutHeader for short
 
-	function handleStopBroadcast() {
+	async function handleStopBroadcast() {
 		if (!$live_debate?.id) return;
+
+		await supabase.from("live_debate").update({
+			ended: true,
+			ended_tz: new Date().toISOString(),
+		}).eq("id", $live_debate.id);
+
+
 		emitBroadcastEvent(supabase, 'broadcast_end', $live_debate.id, {
 			liveDebateId: $live_debate.id
 		});
@@ -99,7 +106,7 @@
 	{/if}
 	<div class="layout-break-end">
 		<TakeABreak />
-		<button class="btn-stop" onclick={handleStopBroadcast}> Stop Broadcast </button>
+		<button class="btn-stop" onclick={()=>handleStopBroadcast()}> Stop Broadcast </button>
 	</div>
 </div>
 

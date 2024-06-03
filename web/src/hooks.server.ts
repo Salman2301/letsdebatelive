@@ -67,8 +67,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		!event.url.pathname.startsWith('/profile/logout')
 	) {
 		if (!session || !session.user || !user || !userData) throw redirect(303, '/');
+		const pathUsername = event.url.pathname.split("/")[2];
 
-		if (event.params.username !== userData.username) {
+		if (pathUsername !== userData.username) {
+			console.log({ u1: event.params.username, u2: userData.username });
+
 			throw redirect(303, '/?ERROR=USERNAME_MISMATCH');
 		}
 	}
