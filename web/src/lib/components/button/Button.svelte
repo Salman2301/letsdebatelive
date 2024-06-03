@@ -3,6 +3,7 @@
 		label: string;
 		color?: 'primary' | 'secondary' | 'accent-red';
 		width?: number;
+		testId?: string;
 		fillType?:
 			| 'solid'
 			| 'outline'
@@ -20,6 +21,7 @@
 		color = 'primary',
 		fillType = 'solid',
 		disabled = false,
+		testId,
 		width,
 		onclick = () => {},
 		fontType = 'bold'
@@ -33,6 +35,7 @@
 		: 'fit-content'};font-weight:{fontType}"
 	{disabled}
 	{onclick}
+	data-testid={testId}
 >
 	<slot name="icon-left" />
 	{label}

@@ -154,6 +154,7 @@
 				width="240px"
 				placeholder="Enter title for your live debate"
 				bind:value={hostDisplayName}
+				testId="in-display-name"
 			/>
 		</div>
 

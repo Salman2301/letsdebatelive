@@ -14,7 +14,7 @@ test('index page should have logo', async ({ page }) => {
 	await expect(page.getByRole('link', { name: 'LETSDEBATE LIVE' })).toBeVisible();
 });
 
-test('Goto new debate', async ({ page, authPage }) => {
+test('Create a  new debate', async ({ page, authPage }) => {
   await page.goto("/");
   await authPage.register();
 
@@ -23,4 +23,82 @@ test('Goto new debate', async ({ page, authPage }) => {
   await page.waitForTimeout(300);
 
   await expect(new URL(page.url()).pathname, "Should be redirected to new debate page").toMatch(/new\-debate/);
+
+  // STAGE 1
+  const title = `Test live - ${genId()}`;
+  await page.getByPlaceholder('Enter title for your live').fill(title);
+
+  const teamNames = [
+    "Team A",
+    "Team B",
+    "Team C",
+    "Team Delete",
+  ];
+  for await (const [i, teamName] of Object.entries(teamNames)) {
+   
+    await page.getByTestId('new-team-input').fill(teamName);
+    await page.getByTestId('team-submit-btn').click();
+    await page.waitForTimeout(300);
+
+    // TODO: Test set as default
+
+    expect(await page.getByTestId('team-title-input').nth(
+      Number(i)
+    ).inputValue(), `It should have created team name: ${teamName}`).toBe(teamName); 
+  }
+
+  await page.getByTestId("btn-team-del").nth(3).click();
+  await page.waitForTimeout(300);
+
+
+  expect(await page.getByTestId("btn-team-del").count(), "Should have deleted one of the team").toBe(3);
+
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.waitForTimeout(300);
+
+  // STAGE 2
+  expect(await page.getByRole('heading', { name: 'My (Host) Setup (2 / 5)' })).toBeTruthy()
+
+  await page.getByTestId("in-display-name").fill("Display");
+  
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.waitForTimeout(300);
+
+  // STAGE 3
+  const cohostEmail = "test@email.com";
+  await page.getByTestId("in-co-host").fill(cohostEmail);
+  await page.getByTestId("add-co-host").click();
+  await page.waitForTimeout(300);
+
+  expect(await page.getByTestId("cohost-item-email").textContent(), `Should have created invite to cohost ${cohostEmail}`).toBe(cohostEmail);
+
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.waitForTimeout(300);
+
+  // STAGE 4
+  // TODO: ADD more test
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.waitForTimeout(300);
+  
+
+  //STAGE 5
+  await page.getByRole('button', { name: 'Publish' }).click();
+  await page.waitForTimeout(300);
+  
+  expect(new URL(await page.url()).pathname, "Page shoud redirect to control room once completed!").toMatch(/control\-room/);
+
 });
+
+
+export function genId(maxLen?: number) {
+	if (typeof maxLen === 'undefined') maxLen = 6;
+
+	const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let id = '';
+	for (let i = 0; i < maxLen; i++) {
+		id += charset.charAt(Math.floor(Math.random() * charset.length));
+	}
+
+	return id;
+}
+

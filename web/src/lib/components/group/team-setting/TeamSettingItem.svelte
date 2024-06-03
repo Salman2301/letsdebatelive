@@ -84,6 +84,7 @@
 			bind:value={newTeamValue}
 			onkeydown={onKeydownChange}
 			use:selectAll
+			data-testid="team-title-input"
 		/>
 		<button class="in-submit" class:hidden={!showSubmitBtn}>
 			<CheckMark />
@@ -92,7 +93,7 @@
 			Default
 		</button>
 	</div>
-	<button class="delete-icon" class:hidden={team.is_default} onclick={remove}>
+	<button class="delete-icon" class:hidden={team.is_default} onclick={remove} data-testid="btn-team-del">
 		<CloseX />
 	</button>
 </div>

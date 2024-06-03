@@ -15,6 +15,7 @@
 		autofocus?: boolean;
 		hasError?: boolean;
 		width?: string;
+		testId?: string;
 		rounded?: 'sm' | 'full';
 		oninput?: (e: KBEvent) => void;
 		ariaLabel?: string;
@@ -31,6 +32,7 @@
 		rounded,
 		ariaLabel,
 		oninput,
+		testId,
 		width
 	}: Props = $props();
 </script>
@@ -48,6 +50,7 @@
 		class:has-error={hasError}
 		style="width:{width ? width : '280px'};border-radius:{rounded === 'sm' ? '4px' : '40px'}"
 		aria-label={ariaLabel}
+		data-testid={testId}
 		oninput={(e) => {
 			hasError = false;
 			oninput?.(e);

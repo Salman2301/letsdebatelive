@@ -92,12 +92,13 @@
 	<input
 		class="in-new-team"
 		placeholder="+ Create new team"
+		data-testid="new-team-input"
 		bind:value={newTeamValue}
 		onkeydown={onKeydownChange}
 		bind:this={inputRef}
 	/>
 
-	<button class="btn-new-team" onclick={newTeam} class:hidden={!showSubmitBtn}>
+	<button class="btn-new-team" data-testid="team-submit-btn" onclick={newTeam} class:hidden={!showSubmitBtn}>
 		<CheckMark />
 	</button>
 </div>

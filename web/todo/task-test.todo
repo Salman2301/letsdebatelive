@@ -7,21 +7,21 @@ E2E:
     ✘ Magic link? @cancelled(24-06-03 01:39)
 
   New Debate:
-    ☐ Create a new debate
-    ☐ Set the title
+    ✔ Create a new debate @done(24-06-03 15:36)
+    ✔ Set the title @done(24-06-03 15:36)
       ☐ Retrive the record from the database
-      ☐ Save the live debate id
-    ☐ Create a new team
-    ☐ Check if the team is added
-    ☐ Check if the color is added
-    ☐ Add a new team
+      ✔ Save the live debate id @done(24-06-03 15:36)
+    ✔ Create a new team @done(24-06-03 16:11)
+    ✔ Check if the team is added @done(24-06-03 16:12)
+    ✘ Check if the color is added @cancelled(24-06-03 16:12)
+    ✔ Add a new team @done(24-06-03 16:12)
     ☐ Set the team as default
     ☐ Retrive the record from the database
       ☐ Check if the default is set
       ☐ Check the color and title value
       ☐ Check if the live debate matchs
-    ☐ Delete the team
-    ☐ Add one more team
+    ✔ Delete the team @done(24-06-03 16:12)
+    ✔ Add one more team @done(24-06-03 16:12)
     ☐ Set this one as default
     ☐ Check if the old team is not default but this one is default
   Control room:

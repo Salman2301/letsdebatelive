@@ -84,8 +84,11 @@ const deleteUserByEmail = async (email) => {
     const userId = user.id;
 
     // Delete reference to user in all table
-    await supabase.from("live_debate_participants").delete().eq("participant_id", userId);
-    await supabase.from("live_debate").delete().eq("host", userId);
+    await Promise.all([
+      supabase.from("live_debate_participants").delete().eq("participant_id", userId),
+      supabase.from("live_debate").delete().eq("host", userId),
+      supabase.from("live_debate_invite_co_host").delete().eq("invited_by", userId)
+    ]);
 
     const { error: deleteUserError } = await supabase.auth.admin.deleteUser(userId);
 

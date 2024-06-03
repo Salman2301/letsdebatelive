@@ -107,6 +107,7 @@
 					width="440px"
 					bind:value={email}
 					placeholder="Enter email address"
+					testId="in-co-host"
 				/>
 				<Label label="Team">
 					<select class="team-select" style="width: 240px" bind:value={team}>
@@ -117,7 +118,13 @@
 				</Label>
 			</div>
 			<div class="self-end">
-				<Button label="Add Co-host" width={240} color="secondary" onclick={handleSubmit} />
+				<Button
+					label="Add Co-host"
+					width={240}
+					color="secondary"
+					onclick={handleSubmit}
+					testId="add-co-host"
+				/>
 			</div>
 		</div>
 		<div class="co-host-list">
@@ -127,7 +134,7 @@
 						<button class="btn-remove" onclick={() => removeCohost(cohost)}>
 							<CloseX />
 						</button>
-						<span>{cohost.email}</span>
+						<span data-testid="cohost-item-email">{cohost.email}</span>
 					</div>
 					<span class="text-light-gray">Status: <span class="status">{cohost.status}</span></span>
 				</div>
