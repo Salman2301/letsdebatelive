@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
 	export type DevicesEnable = {
 		cam_enable: boolean;
 		screenshare_enable: boolean;
