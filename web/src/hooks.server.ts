@@ -70,8 +70,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const pathUsername = event.url.pathname.split("/")[2];
 
 		if (pathUsername !== userData.username) {
-			console.log({ u1: event.params.username, u2: userData.username });
-
 			throw redirect(303, '/?ERROR=USERNAME_MISMATCH');
 		}
 	}

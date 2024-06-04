@@ -65,8 +65,6 @@ export async function extractAndPlay() {
     speakerIsPlaying.set(false);
   };
 
-  console.log("playing....")
-
   speakerIsPlaying.set(true);
   audioBuffer.start();
 }

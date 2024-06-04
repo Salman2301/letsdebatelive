@@ -5,7 +5,7 @@ export async function load({ locals, params, parent }) {
   const supabase = locals.supabase;
   const { userData} = await locals.safeGetSession();
   const pathUsername = params.username;
-  console.log({ userData, pathUsername})
+
   if (!pathUsername || !userData) throw redirect(303, '/?error=INVALID_USERNAME');
 
   if (pathUsername !== userData.username) throw redirect(303, '/?error=FORBIDDEN_USERNAME');
