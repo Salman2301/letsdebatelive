@@ -1,5 +1,7 @@
 import { fail, redirect, type ActionFailure } from '@sveltejs/kit';
 import type { PageData, ParticipantsWithUserData } from './page.types';
+import type { Tables, TablesInsert } from '$src/lib/schema/database.types';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export async function load({ locals, params }) {
 	const PAGE_DATA: PageData = {
@@ -29,18 +31,17 @@ export async function load({ locals, params }) {
 	const username = params.username;
 	if (!username) throw redirect(303, '/?error=INVALID_USERID');
 
-	// TODO: get only the published!
-	const { data: live_debates, error } = await supabase
-		.from('live_debate')
-		.select('*, host(*)')
-		.eq('host.username', username)
-		.not('host', 'is', null);
-
+	const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
+	
 	PAGE_DATA.live_debate = live_debates?.[0] ?? null;
 	const liveDebateId = live_debates?.[0]?.id;
 	PAGE_DATA.host = JSON.parse(JSON.stringify(PAGE_DATA?.live_debate?.host || {}));
 
-	if (error || live_debates.length === 0 || typeof liveDebateId !== 'string') {
+	if (live_debates && live_debates?.length > 1) {
+		console.error("Cleanup: Database has more than one live debate");
+	}
+
+	if (error || !live_debates || live_debates.length === 0 || typeof liveDebateId !== 'string') {
 		throw redirect(303, '/?error=FAILED_LIVE_DEBATE_INFO');
 	}
 
@@ -100,11 +101,7 @@ export const actions = {
 		if (typeof username !== 'string' || username === '')
 			return fail(404, { message: 'Invalid username!' });
 
-		const { data: live_debates, error } = await supabase
-			.from('live_debate')
-			.select('*, host(*)')
-			.eq('host.username', username)
-			.not('host', 'is', null);
+		const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
 
 		const live_debate = live_debates?.[0];
 		const liveDebateId = live_debate?.id;
@@ -127,16 +124,16 @@ export const actions = {
 			return data?.[0]?.team || null;
 		}
 
-		const toInsert = {
+		const toInsert: TablesInsert<"live_debate_participants"> = {
 			live_debate: liveDebateId,
 			participant_id: userData?.id,
-			is_host: liveDebateId === live_debates[0].host,
+			role: 'guest',
 			location: 'backstage',
 			display_name: userData?.username as string,
 			team: await getAnyTeamId(liveDebateId) // must get from the formdata
-		} as const;
+		};
 
-		const { data: insert, error: errorInsert } = await supabase
+		const { error: errorInsert } = await supabase
 			.from('live_debate_participants')
 			.insert(toInsert)
 			.select('*');
@@ -172,15 +169,12 @@ export const actions = {
 		if (typeof username !== 'string' || username === '')
 			return fail(404, { message: 'Invalid username!' });
 
-		const { data: live_debates, error } = await supabase
-			.from('live_debate')
-			.select('*, host(*)')
-			.eq('host.username', username)
-			.not('host', 'is', null);
 
+		const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
+		
 		const liveDebateId = live_debates?.[0]?.id;
 
-		if (error || live_debates.length === 0 || typeof liveDebateId !== 'string') {
+		if (error || !live_debates || live_debates.length === 0 || typeof liveDebateId !== 'string') {
 			return fail(404, { message: 'Failed to get the live_debate info from db' });
 		}
 
@@ -197,3 +191,20 @@ export const actions = {
 		return { success: true };
 	}
 };
+
+async function getLatestLiveDebateId(supabase: SupabaseClient, username: string): Promise<{
+	data: Tables<"live_debate">[] | null;
+	error: any;
+}> {
+	const { data, error } = await supabase
+		.from('live_debate')
+		.select('*, host(*)')
+		.eq('host.username', username)
+		.eq('published', true)
+		.not('ended', 'is', true)
+		.not('host', 'is', null)
+		.order('published_tz', { ascending: false });
+	
+	return { data, error };
+}
+

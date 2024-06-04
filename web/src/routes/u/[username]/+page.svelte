@@ -7,15 +7,15 @@
 	import Chat from './components/sidebar/Chat.svelte';
 
 	import { newToast } from '$lib/components/toast/Toast.svelte';
-	import { getContext, onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
+	import { PageCtx } from '$src/lib/context';
 	import { writable } from 'svelte/store';
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
 	import type { ParticipantsWithUserData } from './page.types';
-	import { PageCtx } from '$src/lib/context';
 
 	interface Props {
 		data: PageData;
