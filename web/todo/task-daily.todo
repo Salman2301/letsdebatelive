@@ -1,9 +1,5 @@
 
 TODO:
-  ☐ Flow
-    ✔ User can have only one active live debate @done(24-06-03 18:12)
-    ☐ Redirect the user to non-live page if the user is not live atm
-
   Layer planel:
     ☐ User able to drag above and below the feed
     ☐ Based on the layout will move according

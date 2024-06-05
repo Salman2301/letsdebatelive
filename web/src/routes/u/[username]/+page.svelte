@@ -12,11 +12,11 @@
 	import { getSupabase } from '$lib/supabase';
 	import { PageCtx } from '$src/lib/context';
 	import { writable } from 'svelte/store';
+	import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
-	import type { ParticipantsWithUserData } from './page.types';
-
+	
 	interface Props {
 		data: PageData;
 		form: ActionData;
@@ -73,8 +73,9 @@
 		}
 		const { data: participantsData, error } = await supabase
 			.from('live_debate_participants')
-			.select('*,participant_id(*),team(*)')
+			.select(participantsWithUserDataSelect)
 			.eq('live_debate', data.live_debate.id)
+			.order("created_at", { ascending: true })
 			.returns<ParticipantsWithUserData[]>();
 
 		$participants = participantsData || [];

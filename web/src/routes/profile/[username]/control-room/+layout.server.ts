@@ -1,3 +1,4 @@
+import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, params }) {
@@ -28,7 +29,7 @@ export async function load({ locals, params }) {
 		{ data: participantsData, error: participantsError }
 	] = await Promise.all([
 		supabase.from('live_debate_team').select().eq('live_debate', liveDebateId).order('title'),
-		supabase.from('live_debate_participants').select().eq('live_debate', liveDebateId)
+		supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateId).order("created_at", { ascending: true }).returns<ParticipantsWithUserData[]>()
 	]);
 	if (teamError) {
 		console.error(teamError);

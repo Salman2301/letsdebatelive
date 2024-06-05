@@ -390,6 +390,42 @@ export type Database = {
 					}
 				];
 			};
+			live_debate_participant_role: {
+				Row: {
+					created_at: string;
+					live_debate: string;
+					participant_id: string;
+					role: Database['public']['Enums']['role'];
+				};
+				Insert: {
+					created_at?: string;
+					live_debate: string;
+					participant_id: string;
+					role: Database['public']['Enums']['role'];
+				};
+				Update: {
+					created_at?: string;
+					live_debate?: string;
+					participant_id?: string;
+					role?: Database['public']['Enums']['role'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_debate_participant_role_live_debate_fkey';
+						columns: ['live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_debate_participant_role_participant_id_live_debate_fkey';
+						columns: ['participant_id', 'live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate_participants';
+						referencedColumns: ['participant_id', 'live_debate'];
+					}
+				];
+			};
 			live_debate_participants: {
 				Row: {
 					cam_available: boolean | null;

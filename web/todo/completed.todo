@@ -1,3 +1,12 @@
+✔ User can have only one active live debate @done(24-06-03 18:12)
+    
+✔ Redirect the user to non-live page if the user is not live atm @done(24-06-05 11:41)
+  ✔ We don't need a seperate table since it can be handle by RLS policy? @done(24-06-05 11:41)
+    ✔ That is not true, RLS depends on the row (role) column this column can only be change by host / co-host and that's exactly why it needs to be a separate table. @done(24-06-05 11:41)
+    In this table can only be modify by the host / co-host
+    And the participant can be change by either the user or the role with host / co-host
+
+
 KNOWN BUGS:
   ✔ Move the form using form action @done(24-05-30 01:19)
     ✔ Login user have to refresh to update the UI @done(24-05-30 01:18)

@@ -1,7 +1,13 @@
 import { fail, redirect, type ActionFailure } from '@sveltejs/kit';
-import type { PageData, ParticipantsWithUserData } from './page.types';
-import type { Tables, TablesInsert } from '$src/lib/schema/database.types';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { SUPABASE_SECRET_KEY } from '$env/static/private';
+import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
+
+import type { PageData } from './page.types';
+import type { Database, Tables, TablesInsert } from '$src/lib/schema/database.types';
+
+const supabaseAdmin = createClient<Database>(PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY);
 
 export async function load({ locals, params }) {
 	const PAGE_DATA: PageData = {
@@ -45,15 +51,19 @@ export async function load({ locals, params }) {
 		throw redirect(303, '/?error=FAILED_LIVE_DEBATE_INFO');
 	}
 
-
-
 	const [
 		{ data: live_debate_participants, error: participantsError },
 		{ data: live_debate_team, error: teamError }
 	] = await Promise.all([
-		supabase.from('live_debate_participants').select('*, participant_id(*), team(*)').eq('live_debate', liveDebateId).returns<ParticipantsWithUserData[]>(),
+		supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateId).order("created_at", { ascending: true }).returns<ParticipantsWithUserData[]>(),
 		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
 	]);
+
+	await supabaseAdmin.from("live_debate_participant_role").insert({
+		live_debate: liveDebateId,
+		participant_id: PAGE_DATA.user.id,
+		role: "guest"
+	});
 
 	PAGE_DATA.teams = live_debate_team || [];
 	PAGE_DATA.teamMapColor = PAGE_DATA.teams.reduce((obj: Record<string, string>, team) => {
@@ -207,4 +217,3 @@ async function getLatestLiveDebateId(supabase: SupabaseClient, username: string)
 	
 	return { data, error };
 }
-

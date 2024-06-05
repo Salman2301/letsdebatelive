@@ -18,9 +18,10 @@
 	import { tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import type { Tables } from '$lib/schema/database.types';
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 
 	interface Props {
-		participant: Tables<'live_debate_participants'>;
+		participant: ParticipantsWithUserData;
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
 		isStageFull: boolean;
@@ -132,7 +133,7 @@
 		</div>
 	</div>
 	<div class="username-text">
-		<div class="team-circle" style="background-color:{teamMapColor[participant.team as string]}"></div>
+		<div class="team-circle" style="background-color:{teamMapColor[participant.team.id as string]}"></div>
 		<div class="input-container">
 			<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
 			{#if showNameSubmitBtn}

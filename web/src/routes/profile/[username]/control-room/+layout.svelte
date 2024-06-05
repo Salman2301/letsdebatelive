@@ -9,7 +9,7 @@
 
 	import type { PageData } from './$types';
 	import type { Tables } from '$lib/schema/database.types';
-	import type { SubscriptionCB } from '$lib/schema/subscription.types';
+	import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
 
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('control-room');
@@ -23,14 +23,14 @@
 
 	const teams: Writable<Tables<'live_debate_team'>[]> = writable(data.teamData);
 
-	const participants: Writable<Tables<'live_debate_participants'>[]> = writable(
+	const participants: Writable<ParticipantsWithUserData[]> = writable(
 		data.participantsData
 	);
-	const participantsOnStage: Readable<Tables<'live_debate_participants'>[]> = derived(
+	const participantsOnStage: Readable<ParticipantsWithUserData[]> = derived(
 		participants,
 		($participants) => $participants.filter((e) => e.location === 'stage')
 	);
-	const participantsBackStage: Readable<Tables<'live_debate_participants'>[]> = derived(
+	const participantsBackStage: Readable<ParticipantsWithUserData[]> = derived(
 		participants,
 		($participants) => $participants.filter((e) => e.location === 'backstage')
 	);
@@ -65,12 +65,12 @@
 		if (!liveDebateIdStr) throw new Error('Did you seed the database?');
 
 		const [{ data: participantsData, error: participantsError }, { data: teamsData, error: teamsError }] = await Promise.all([
-			supabase.from('live_debate_participants').select().eq('live_debate', liveDebateIdStr),
+			supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateIdStr).returns<ParticipantsWithUserData[]>(),
 			supabase.from('live_debate_team').select().eq('live_debate', liveDebateIdStr)
 		]);
 		
-		if (!participantsData || !participantsData[0]) throw new Error('No new participants');
-		// if (!teamsData || !teamsData[0]) throw new Error('No team');
+		if (!participantsData || !participantsData[0] || !participantsError) throw new Error('No new participants');
+		if (!teamsError) throw new Error('No team');
 
 		participants.set(participantsData);
 		teams.set(teamsData || []);
@@ -85,34 +85,19 @@
 					filter: `live_debate=eq.${liveDebateIdStr}`
 				},
 				(payload) => {
-					syncLiveDebateParticipants(payload as any);
+					syncLiveDebateParticipants();
 				}
 			)
 			.subscribe();
 
-		function syncLiveDebateParticipants({
-			new: data,
-			old,
-			eventType
-		}: SubscriptionCB<'live_debate_participants'>) {
-			switch (eventType) {
-				case 'UPDATE': {
-					$participants = $participants.map((item) =>
-						item.participant_id === data.participant_id ? data : item
-					);
-					return;
-				}
-				case 'INSERT': {
-					$participants = [...$participants, data];
-					return;
-				}
-				case 'DELETE': {
-					$participants = $participants.filter(
-						(item) => item.participant_id !== old.participant_id
-					);
-					return;
-				}
-			}
+		async function syncLiveDebateParticipants() {
+			const {data: participantsWithUserData, error} = await supabase.from('live_debate_participants')
+				.select(participantsWithUserDataSelect)
+				.eq('live_debate', liveDebateIdStr)
+				.order("created_at", { ascending: true })
+				.returns<ParticipantsWithUserData[]>();
+
+			$participants = participantsWithUserData || [];
 		}
 
 		// On Destroy unsubs to all the subscriptions

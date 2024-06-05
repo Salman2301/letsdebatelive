@@ -1,7 +1,6 @@
 import type { Tables } from '$lib/schema/database.types';
+import type { ParticipantsWithUserData } from '$src/lib/types';
 import type { User } from '@supabase/supabase-js';
-
-export type ParticipantsWithUserData = Omit<Tables<"live_debate_participants">, 'participant_id' | 'team'> & { participant_id: Tables<"user_data">;  team: Tables<"live_debate_team">}
 
 export interface PageData {
 	userJoined: boolean;

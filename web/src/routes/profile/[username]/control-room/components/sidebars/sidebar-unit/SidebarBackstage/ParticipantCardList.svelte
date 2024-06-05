@@ -12,16 +12,18 @@
 		DeviceUserProfileDisabled,
 		UserBan
 	} from '$lib/components/icon';
+	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
+	import CheckMark from '$lib/components/icon/CheckMark.svelte';
 
 	import { tick } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$lib/supabase';
 
-	import CheckMark from '$lib/components/icon/CheckMark.svelte';
 	import type { Tables } from '$lib/schema/database.types';
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 
 	interface Props {
-		participant: Tables<'live_debate_participants'>;
+		participant: ParticipantsWithUserData;
 		live_debate: Tables<'live_debate'>;
 		teamMapColor: Record<string, string>;
 		isStageFull: boolean;
@@ -44,7 +46,7 @@
 			.from('live_debate_participants')
 			.update(toUpdate)
 			.eq('live_debate', live_debate.id)
-			.eq('participant_id', participant.participant_id);
+			.eq('participant_id', participant.participant_id.id);
 	}
 
 	async function onKeydownChange(event: KeyboardEvent) {
@@ -82,7 +84,7 @@
 				.from('live_debate_participants')
 				.update(row)
 				.eq('live_debate', live_debate.id)
-				.eq('participant_id', participant.participant_id);
+				.eq('participant_id', participant.participant_id.id);
 		} catch (e) {
 			console.error(e);
 			newToast({
@@ -104,7 +106,7 @@
 				.from('live_debate_participants')
 				.delete()
 				.eq('live_debate', live_debate.id)
-				.eq('participant_id', participant.participant_id)
+				.eq('participant_id', participant.participant_id.id)
 				.throwOnError();
 		} catch (e) {
 			console.error(e);
@@ -122,10 +124,12 @@
 			<UserRemove />
 		</button>
 
-		<div class="username-img-default"></div>
+		<div class="username-img-default">
+			<UserImage user={participant.participant_id} />
+		</div>
 		<div>
 			<div class="username-text">
-				<div class="team-circle" style="background-color:{teamMapColor[participant.team as string]}"></div>
+				<div class="team-circle" style="background-color:{participant.team ? teamMapColor[participant.team.id as string] : "white"}"></div>
 				<div class="input-container">
 					<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
 					{#if showNameSubmitBtn}
@@ -226,7 +230,6 @@
 		width: 48px;
 		height: 48px;
 		@apply relative;
-		background: linear-gradient(0deg, white, rgb(var(--color-secondary)));
 	}
 
 	.username-text {

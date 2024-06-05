@@ -26,9 +26,10 @@
 	import { authUserData } from '$lib/stores/auth.store';
 	import { currentSidebar } from '$lib/stores/sidebar.store';
 	import { getSupabase } from '$lib/supabase';
+	import { PageCtx } from '$src/lib/context';
 
 	import type { Tables } from '$lib/schema/database.types';
-	import { PageCtx } from '$src/lib/context';
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 
 	interface Props {
 		type: 'backstage' | 'stage';
@@ -45,7 +46,7 @@
 	let live_debate = pageCtx.get('ctx_table$live_debate');
 	let teamMapColor = pageCtx.get('ctx_map$teamColor');
 
-	let filteredParticipants: Tables<'live_debate_participants'>[] = $derived(
+	let filteredParticipants: ParticipantsWithUserData[] = $derived(
 		$participants?.filter((participant) => participant.location === type) || []
 	);
 

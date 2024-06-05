@@ -3,9 +3,10 @@
 	import TeamSettingItem from './TeamSettingItem.svelte';
 	import Heading3 from '$lib/components/form/Heading3.svelte';
 
-	import { CheckMark } from '$lib/components/icon';
 	import { getSupabase } from '$lib/supabase';
-	import { getContext, onMount, tick } from 'svelte';
+	import { CheckMark } from '$lib/components/icon';
+	import { onMount, tick } from 'svelte';
+	import { newToast } from '$lib/components/toast/Toast.svelte';
 
 	import type { Writable } from 'svelte/store';
 	import type { Tables } from '$src/lib/schema/database.types';
@@ -43,13 +44,21 @@
 	async function newTeam() {
 		if (!$live_debate?.id) return;
 
-		await supabase.from('live_debate_team').insert({
+		const { data, error } = await supabase.from('live_debate_team').insert({
 			color: getAvailableColor(),
 			live_debate: $live_debate?.id,
 			slug: slugify(newTeamValue),
 			title: newTeamValue,
 			is_default: false
-		});
+		}).select();
+
+		if( error) {
+			console.error(error);
+			newToast({
+				type: 'error',
+				message: 'Failed to add team'
+			})
+		}
 		newTeamValue = '';
 		refreshTeamData();
 		inputRef?.focus?.();

@@ -3,7 +3,7 @@
 	import TeamSetting from '$src/lib/components/group/team-setting/TeamSetting.svelte';
 	import { PageCtx } from '$src/lib/context';
 	import { getSupabase } from '$src/lib/supabase';
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	const page = new PageCtx('new-debate');
 	const liveDebate = page.get('liveDebate');
