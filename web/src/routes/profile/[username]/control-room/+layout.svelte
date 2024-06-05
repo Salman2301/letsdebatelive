@@ -69,8 +69,8 @@
 			supabase.from('live_debate_team').select().eq('live_debate', liveDebateIdStr)
 		]);
 		
-		if (!participantsData || !participantsData[0] || !participantsError) throw new Error('No new participants');
-		if (!teamsError) throw new Error('No team');
+		if (!participantsData || !participantsData[0] || participantsError) throw new Error('No new participants');
+		if (teamsError) throw new Error('No team');
 
 		participants.set(participantsData);
 		teams.set(teamsData || []);
