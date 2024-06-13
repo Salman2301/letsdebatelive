@@ -2,10 +2,12 @@
 TODO:
   ☐ Rename "live" debate to "live"
 
-  Layer planel:
-    ☐ User able to drag above and below the feed
-    ☐ Based on the layout will move according
-    ☐ User can add image /  text / widget
+
+  Rethink layers:
+    Layer planel:
+      ☐ User able to drag above and below the feed
+      ☐ Based on the layout will move according
+      ☐ User can add image /  text / widget
 
   New Debate:    
     ☐ Screen sidebar

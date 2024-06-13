@@ -7,14 +7,12 @@
 	import { getSupabase } from '$src/lib/supabase';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
 	// User able to popup the chat
 	// User can see multiple chats from different broadcasts
 	// User can
 	let isLoading: boolean = $state(true);
 	let isSending: boolean = $state(false);
-	type ChatWithSenderData = Omit<Tables<'live_debate_chat'>, 'sender_id'> & {
-		sender_id: Tables<'user_data'>;
-	};
 	let chats: ChatWithSenderData[] = $state([]);
 	const supabase = getSupabase();
 
@@ -56,7 +54,7 @@
 	async function fetchChats() {
 		const { data: last20Data } = await supabase
 			.from('live_debate_chat')
-			.select('*,sender_id(*)')
+			.select(chatWithSenderData)
 			.order('created_at', { ascending: true })
 			.limit(20)
 			.returns<ChatWithSenderData[]>();
@@ -157,6 +155,9 @@
 		@apply rounded;
 		@apply bg-primary hover:bg-primary-dark;
 		@apply py-1;
+	}
+	.chat-item {
+		@apply text-sm;
 	}
 	.username {
 		@apply font-bold;

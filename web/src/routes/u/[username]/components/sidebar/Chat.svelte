@@ -8,6 +8,7 @@
 
 	import type { Tables } from '$src/lib/schema/database.types';
 	import { PageCtx } from '$src/lib/context';
+	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
 
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('live');
@@ -90,31 +91,107 @@
 		if (data?.[0]?.team) teamId = data?.[0]?.team;
 		return;
 	}
+
+	let chats: ChatWithSenderData[] = $state([]);
+	let isSending: boolean = $state(false);
+	let isLoading: boolean = $state(true);
+	let value: string = $state('');
+	async function submitChat() {
+		if (!ctx?.live_debate || !$authUserData) return;
+		try {
+			if (value.trim().length === 0) return;
+			isSending = true;
+			await supabase
+				.from('live_debate_chat')
+				.insert({
+					chat: value.trim(),
+					live_debate: ctx.live_debate.id,
+					sender_id: $authUserData!.id
+				})
+				.throwOnError();
+			isSending = false;
+			value = '';
+		} catch (e) {
+			console.log('error', e);
+			isSending = false;
+			newToast({
+				message: 'Failed to send the message',
+				type: 'error'
+			});
+		}
+	}
+
+	function handleKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Enter' && e.shiftKey === true) {
+			e.preventDefault();
+			submitChat();
+		}
+	}
+
+	async function fetchChats() {
+		const { data: last20Data } = await supabase
+			.from('live_debate_chat')
+			.select(chatWithSenderData)
+			.order('created_at', { ascending: true })
+			.limit(20)
+			.returns<ChatWithSenderData[]>();
+
+		chats = last20Data || [];
+		isLoading = false;
+	}
+
+	$effect(() => {
+		fetchChats();
+
+		if (!ctx?.live_debate) return;
+		supabase
+			.channel('chat')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'live_debate_chat',
+					filter: `live_debate=eq.${ctx.live_debate.id}`
+				},
+				fetchChats
+			)
+			.subscribe();
+	});
 </script>
 
 <div class="chat-container">
 	<div class="chat-items">
-		<div class="chat-item">
-			<span class="chat-item-username">username</span><span class="chat-item-content"
-				>This is a content of the chat user</span
-			>
-		</div>
-		<div class="chat-input-container">
-			<textarea class="chat-text"></textarea>
-			<div class="chat-footer">
-				<div class="left">
-					<button class="team-circle" onclick={() => handleOpenTeamSelect()}>
-						<div
-							class="circle-icon"
-							style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
-						></div>
-						<span>Change team?</span>
-					</button>
-				</div>
-				<button class="btn-submit" style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
-					>Submit</button
-				>
+		{#each chats as chat}
+			<div class="chat-item">
+				<span class="chat-item-username">
+					{chat.sender_id.username}
+				</span>
+				<span class="chat-item-content">
+					{chat.chat}
+				</span>
 			</div>
+		{/each}
+	</div>
+	<div class="chat-input-container">
+		<textarea class="chat-text" bind:value onkeydown="{handleKeyDown}"></textarea>
+		<div class="chat-footer">
+			<div class="left">
+				<button class="team-circle" onclick={() => handleOpenTeamSelect()}>
+					<div
+						class="circle-icon"
+						style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
+					></div>
+					<span>Change team?</span>
+				</button>
+			</div>
+			<button
+				class="btn-submit"
+				style="background-color:{teamId ? ctx.teamMapColor[teamId] : ''}"
+				onsubmit={submitChat}
+			>
+				Submit
+			</button>
 		</div>
 	</div>
 </div>
@@ -133,6 +210,10 @@
 	.chat-items {
 		@apply w-full;
 		@apply px-2;
+	}
+	.chat-item {
+		display: block;
+		@apply w-full;
 	}
 	button {
 		@apply flex justify-center items-center gap-1;
@@ -153,7 +234,7 @@
 	}
 	.chat-input-container {
 		@apply flex flex-col justify-end;
-		height: calc(100vh - 76px - 70px);
+		height: 100%;
 	}
 	.chat-text {
 		@apply rounded;
