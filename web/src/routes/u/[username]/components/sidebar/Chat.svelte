@@ -159,6 +159,9 @@
 		@apply rounded;
 		@apply border border-light-gray;
 		@apply bg-transparent text-white;
+		field-sizing: content;
+		min-height: 40px;
+		max-height: 120px;
 	}
 	.chat-footer {
 		@apply flex justify-between;
