@@ -59,9 +59,9 @@ export async function load({ locals, params }) {
 		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
 	]);
 
-	await supabaseAdmin.from("live_debate_participant_role").insert({
+	await supabaseAdmin.from("live_debate_user_role").insert({
 		live_debate: liveDebateId,
-		participant_id: PAGE_DATA.user.id,
+		user_id: PAGE_DATA.user.id,
 		role: "guest"
 	});
 

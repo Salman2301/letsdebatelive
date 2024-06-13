@@ -63,14 +63,14 @@ export async function load({ locals, params, parent }): Promise<ReturnCreateLive
     })
     .select();
   
-  const { error: roleError } = await supabaseAdmin
-    .from('live_debate_participant_role')
+  const { data: newHostRole, error: roleError } = await supabaseAdmin
+    .from('live_debate_user_role')
     .insert({
       live_debate: liveDebateId,
-      participant_id: userData.id,
+      user_id: userData.id,
       role: 'host',
-    });
-  
+    }).select();
+  console.error(JSON.stringify(roleError, null, 4)); 
   if (roleError || newLiveDebateError || hostDataError || !hostData?.[0]?.participant_id || !newLiveDebate || !hostData) {
     console.error(roleError, newLiveDebateError, hostDataError, hostData);
     throw redirect(303, `/?error=FAILED_TO_CREATE_OR_FETCH_LIVE_DEBATE`);
@@ -112,7 +112,7 @@ async function oldLiveDebate(supabase: SupabaseClient<Database>, userData: Table
     .eq("live_debate", liveDebateId);
   
   const { error: roleError } = await supabaseAdmin
-    .from('live_debate_participant_role')
+    .from('live_debate_user_role')
     .select()
     .eq('live_debate', liveDebateId)
     .eq('participant_id', userData.id)

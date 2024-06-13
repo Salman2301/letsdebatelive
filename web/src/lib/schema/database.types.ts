@@ -287,11 +287,11 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_invite_co_host_invited_by_live_debate_fkey';
-						columns: ['invited_by', 'live_debate'];
+						foreignKeyName: 'live_debate_invite_co_host_invited_by_fkey';
+						columns: ['invited_by'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate_participants';
-						referencedColumns: ['participant_id', 'live_debate'];
+						referencedRelation: 'user_data';
+						referencedColumns: ['id'];
 					},
 					{
 						foreignKeyName: 'live_debate_invite_co_host_live_debate_fkey';
@@ -387,42 +387,6 @@ export type Database = {
 						isOneToOne: false;
 						referencedRelation: 'live_debate';
 						referencedColumns: ['id'];
-					}
-				];
-			};
-			live_debate_participant_role: {
-				Row: {
-					created_at: string;
-					live_debate: string;
-					participant_id: string;
-					role: Database['public']['Enums']['role'];
-				};
-				Insert: {
-					created_at?: string;
-					live_debate: string;
-					participant_id: string;
-					role: Database['public']['Enums']['role'];
-				};
-				Update: {
-					created_at?: string;
-					live_debate?: string;
-					participant_id?: string;
-					role?: Database['public']['Enums']['role'];
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'live_debate_participant_role_live_debate_fkey';
-						columns: ['live_debate'];
-						isOneToOne: false;
-						referencedRelation: 'live_debate';
-						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'live_debate_participant_role_participant_id_live_debate_fkey';
-						columns: ['participant_id', 'live_debate'];
-						isOneToOne: false;
-						referencedRelation: 'live_debate_participants';
-						referencedColumns: ['participant_id', 'live_debate'];
 					}
 				];
 			};
@@ -570,6 +534,42 @@ export type Database = {
 						columns: ['live_debate'];
 						isOneToOne: false;
 						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_debate_user_role: {
+				Row: {
+					created_at: string;
+					live_debate: string;
+					role: Database['public']['Enums']['role'];
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					live_debate: string;
+					role: Database['public']['Enums']['role'];
+					user_id: string;
+				};
+				Update: {
+					created_at?: string;
+					live_debate?: string;
+					role?: Database['public']['Enums']['role'];
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_debate_user_role_live_debate_fkey';
+						columns: ['live_debate'];
+						isOneToOne: false;
+						referencedRelation: 'live_debate';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_debate_user_role_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					}
 				];

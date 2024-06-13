@@ -4,7 +4,7 @@
 	import type { LayoutServerData, } from './$types';
 
 	const pageCtx = new PageCtx('new-debate');
-	let { data }: { data: LayoutServerData } = $props();
+	let { data, children }: { data: LayoutServerData, children: any } = $props();
 
 
 	pageCtx.set({
@@ -17,4 +17,4 @@
 
 </script>
 
-<slot></slot>
+{@render children()}

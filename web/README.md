@@ -1,4 +1,8 @@
+# Intro
+
 Letsdebatelive is a video-conference platform to organize debates and live stream to audience at ease.
+
+We are also trying to solve OBS in browsers and make it more accessible to everyone.
 
 - **Audience** get a chance to participate in the live debate and
 - **Host** will seemlessly host different debate to multiple platform with less hassel.
