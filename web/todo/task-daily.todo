@@ -1,15 +1,13 @@
 
 TODO:
-  ☐ Rename "live" debate to "live"
-
-
+  ☐ Rename "live debate" to "live"
   Rethink layers:
     Layer planel:
       ☐ User able to drag above and below the feed
       ☐ Based on the layout will move according
       ☐ User can add image /  text / widget
 
-  New Debate:    
+  New Debate:
     ☐ Screen sidebar
 
   ☐ Create a webRTC group feed stream
@@ -75,11 +73,12 @@ TODO:
 
   Setting page:
     ☐ Schedules to display during offline?
+      ☐ Ask for user email to send a notification on live
 
   Live Page:
     ✔ Connect title @done(24-05-31 23:55)
-    ☐ Connect host name
-    ☐ Setup image
+    ✔ Connect host name @done(24-06-14 04:30)
+    ✔ Setup image @done(24-06-14 04:30)
       ✔ Update the seed to upload the image in the storage? @done(24-05-31 23:55)
       ☐ Get the follower count
         ☐ Setup database trigger and function to setup the follower count
@@ -110,8 +109,8 @@ TODO:
   Chat system:
     ☐ Once user focus on backstage chat
     ☐ Create a basic chat system between control-room / user / backstage
-    ☐ User can send chat
-    ☐ Control room host can send the chat
+    ✔ User can send chat @done(24-06-14 04:31)
+    ✔ Control room host can send the chat @done(24-06-14 04:31)
     ☐ Backstage user can send the chat
 
   Sidebar:
@@ -130,10 +129,11 @@ TODO:
 
   ✔ Layout Changes and Share webCam and Screenshare @done(24-05-31 23:56)
   ☐ Create a auto chat to send chat every 10 secs to test the live chat
+    ☐ Auto chat should also work based on for every number of chat, like every 20 chat send this message
     ☐ Memory leak handle max chat to 50
       ☐ Auto delete chats older than 50
-  ☐ Connect the host title
-  ☐ Host DP
+  ✔ Connect the host title @done(24-06-14 04:33)
+  ✔ Host DP @done(24-06-14 04:33)
   ☐ Host Support button
   ☐ Number of support
 
