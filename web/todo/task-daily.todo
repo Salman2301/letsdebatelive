@@ -1,5 +1,11 @@
 
-TODO:
+  FEED INFO ===>
+    DEVICE
+    USERID
+  I want the user to send multiple different feeds not just screenshare and webcam
+
+
+  ☐ Work on streaming chat with scrol not functionality
   ✔ Rename "live_debate" to "live_feed" @done(24-06-14 05:22)
   ✘ Activate all the live* not live_* @cancelled(24-06-14 05:22)
   Rethink layers:
