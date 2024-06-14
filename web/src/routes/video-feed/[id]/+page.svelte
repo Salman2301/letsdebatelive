@@ -4,14 +4,14 @@
 
 	interface Props {
 		data: {
-			live_debate_id: string;
+			live_feed_id: string;
 		};
 	}
 
 	let { data }: Props = $props();
 </script>
 
-<VideoFeed live_debate_id={data.live_debate_id} />
+<VideoFeed live_feed_id={data.live_feed_id} />
 
 <style lang="postcss">
 </style>

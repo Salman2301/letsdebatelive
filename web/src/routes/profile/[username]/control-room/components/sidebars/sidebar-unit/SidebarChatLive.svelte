@@ -17,7 +17,7 @@
 	const supabase = getSupabase();
 
 	const pageCtx = new PageCtx('control-room');
-	const liveDebate = pageCtx.get('ctx_table$live_debate');
+	const liveFeed = pageCtx.get('ctx_table$live_feed');
 
 	let value: string = $state('');
 	async function submitChat() {
@@ -25,10 +25,10 @@
 			if (value.trim().length === 0) return;
 			isSending = true;
 			await supabase
-				.from('live_debate_chat')
+				.from('live_feed_chat')
 				.insert({
 					chat: value.trim(),
-					live_debate: $liveDebate!.id,
+					live_feed: $liveFeed!.id,
 					sender_id: $authUserData!.id
 				})
 				.throwOnError();
@@ -53,7 +53,7 @@
 
 	async function fetchChats() {
 		const { data: last20Data } = await supabase
-			.from('live_debate_chat')
+			.from('live_feed_chat')
 			.select(chatWithSenderData)
 			.order('created_at', { ascending: true })
 			.limit(20)
@@ -74,8 +74,8 @@
 			{
 				event: '*',
 				schema: 'public',
-				table: 'live_debate_chat',
-				filter: `live_debate=eq.${$liveDebate!.id}`
+				table: 'live_feed_chat',
+				filter: `live_feed=eq.${$liveFeed!.id}`
 			},
 			fetchChats
 		)
@@ -128,7 +128,7 @@
 	}
 	.chat-container {
 		width: 100%;
-		height: fill-available;
+		height: stretch;
 		overflow: scroll;
 	}
 	.input-chat {

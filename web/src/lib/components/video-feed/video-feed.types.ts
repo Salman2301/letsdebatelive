@@ -23,7 +23,7 @@ interface ScenePayloadDefault extends LayerText {
 export interface ScenePayloadContent {
 	sceneType: 'scene_content';
 	layerId: LayerIdContent;
-	// Metadata should be coming from a different channel live_debates_participants
+	// Metadata should be coming from a different channel live_feeds_participants
 	// metadata: {
 	//   participants: any[];
 	//   screen: any[]
@@ -47,5 +47,5 @@ interface LayerText {
 }
 
 // interface ParticipantsMetadata {
-//   data: Tables<"live_debate_participants">;
+//   data: Tables<"live_feed_participants">;
 // }

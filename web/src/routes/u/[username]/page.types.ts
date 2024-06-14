@@ -6,11 +6,11 @@ export interface PageData {
 	userJoined: boolean;
 	isLoggedIn: boolean;
 	user: User | null; // TODO: why do we need to send user, should it not be userData
-	live_debate: Tables<'live_debate'> | null;
+	live_feed: Tables<'live_feed'> | null;
 	participants: ParticipantsWithUserData[];
 	myBackstageInfo: ParticipantsWithUserData | null;
 	isJoined: boolean;
-	teams: Tables<"live_debate_team">[] | [];
+	teams: Tables<'live_feed_team'>[] | [];
 	teamMapColor: Record<string, string>;
-	host: Tables<"user_data"> | null;
+	host: Tables<'user_data'> | null;
 }

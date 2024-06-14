@@ -21,31 +21,31 @@
 	});
 
 	interface Props {
-		live_debate_id?: string;
+		live_feed_id?: string;
 	}
 
-	let { live_debate_id }: Props = $props();
+	let { live_feed_id }: Props = $props();
 
 	const supabase = getSupabase();
-	let participantsList: Tables<'live_debate_participants'>[] = $state([]);
+	let participantsList: Tables<'live_feed_participants'>[] = $state([]);
 
 	onMount(async () => {
 		supabase
-			.channel(`scene_${live_debate_id}`)
+			.channel(`scene_${live_feed_id}`)
 			.on('broadcast', { event: 'scene_change' }, onSceneChange)
 			.subscribe();
 
 		supabase
-			.channel(`participants_${live_debate_id}`)
+			.channel(`participants_${live_feed_id}`)
 			.on(
 				'postgres_changes',
 				{
 					event: '*',
 					schema: 'public',
-					table: 'live_debate_participants',
-					filter: `live_debate=eq.${live_debate_id}`
+					table: 'live_feed_participants',
+					filter: `live_feed=eq.${live_feed_id}`
 				},
-				(payload: RealtimePostgresChangesPayload<Tables<'live_debate_participants'>>) =>
+				(payload: RealtimePostgresChangesPayload<Tables<'live_feed_participants'>>) =>
 					onParticpantChange()
 			)
 			.subscribe();
@@ -54,11 +54,11 @@
 	});
 
 	async function onParticpantChange() {
-		if (!live_debate_id) return;
+		if (!live_feed_id) return;
 		const { data, error } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.select()
-			.eq('live_debate', live_debate_id)
+			.eq('live_feed', live_feed_id)
 			.eq('location', 'stage');
 		participantsList = data ?? [];
 	}

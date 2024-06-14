@@ -19,13 +19,11 @@
 	}
 	let { data }: Props = $props();
 
-	const liveDebate: Writable<Tables<'live_debate'> | null> = writable(data.live_debate);
+	const liveFeed: Writable<Tables<'live_feed'> | null> = writable(data.live_feed);
 
-	const teams: Writable<Tables<'live_debate_team'>[]> = writable(data.teamData);
+	const teams: Writable<Tables<'live_feed_team'>[]> = writable(data.teamData);
 
-	const participants: Writable<ParticipantsWithUserData[]> = writable(
-		data.participantsData
-	);
+	const participants: Writable<ParticipantsWithUserData[]> = writable(data.participantsData);
 	const participantsOnStage: Readable<ParticipantsWithUserData[]> = derived(
 		participants,
 		($participants) => $participants.filter((e) => e.location === 'stage')
@@ -43,69 +41,78 @@
 	});
 
 	pageCtx.set({
-		ctx_table$live_debate: liveDebate,
-		ctx_table$live_debate_participants: participants,
-		ctx_table$live_debate_participants_stage: participantsOnStage,
-		ctx_table$live_debate_participants_backstage: participantsBackStage,
-		ctx_table$live_debate_team: teams,
+		ctx_table$live_feed: liveFeed,
+		ctx_table$live_feed_participants: participants,
+		ctx_table$live_feed_participants_stage: participantsOnStage,
+		ctx_table$live_feed_participants_backstage: participantsBackStage,
+		ctx_table$live_feed_team: teams,
 		ctx_map$teamColor: teamMapColor
 	});
 
-	const liveDebateChannel = supabase.channel('custom-all-channel');
+	const liveFeedChannel = supabase.channel('custom-all-channel');
 
 	onMount(async () => {
-		if(!$authUserData?.id) {
+		if (!$authUserData?.id) {
 			$authUserData = data.userData;
 			// throw new Error('You must be logged in to see the control room');
 		}
 
-		liveDebate.set(data.live_debate);
-		const liveDebateIdStr = data.live_debate?.id;
+		liveFeed.set(data.live_feed);
+		const liveFeedIdStr = data.live_feed?.id;
 
-		if (!liveDebateIdStr) throw new Error('Did you seed the database?');
+		if (!liveFeedIdStr) throw new Error('Did you seed the database?');
 
-		const [{ data: participantsData, error: participantsError }, { data: teamsData, error: teamsError }] = await Promise.all([
-			supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateIdStr).returns<ParticipantsWithUserData[]>(),
-			supabase.from('live_debate_team').select().eq('live_debate', liveDebateIdStr)
+		const [
+			{ data: participantsData, error: participantsError },
+			{ data: teamsData, error: teamsError }
+		] = await Promise.all([
+			supabase
+				.from('live_feed_participants')
+				.select(participantsWithUserDataSelect)
+				.eq('live_feed', liveFeedIdStr)
+				.returns<ParticipantsWithUserData[]>(),
+			supabase.from('live_feed_team').select().eq('live_feed', liveFeedIdStr)
 		]);
-		
-		if (!participantsData || !participantsData[0] || participantsError) throw new Error('No new participants');
+
+		if (!participantsData || !participantsData[0] || participantsError)
+			throw new Error('No new participants');
 		if (teamsError) throw new Error('No team');
 
 		participants.set(participantsData);
 		teams.set(teamsData || []);
 
-		liveDebateChannel
+		liveFeedChannel
 			.on(
 				'postgres_changes',
 				{
 					event: '*',
 					schema: 'public',
-					table: 'live_debate_participants',
-					filter: `live_debate=eq.${liveDebateIdStr}`
+					table: 'live_feed_participants',
+					filter: `live_feed=eq.${liveFeedIdStr}`
 				},
 				(payload) => {
-					syncLiveDebateParticipants();
+					syncLiveFeedParticipants();
 				}
 			)
 			.subscribe();
 
-		async function syncLiveDebateParticipants() {
-			const {data: participantsWithUserData, error} = await supabase.from('live_debate_participants')
+		async function syncLiveFeedParticipants() {
+			const { data: participantsWithUserData, error } = await supabase
+				.from('live_feed_participants')
 				.select(participantsWithUserDataSelect)
-				.eq('live_debate', liveDebateIdStr)
-				.order("created_at", { ascending: true })
+				.eq('live_feed', liveFeedIdStr)
+				.order('created_at', { ascending: true })
 				.returns<ParticipantsWithUserData[]>();
 
 			$participants = participantsWithUserData || [];
 		}
 
 		// On Destroy unsubs to all the subscriptions
-		// get the live debate setting list
+		// get the live feed setting list
 	});
 
 	onDestroy(() => {
-		liveDebateChannel.unsubscribe();
+		liveFeedChannel.unsubscribe();
 	});
 </script>
 

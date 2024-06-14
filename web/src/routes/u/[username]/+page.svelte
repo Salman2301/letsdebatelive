@@ -16,7 +16,7 @@
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
-	
+
 	interface Props {
 		data: PageData;
 		form: ActionData;
@@ -48,16 +48,16 @@
 	});
 
 	onMount(() => {
-		if ($isJoined && data?.live_debate?.id) {
-			backstageChannel = supabase.channel(`backstage_${data.live_debate.id}`);
+		if ($isJoined && data?.live_feed?.id) {
+			backstageChannel = supabase.channel(`backstage_${data.live_feed.id}`);
 
 			backstageChannel.on(
 				'postgres_changes',
 				{
 					event: '*',
 					schema: 'public',
-					table: 'live_debate_participants',
-					filter: `live_debate=eq.${data.live_debate.id}`
+					table: 'live_feed_participants',
+					filter: `live_feed=eq.${data.live_feed.id}`
 				},
 				(payload) => syncBackstage()
 			);
@@ -67,15 +67,15 @@
 	});
 
 	async function syncBackstage() {
-		if (!data?.live_debate?.id) return;
+		if (!data?.live_feed?.id) return;
 		if (!$authUserData) {
 			return;
 		}
 		const { data: participantsData, error } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.select(participantsWithUserDataSelect)
-			.eq('live_debate', data.live_debate.id)
-			.order("created_at", { ascending: true })
+			.eq('live_feed', data.live_feed.id)
+			.order('created_at', { ascending: true })
 			.returns<ParticipantsWithUserData[]>();
 
 		$participants = participantsData || [];

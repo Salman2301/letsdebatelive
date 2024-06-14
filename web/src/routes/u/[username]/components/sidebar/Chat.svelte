@@ -37,8 +37,8 @@
 		});
 	}
 
-	async function handleSelectTeam(team: Tables<'live_debate_team'>) {
-		if (!$authUserData?.id || !ctx.live_debate) {
+	async function handleSelectTeam(team: Tables<'live_feed_team'>) {
+		if (!$authUserData?.id || !ctx.live_feed) {
 			return newToast({
 				type: 'error',
 				message: 'Error failed to get the current user info'
@@ -47,22 +47,22 @@
 
 		const [{ data, error }, { data: participantUpdate, error: errorUpdate }] = await Promise.all([
 			supabase
-				.from('live_debate_user_team')
+				.from('live_feed_user_team')
 				.upsert({
-					live_debate: ctx.live_debate.id,
+					live_feed: ctx.live_feed.id,
 					team: team.id,
 					user_id: $authUserData?.id
 				})
-				.eq('live_debate', ctx.live_debate.id)
+				.eq('live_feed', ctx.live_feed.id)
 				.eq('user_id', $authUserData.id),
 
 			// Update team if the user is in backstage
 			supabase
-				.from('live_debate_participants')
+				.from('live_feed_participants')
 				.update({
 					team: team.id
 				})
-				.eq('live_debate', ctx.live_debate.id)
+				.eq('live_feed', ctx.live_feed.id)
 				.eq('participant_id', $authUserData.id)
 		]);
 
@@ -80,12 +80,12 @@
 	}
 
 	async function getTeamId() {
-		if (!ctx?.live_debate || !$authUserData) return;
+		if (!ctx?.live_feed || !$authUserData) return;
 
 		const { data, error } = await supabase
-			.from('live_debate_user_team')
+			.from('live_feed_user_team')
 			.select()
-			.eq('live_debate', ctx.live_debate.id)
+			.eq('live_feed', ctx.live_feed.id)
 			.eq('user_id', $authUserData?.id);
 
 		if (data?.[0]?.team) teamId = data?.[0]?.team;
@@ -97,15 +97,15 @@
 	let isLoading: boolean = $state(true);
 	let value: string = $state('');
 	async function submitChat() {
-		if (!ctx?.live_debate || !$authUserData) return;
+		if (!ctx?.live_feed || !$authUserData) return;
 		try {
 			if (value.trim().length === 0) return;
 			isSending = true;
 			await supabase
-				.from('live_debate_chat')
+				.from('live_feed_chat')
 				.insert({
 					chat: value.trim(),
-					live_debate: ctx.live_debate.id,
+					live_feed: ctx.live_feed.id,
 					sender_id: $authUserData!.id
 				})
 				.throwOnError();
@@ -130,7 +130,7 @@
 
 	async function fetchChats() {
 		const { data: last20Data } = await supabase
-			.from('live_debate_chat')
+			.from('live_feed_chat')
 			.select(chatWithSenderData)
 			.order('created_at', { ascending: true })
 			.limit(20)
@@ -143,7 +143,7 @@
 	$effect(() => {
 		fetchChats();
 
-		if (!ctx?.live_debate) return;
+		if (!ctx?.live_feed) return;
 		supabase
 			.channel('chat')
 			.on(
@@ -151,8 +151,8 @@
 				{
 					event: '*',
 					schema: 'public',
-					table: 'live_debate_chat',
-					filter: `live_debate=eq.${ctx.live_debate.id}`
+					table: 'live_feed_chat',
+					filter: `live_feed=eq.${ctx.live_feed.id}`
 				},
 				fetchChats
 			)
@@ -174,7 +174,7 @@
 		{/each}
 	</div>
 	<div class="chat-input-container">
-		<textarea class="chat-text" bind:value onkeydown="{handleKeyDown}"></textarea>
+		<textarea class="chat-text" bind:value onkeydown={handleKeyDown}></textarea>
 		<div class="chat-footer">
 			<div class="left">
 				<button class="team-circle" onclick={() => handleOpenTeamSelect()}>

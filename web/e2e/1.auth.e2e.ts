@@ -11,7 +11,7 @@ const test = base.extend<{ authPage: AuthPage }>({
 
 test('index page should have logo', async ({ page, authPage }) => {
 	await page.goto('/');
-	await expect(page.getByRole('link', { name: 'LETSDEBATE LIVE' })).toBeVisible();
+	await expect(page.getByRole('link', { name: 'VISTA LIVE' })).toBeVisible();
 });
 
 test('user able to register', async ({ page, authPage }) => {

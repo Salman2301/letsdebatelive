@@ -109,92 +109,92 @@ INSERT INTO "public"."user_data" ("id", "created_at", "displayName", "email", "f
 
 
 --
--- Data for Name: live_debate; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate" ("id", "created_at", "title", "host", "chat_rules", "debate_type", "chat_filter_words", "backstage_max", "studio_mode", "debater_card_show", "published", "max_participants", "max_stage", "backstage_audience", "chat_audience", "viewer_audience", "auto_move_to_stage", "ended", "ended_tz", "published_tz") VALUES
-	('369fa6a1-1311-4b37-b9d3-3ba82e3c056a', '2024-06-02 07:46:06.015748+00', 'New debate', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, NULL, NULL, true, 20, 10, '{anonymous}', '{anonymous}', '{anonymous}', true, true, NULL, '2024-06-02 07:47:16.018+00'),
+INSERT INTO "public"."live_feed" ("id", "created_at", "title", "host", "chat_rules", "feed_type", "chat_filter_words", "backstage_max", "studio_mode", "feeder_card_show", "published", "max_participants", "max_stage", "backstage_audience", "chat_audience", "viewer_audience", "auto_move_to_stage", "ended", "ended_tz", "published_tz") VALUES
+	('369fa6a1-1311-4b37-b9d3-3ba82e3c056a', '2024-06-02 07:46:06.015748+00', 'New feed', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, NULL, NULL, true, 20, 10, '{anonymous}', '{anonymous}', '{anonymous}', true, true, NULL, '2024-06-02 07:47:16.018+00'),
 	('7cb41530-2726-4d9a-8825-07bddc65807a', '2024-06-13 13:55:48.405212+00', NULL, 'dc81fe33-706b-40eb-962b-14ebf3eadc58', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	('0834497a-bdd8-4529-8769-5b619111ea0c', '2024-06-13 13:56:09.08793+00', NULL, 'dc81fe33-706b-40eb-962b-14ebf3eadc58', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 	('89d84603-d8c6-4296-b6c6-e0e3c40210e0', '2024-06-13 13:50:47.664498+00', 'test', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, NULL, NULL, NULL, NULL, true, 10, 4, '{anonymous}', '{anonymous}', '{anonymous}', false, NULL, NULL, '2024-06-13 13:51:56.385+00');
 
 
 --
--- Data for Name: live_debate_team; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_team; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate_team" ("created_at", "color", "title", "id", "live_debate", "slug", "is_default") VALUES
+INSERT INTO "public"."live_feed_team" ("created_at", "color", "title", "id", "live_feed", "slug", "is_default") VALUES
 	('2024-06-13 13:51:07.731273+00', '#32DE8A', 'Team A', 'eb32685d-ada6-4c04-badc-5c3392e516c8', '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'team-a', true),
 	('2024-06-13 13:51:09.859461+00', '#EF7674', 'Team B', '242675f6-779d-4297-829d-fdc2d5fb5ba0', '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'team-b', false),
 	('2024-06-13 13:51:11.293583+00', '#F2AF29', 'Team C', '2f3e1d79-ec63-4ec3-88ca-c9797c504d0d', '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'team-c', false);
 
 
 --
--- Data for Name: live_debate_agenda; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_agenda; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_audience_team_only; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_audience_team_only; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_backstage_chat; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_backstage_chat; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_chat; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_chat; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_invite_co_host; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_invite_co_host; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate_invite_co_host" ("id", "created_at", "invited_by", "status", "email", "team", "live_debate") VALUES
+INSERT INTO "public"."live_feed_invite_co_host" ("id", "created_at", "invited_by", "status", "email", "team", "live_feed") VALUES
 	('c8d8d0c1-f777-4a63-b7a3-ddaacccd2cdc', '2024-06-13 13:51:46.837921+00', '26d288ae-1bfa-4a01-8469-d694b52a8972', 'invited', 'salman@test.com', '242675f6-779d-4297-829d-fdc2d5fb5ba0', '89d84603-d8c6-4296-b6c6-e0e3c40210e0');
 
 
 --
--- Data for Name: live_debate_kick; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_kick; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_notification; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_notification; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- Data for Name: live_debate_participants; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_participants; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate_participants" ("created_at", "speaker_id", "mic_id", "cam_id", "speaker_enable", "mic_enable", "cam_enable", "screenshare_available", "speaker_available", "mic_available", "cam_available", "current_stage", "is_kicked", "display_name", "team", "hand_raised", "live_debate", "location", "participant_id", "host_id", "profile_image_enable", "screenshare_enable", "hand_raised_at", "role") VALUES
+INSERT INTO "public"."live_feed_participants" ("created_at", "speaker_id", "mic_id", "cam_id", "speaker_enable", "mic_enable", "cam_enable", "screenshare_available", "speaker_available", "mic_available", "cam_available", "current_stage", "is_kicked", "display_name", "team", "hand_raised", "live_feed", "location", "participant_id", "host_id", "profile_image_enable", "screenshare_enable", "hand_raised_at", "role") VALUES
 	('2024-06-13 13:56:23.234111+00', NULL, NULL, NULL, true, false, true, NULL, NULL, NULL, NULL, NULL, NULL, 'What', 'eb32685d-ada6-4c04-badc-5c3392e516c8', NULL, '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'backstage', 'dc81fe33-706b-40eb-962b-14ebf3eadc58', NULL, true, true, NULL, 'guest'),
 	('2024-06-13 13:50:47.675445+00', 'default', 'default', 'f99be2ea021149ba773fdb26c805335c8dfdd9b9eff8b6af99b572de5ecf633c', true, false, false, true, true, true, false, NULL, NULL, 'Jhon Doe', '2f3e1d79-ec63-4ec3-88ca-c9797c504d0d', NULL, '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'stage', '26d288ae-1bfa-4a01-8469-d694b52a8972', NULL, NULL, false, NULL, 'host');
 
 
 --
--- Data for Name: live_debate_user_role; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_user_role; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate_user_role" ("user_id", "created_at", "live_debate", "role") VALUES
+INSERT INTO "public"."live_feed_user_role" ("user_id", "created_at", "live_feed", "role") VALUES
 	('26d288ae-1bfa-4a01-8469-d694b52a8972', '2024-06-13 13:50:51.604693+00', '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'host');
 
 
 --
--- Data for Name: live_debate_user_team; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: live_feed_user_team; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."live_debate_user_team" ("user_id", "created_at", "live_debate", "team") VALUES
+INSERT INTO "public"."live_feed_user_team" ("user_id", "created_at", "live_feed", "team") VALUES
 	('dc81fe33-706b-40eb-962b-14ebf3eadc58', '2024-06-13 13:56:35.15754+00', '89d84603-d8c6-4296-b6c6-e0e3c40210e0', 'eb32685d-ada6-4c04-badc-5c3392e516c8');
 
 

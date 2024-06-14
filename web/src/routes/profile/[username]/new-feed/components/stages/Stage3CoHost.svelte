@@ -4,19 +4,17 @@
 	import CloseX from '$src/lib/components/icon/CloseX.svelte';
 	import Label from '$src/lib/components/form/input/Label.svelte';
 
-
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { PageCtx } from '$src/lib/context';
 	import { onMount } from 'svelte';
 	import { z } from 'zod';
 	import { getSupabase } from '$src/lib/supabase';
-	
 
 	import type { Tables } from '$src/lib/schema/database.types';
 
 	const supabase = getSupabase();
 
-	const pageCtx = new PageCtx('new-debate');
+	const pageCtx = new PageCtx('new-feed');
 	const teams = pageCtx.get('teams');
 	const host = pageCtx.get('hostParticipant');
 	const cohosts = pageCtx.get('inviteCohost');
@@ -46,10 +44,10 @@
 				return;
 			}
 
-			const { data, error } = await supabase.from('live_debate_invite_co_host').insert({
+			const { data, error } = await supabase.from('live_feed_invite_co_host').insert({
 				email: email,
 				invited_by: $host?.participant_id!,
-				live_debate: $host?.live_debate!,
+				live_feed: $host?.live_feed!,
 				status: 'invited',
 				team: team || null
 			});
@@ -60,7 +58,7 @@
 					message: 'Co-host added successfully'
 				});
 			}
-			email = "";
+			email = '';
 
 			refreshInviteCohost();
 		} catch (e) {
@@ -73,9 +71,9 @@
 
 	async function refreshInviteCohost() {
 		const { data, error } = await supabase
-			.from('live_debate_invite_co_host')
+			.from('live_feed_invite_co_host')
 			.select()
-			.eq('live_debate', $host?.live_debate!);
+			.eq('live_feed', $host?.live_feed!);
 
 		$cohosts = data || [];
 	}
@@ -89,10 +87,12 @@
 		}
 	}
 
-	async function removeCohost(cohost: Tables<"live_debate_invite_co_host">) {
-		const { data, error } = await supabase.from('live_debate_invite_co_host').delete().eq('id', cohost.id);
+	async function removeCohost(cohost: Tables<'live_feed_invite_co_host'>) {
+		const { data, error } = await supabase
+			.from('live_feed_invite_co_host')
+			.delete()
+			.eq('id', cohost.id);
 		refreshInviteCohost();
-
 	}
 </script>
 

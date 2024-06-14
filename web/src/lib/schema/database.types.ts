@@ -21,7 +21,7 @@ export type Database = {
 				};
 				Relationships: [];
 			};
-			live_debate: {
+			live_feed: {
 				Row: {
 					auto_move_to_stage: boolean | null;
 					backstage_audience: Database['public']['Enums']['audience_type'][] | null;
@@ -30,10 +30,10 @@ export type Database = {
 					chat_filter_words: string | null;
 					chat_rules: string | null;
 					created_at: string;
-					debate_type: string | null;
-					debater_card_show: boolean | null;
 					ended: boolean | null;
 					ended_tz: string | null;
+					feed_type: string | null;
+					feeder_card_show: boolean | null;
 					host: string | null;
 					id: string;
 					max_participants: number;
@@ -52,10 +52,10 @@ export type Database = {
 					chat_filter_words?: string | null;
 					chat_rules?: string | null;
 					created_at?: string;
-					debate_type?: string | null;
-					debater_card_show?: boolean | null;
 					ended?: boolean | null;
 					ended_tz?: string | null;
+					feed_type?: string | null;
+					feeder_card_show?: boolean | null;
 					host?: string | null;
 					id?: string;
 					max_participants?: number;
@@ -74,10 +74,10 @@ export type Database = {
 					chat_filter_words?: string | null;
 					chat_rules?: string | null;
 					created_at?: string;
-					debate_type?: string | null;
-					debater_card_show?: boolean | null;
 					ended?: boolean | null;
 					ended_tz?: string | null;
+					feed_type?: string | null;
+					feeder_card_show?: boolean | null;
 					host?: string | null;
 					id?: string;
 					max_participants?: number;
@@ -90,7 +90,7 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'public_live_debate_host_fkey';
+						foreignKeyName: 'public_live_feed_host_fkey';
 						columns: ['host'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -98,12 +98,12 @@ export type Database = {
 					}
 				];
 			};
-			live_debate_agenda: {
+			live_feed_agenda: {
 				Row: {
 					completed: boolean | null;
 					created_at: string;
 					id: string;
-					live_debate: string | null;
+					live_feed: string | null;
 					team: string | null;
 					time: string | null;
 					title: string | null;
@@ -112,7 +112,7 @@ export type Database = {
 					completed?: boolean | null;
 					created_at?: string;
 					id?: string;
-					live_debate?: string | null;
+					live_feed?: string | null;
 					team?: string | null;
 					time?: string | null;
 					title?: string | null;
@@ -121,96 +121,96 @@ export type Database = {
 					completed?: boolean | null;
 					created_at?: string;
 					id?: string;
-					live_debate?: string | null;
+					live_feed?: string | null;
 					team?: string | null;
 					time?: string | null;
 					title?: string | null;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'debate_agenda_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'feed_agenda_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'debate_agenda_team_fkey';
+						foreignKeyName: 'feed_agenda_team_fkey';
 						columns: ['team'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate_team';
+						referencedRelation: 'live_feed_team';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_audience_team_only: {
+			live_feed_audience_team_only: {
 				Row: {
 					created_at: string;
-					live_debate: string;
+					live_feed: string;
 					service: Database['public']['Enums']['audience_service'];
 					team: string;
 				};
 				Insert: {
 					created_at?: string;
-					live_debate: string;
+					live_feed: string;
 					service: Database['public']['Enums']['audience_service'];
 					team: string;
 				};
 				Update: {
 					created_at?: string;
-					live_debate?: string;
+					live_feed?: string;
 					service?: Database['public']['Enums']['audience_service'];
 					team?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_audience_team_only_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_audience_team_only_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_audience_team_only_team_fkey';
+						foreignKeyName: 'live_feed_audience_team_only_team_fkey';
 						columns: ['team'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate_team';
+						referencedRelation: 'live_feed_team';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_backstage_chat: {
+			live_feed_backstage_chat: {
 				Row: {
 					chat: string;
 					created_at: string;
 					id: string;
-					live_debate_id: string;
+					live_feed_id: string;
 					sender_id: string;
 				};
 				Insert: {
 					chat: string;
 					created_at?: string;
 					id?: string;
-					live_debate_id: string;
+					live_feed_id: string;
 					sender_id: string;
 				};
 				Update: {
 					chat?: string;
 					created_at?: string;
 					id?: string;
-					live_debate_id?: string;
+					live_feed_id?: string;
 					sender_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_backstage_chat_live_debate_id_fkey';
-						columns: ['live_debate_id'];
+						foreignKeyName: 'live_feed_backstage_chat_live_feed_id_fkey';
+						columns: ['live_feed_id'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_backstage_chat_sender_id_fkey';
+						foreignKeyName: 'live_feed_backstage_chat_sender_id_fkey';
 						columns: ['sender_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -218,38 +218,38 @@ export type Database = {
 					}
 				];
 			};
-			live_debate_chat: {
+			live_feed_chat: {
 				Row: {
 					chat: string;
 					created_at: string;
 					id: string;
-					live_debate: string;
+					live_feed: string;
 					sender_id: string;
 				};
 				Insert: {
 					chat: string;
 					created_at?: string;
 					id?: string;
-					live_debate: string;
+					live_feed: string;
 					sender_id: string;
 				};
 				Update: {
 					chat?: string;
 					created_at?: string;
 					id?: string;
-					live_debate?: string;
+					live_feed?: string;
 					sender_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_chat_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_chat_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_chat_sender_id_fkey';
+						foreignKeyName: 'live_feed_chat_sender_id_fkey';
 						columns: ['sender_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -257,13 +257,13 @@ export type Database = {
 					}
 				];
 			};
-			live_debate_invite_co_host: {
+			live_feed_invite_co_host: {
 				Row: {
 					created_at: string;
 					email: string;
 					id: string;
 					invited_by: string;
-					live_debate: string;
+					live_feed: string;
 					status: string;
 					team: string | null;
 				};
@@ -272,7 +272,7 @@ export type Database = {
 					email: string;
 					id?: string;
 					invited_by: string;
-					live_debate: string;
+					live_feed: string;
 					status: string;
 					team?: string | null;
 				};
@@ -281,40 +281,40 @@ export type Database = {
 					email?: string;
 					id?: string;
 					invited_by?: string;
-					live_debate?: string;
+					live_feed?: string;
 					status?: string;
 					team?: string | null;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_invite_co_host_invited_by_fkey';
+						foreignKeyName: 'live_feed_invite_co_host_invited_by_fkey';
 						columns: ['invited_by'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_invite_co_host_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_invite_co_host_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_invite_co_host_team_fkey';
+						foreignKeyName: 'live_feed_invite_co_host_team_fkey';
 						columns: ['team'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate_team';
+						referencedRelation: 'live_feed_team';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_kick: {
+			live_feed_kick: {
 				Row: {
 					created_at: string;
 					id: string;
 					kicked_by: string;
-					live_debate: string;
+					live_feed: string;
 					reason: string | null;
 					user_id: string;
 				};
@@ -322,7 +322,7 @@ export type Database = {
 					created_at?: string;
 					id?: string;
 					kicked_by: string;
-					live_debate: string;
+					live_feed: string;
 					reason?: string | null;
 					user_id: string;
 				};
@@ -330,27 +330,27 @@ export type Database = {
 					created_at?: string;
 					id?: string;
 					kicked_by?: string;
-					live_debate?: string;
+					live_feed?: string;
 					reason?: string | null;
 					user_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_kick_kicked_by_fkey';
+						foreignKeyName: 'live_feed_kick_kicked_by_fkey';
 						columns: ['kicked_by'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_kick_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_kick_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_kick_user_id_fkey';
+						foreignKeyName: 'live_feed_kick_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -358,39 +358,39 @@ export type Database = {
 					}
 				];
 			};
-			live_debate_notification: {
+			live_feed_notification: {
 				Row: {
 					created_at: string;
 					has_read: boolean;
-					live_debate: string;
+					live_feed: string;
 					missed_count: number | null;
 					service: Database['public']['Enums']['notification_service'];
 				};
 				Insert: {
 					created_at?: string;
 					has_read: boolean;
-					live_debate: string;
+					live_feed: string;
 					missed_count?: number | null;
 					service: Database['public']['Enums']['notification_service'];
 				};
 				Update: {
 					created_at?: string;
 					has_read?: boolean;
-					live_debate?: string;
+					live_feed?: string;
 					missed_count?: number | null;
 					service?: Database['public']['Enums']['notification_service'];
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_notification_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_notification_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_participants: {
+			live_feed_participants: {
 				Row: {
 					cam_available: boolean | null;
 					cam_enable: boolean | null;
@@ -402,7 +402,7 @@ export type Database = {
 					hand_raised_at: string | null;
 					host_id: string | null;
 					is_kicked: boolean | null;
-					live_debate: string;
+					live_feed: string;
 					location: Database['public']['Enums']['participant_location'];
 					mic_available: boolean | null;
 					mic_enable: boolean | null;
@@ -428,7 +428,7 @@ export type Database = {
 					hand_raised_at?: string | null;
 					host_id?: string | null;
 					is_kicked?: boolean | null;
-					live_debate: string;
+					live_feed: string;
 					location: Database['public']['Enums']['participant_location'];
 					mic_available?: boolean | null;
 					mic_enable?: boolean | null;
@@ -454,7 +454,7 @@ export type Database = {
 					hand_raised_at?: string | null;
 					host_id?: string | null;
 					is_kicked?: boolean | null;
-					live_debate?: string;
+					live_feed?: string;
 					location?: Database['public']['Enums']['participant_location'];
 					mic_available?: boolean | null;
 					mic_enable?: boolean | null;
@@ -471,42 +471,42 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_participants_host_id_fkey';
+						foreignKeyName: 'live_feed_participants_host_id_fkey';
 						columns: ['host_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_participants_id_fkey';
+						foreignKeyName: 'live_feed_participants_id_fkey';
 						columns: ['participant_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_participants_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_participants_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'public_live_debate_participants_team_fkey';
+						foreignKeyName: 'public_live_feed_participants_team_fkey';
 						columns: ['team'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate_team';
+						referencedRelation: 'live_feed_team';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_team: {
+			live_feed_team: {
 				Row: {
 					color: string;
 					created_at: string;
 					id: string;
 					is_default: boolean | null;
-					live_debate: string;
+					live_feed: string;
 					slug: string;
 					title: string;
 				};
@@ -515,7 +515,7 @@ export type Database = {
 					created_at?: string;
 					id?: string;
 					is_default?: boolean | null;
-					live_debate: string;
+					live_feed: string;
 					slug: string;
 					title: string;
 				};
@@ -524,49 +524,49 @@ export type Database = {
 					created_at?: string;
 					id?: string;
 					is_default?: boolean | null;
-					live_debate?: string;
+					live_feed?: string;
 					slug?: string;
 					title?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_team_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_team_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					}
 				];
 			};
-			live_debate_user_role: {
+			live_feed_user_role: {
 				Row: {
 					created_at: string;
-					live_debate: string;
+					live_feed: string;
 					role: Database['public']['Enums']['role'];
 					user_id: string;
 				};
 				Insert: {
 					created_at?: string;
-					live_debate: string;
+					live_feed: string;
 					role: Database['public']['Enums']['role'];
 					user_id: string;
 				};
 				Update: {
 					created_at?: string;
-					live_debate?: string;
+					live_feed?: string;
 					role?: Database['public']['Enums']['role'];
 					user_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_user_role_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_user_role_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_user_role_user_id_fkey';
+						foreignKeyName: 'live_feed_user_role_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -574,35 +574,35 @@ export type Database = {
 					}
 				];
 			};
-			live_debate_user_team: {
+			live_feed_user_team: {
 				Row: {
 					created_at: string;
-					live_debate: string;
+					live_feed: string;
 					team: string;
 					user_id: string;
 				};
 				Insert: {
 					created_at?: string;
-					live_debate: string;
+					live_feed: string;
 					team: string;
 					user_id?: string;
 				};
 				Update: {
 					created_at?: string;
-					live_debate?: string;
+					live_feed?: string;
 					team?: string;
 					user_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'live_debate_user_team_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_feed_user_team_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_debate_user_team_user_id_fkey';
+						foreignKeyName: 'live_feed_user_team_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'user_data';
@@ -614,7 +614,7 @@ export type Database = {
 				Row: {
 					banned_by: string;
 					created_at: string;
-					live_debate: string;
+					live_feed: string;
 					reason: string | null;
 					reason_title: string | null;
 					user_id: string;
@@ -622,7 +622,7 @@ export type Database = {
 				Insert: {
 					banned_by?: string;
 					created_at?: string;
-					live_debate: string;
+					live_feed: string;
 					reason?: string | null;
 					reason_title?: string | null;
 					user_id: string;
@@ -630,7 +630,7 @@ export type Database = {
 				Update: {
 					banned_by?: string;
 					created_at?: string;
-					live_debate?: string;
+					live_feed?: string;
 					reason?: string | null;
 					reason_title?: string | null;
 					user_id?: string;
@@ -644,10 +644,10 @@ export type Database = {
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'live_host_ban_live_debate_fkey';
-						columns: ['live_debate'];
+						foreignKeyName: 'live_host_ban_live_feed_fkey';
+						columns: ['live_feed'];
 						isOneToOne: false;
-						referencedRelation: 'live_debate';
+						referencedRelation: 'live_feed';
 						referencedColumns: ['id'];
 					},
 					{
@@ -894,7 +894,7 @@ export type Database = {
 		Functions: {
 			is_space_left: {
 				Args: {
-					live_debate_id: string;
+					live_feed_id: string;
 				};
 				Returns: boolean;
 			};
@@ -904,19 +904,19 @@ export type Database = {
 			};
 			user_atleast_co_host: {
 				Args: {
-					live_debate_id: string;
+					live_feed_id: string;
 				};
 				Returns: boolean;
 			};
 			user_atleast_mod: {
 				Args: {
-					live_debate_id: string;
+					live_feed_id: string;
 				};
 				Returns: boolean;
 			};
 			user_is_host: {
 				Args: {
-					live_debate_id: string;
+					live_feed_id: string;
 				};
 				Returns: boolean;
 			};

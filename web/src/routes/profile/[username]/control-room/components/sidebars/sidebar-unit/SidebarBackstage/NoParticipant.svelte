@@ -11,7 +11,7 @@
 
 	let { type }: Props = $props();
 
-	let participants: Writable<Tables<'live_debate_participants'>[]> =
+	let participants: Writable<Tables<'live_feed_participants'>[]> =
 		getContext('ctx_table$participants');
 </script>
 

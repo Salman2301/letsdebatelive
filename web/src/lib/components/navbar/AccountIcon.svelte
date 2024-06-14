@@ -11,10 +11,10 @@
 
 	const supabase = getSupabase();
 
-	async function handleCreateDebate() {
+	async function handleCreateFeed() {
 		if (!$authUserData) return;
 		showPopup = false;
-		goto(`/profile/${$authUserData.username}/new-debate`);
+		goto(`/profile/${$authUserData.username}/new-feed`);
 	}
 
 	function gotoClosePopup(link: string) {
@@ -40,12 +40,10 @@
 
 	{#if showPopup}
 		<div class="popup">
-			<button class="btn-popup" onclick={handleCreateDebate}> Create Debate </button>
+			<button class="btn-popup" onclick={handleCreateFeed}> Create Feed </button>
 			{#if $authUserData === null}
 				<button class="btn-popup" onclick={openLogin}> Login </button>
-				<button class="btn-popup bg-primary/70" onclick={openRegister}>
-					Create account
-				</button>
+				<button class="btn-popup bg-primary/70" onclick={openRegister}> Create account </button>
 			{:else}
 				{@const username = $authUserData.username}
 				<button

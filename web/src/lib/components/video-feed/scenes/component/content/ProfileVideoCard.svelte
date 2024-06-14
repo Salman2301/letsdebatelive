@@ -5,7 +5,7 @@
 
 	interface Props {
 		type?: 'audio' | 'video';
-		participant: Tables<'live_debate_participants'>;
+		participant: Tables<'live_feed_participants'>;
 	}
 	let { type, participant }: Props = $props();
 </script>

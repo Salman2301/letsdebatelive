@@ -12,11 +12,11 @@
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('control-room');
 
-	const live_debate = pageCtx.get('ctx_table$live_debate');
+	const live_feed = pageCtx.get('ctx_table$live_feed');
 
 	onMount(async () => {
-		if (!$live_debate?.id) return;
-		emitSceneChange(supabase, $live_debate.id, {
+		if (!$live_feed?.id) return;
+		emitSceneChange(supabase, $live_feed.id, {
 			sceneType: 'scene_content',
 			layerId: 'profile_multiple'
 		});
@@ -25,14 +25,14 @@
 	});
 
 	async function handleLive() {
-		if (!$live_debate?.id) return;
-		// Create a live_debate
-		emitBroadcastEvent(supabase, 'broadcast_start', $live_debate?.id);
+		if (!$live_feed?.id) return;
+		// Create a live_feed
+		emitBroadcastEvent(supabase, 'broadcast_start', $live_feed?.id);
 	}
 </script>
 
 <div class="control-room-container hidden">
-	<VideoFeed live_debate_id={$live_debate?.id} />
+	<VideoFeed live_feed_id={$live_feed?.id} />
 	<LayoutHeader />
 	<div class="small-panel-container">
 		<div class="small-panel small-panel-1">

@@ -37,7 +37,7 @@ type BaseSubscriptionResult = {
 
 {
   "schema": "public",
-  "table": "live_debate_participants",
+  "table": "live_feed_participants",
   "commit_timestamp": "2024-05-21T07:24:39.773Z",
   "eventType": "UPDATE",
   "new": {
@@ -50,7 +50,7 @@ type BaseSubscriptionResult = {
       "hand_raised": null,
       "is_host": false,
       "is_kicked": null,
-      "live_debate": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
+      "live_feed": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
       "location": "backstage",
       "mic_available": null,
       "mic_enable": true,
@@ -63,7 +63,7 @@ type BaseSubscriptionResult = {
       "team": "8dd04996-eddd-49ee-8e36-c459202e87e4"
   },
   "old": {
-      "live_debate": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
+      "live_feed": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
       "participant_id": "dc81fe33-706b-40eb-962b-14ebf3eadc58"
   },
   "errors": null
@@ -72,12 +72,12 @@ type BaseSubscriptionResult = {
 // delete
 {
   "schema": "public",
-  "table": "live_debate_participants",
+  "table": "live_feed_participants",
   "commit_timestamp": "2024-05-21T07:25:03.170Z",
   "eventType": "DELETE",
   "new": {},
   "old": {
-      "live_debate": "b39f5e45-df05-42d2-b9b0-53d87e3ab647",
+      "live_feed": "b39f5e45-df05-42d2-b9b0-53d87e3ab647",
       "participant_id": "dc81fe33-706b-40eb-962b-14ebf3eadc58"
   },
   "errors": null
@@ -85,7 +85,7 @@ type BaseSubscriptionResult = {
 
 {
     "schema": "public",
-    "table": "live_debate_participants",
+    "table": "live_feed_participants",
     "commit_timestamp": "2024-05-21T07:29:56.825Z",
     "eventType": "INSERT",
     "new": {
@@ -98,7 +98,7 @@ type BaseSubscriptionResult = {
         "hand_raised": null,
         "is_host": false,
         "is_kicked": null,
-        "live_debate": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
+        "live_feed": "4167bf11-dc10-46d3-9d32-e5b7ad9d3e67",
         "location": "backstage",
         "mic_available": null,
         "mic_enable": true,

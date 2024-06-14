@@ -5,6 +5,6 @@ export function load({ locals, params }) {
 	// Check if the id is a valid id and it's
 
 	return {
-		live_debate_id: params.id
+		live_feed_id: params.id
 	};
 }

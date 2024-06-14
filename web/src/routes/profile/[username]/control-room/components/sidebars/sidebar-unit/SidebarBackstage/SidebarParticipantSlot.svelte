@@ -42,8 +42,8 @@
 
 	let { type, showSetting = $bindable(false), title }: Props = $props();
 
-	let participants = pageCtx.get('ctx_table$live_debate_participants');
-	let live_debate = pageCtx.get('ctx_table$live_debate');
+	let participants = pageCtx.get('ctx_table$live_feed_participants');
+	let live_feed = pageCtx.get('ctx_table$live_feed');
 	let teamMapColor = pageCtx.get('ctx_map$teamColor');
 
 	let filteredParticipants: ParticipantsWithUserData[] = $derived(
@@ -53,10 +53,10 @@
 	let isStageFull: boolean = $state(false);
 
 	$effect(() => {
-		if (!$participants || !$live_debate) return;
+		if (!$participants || !$live_feed) return;
 		const currentStageCount = $participants.filter((e) => e.location === 'stage').length;
 
-		isStageFull = currentStageCount >= $live_debate.max_stage;
+		isStageFull = currentStageCount >= $live_feed.max_stage;
 	});
 
 	let viewMode: 'list' | 'grid' = $state('list');
@@ -70,23 +70,23 @@
 		showSetting = !showSetting;
 	}
 
-	let deviceEnable: Partial<Tables<'live_debate_participants'>> = $derived({
+	let deviceEnable: Partial<Tables<'live_feed_participants'>> = $derived({
 		cam_enable: !filteredParticipants.some((item) => !item.cam_enable),
 		mic_enable: !filteredParticipants.some((item) => !item.mic_enable),
 		screenshare_enable: !filteredParticipants.some((item) => !item.screenshare_enable),
 		profile_image_enable: !filteredParticipants.some((item) => !item.profile_image_enable)
 	});
 
-	async function toggleDevice(device: keyof Tables<'live_debate_participants'>) {
+	async function toggleDevice(device: keyof Tables<'live_feed_participants'>) {
 		const toUpdate = {
 			[device]: !deviceEnable[device]
 		};
 
 		// INFO: keep the `await`, on remove if removed it doesn't update
 		const { data, error } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.update(toUpdate)
-			.eq('live_debate', $live_debate?.id as string);
+			.eq('live_feed', $live_feed?.id as string);
 	}
 
 	async function handleCopyLink() {
@@ -204,24 +204,24 @@
 		</div>
 	</div>
 	<div class="participant-card-container">
-		{#if viewMode === 'grid' && $live_debate}
+		{#if viewMode === 'grid' && $live_feed}
 			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCard
 					{participant}
 					{isStageFull}
-					live_debate={$live_debate}
+					live_feed={$live_feed}
 					teamMapColor={$teamMapColor}
 					{type}
 				/>
 			{:else}
 				<NoParticipant {type} />
 			{/each}
-		{:else if viewMode === 'list' && $live_debate}
+		{:else if viewMode === 'list' && $live_feed}
 			{#each filteredParticipants as participant (participant.participant_id)}
 				<ParticipantCardList
 					{isStageFull}
 					{participant}
-					live_debate={$live_debate}
+					live_feed={$live_feed}
 					teamMapColor={$teamMapColor}
 					{type}
 				/>

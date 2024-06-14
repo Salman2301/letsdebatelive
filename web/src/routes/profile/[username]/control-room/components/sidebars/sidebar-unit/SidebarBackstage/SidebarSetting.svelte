@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Button from '$lib/components/button/Button.svelte';
-	import LiveDebateSetting, { type InstanceType } from '$lib/components/group/live-debate-setting/LiveDebateSetting.svelte';
+	import LiveFeedSetting, {
+		type InstanceType
+	} from '$lib/components/group/live-feed-setting/LiveFeedSetting.svelte';
 	import TeamSetting from '$src/lib/components/group/team-setting/TeamSetting.svelte';
 
 	import { GoBack } from '$lib/components/icon';
@@ -11,19 +13,19 @@
 		onclose?: () => void;
 	}
 
-	const pageCtx = new PageCtx("control-room");
-	
-	const live_debate = pageCtx.get('ctx_table$live_debate');
-	const teams = pageCtx.get('ctx_table$live_debate_team');
-	
+	const pageCtx = new PageCtx('control-room');
+
+	const live_feed = pageCtx.get('ctx_table$live_feed');
+	const teams = pageCtx.get('ctx_table$live_feed_team');
+
 	const { onclose, type }: Props = $props();
 
 	let showSubmit: boolean = $state(false);
 
-	let liveDebateInstance: InstanceType;
+	let liveFeedInstance: InstanceType;
 
 	function handleSubmit() {
-		liveDebateInstance?.submit();		
+		liveFeedInstance?.submit();
 	}
 </script>
 
@@ -43,18 +45,10 @@
 		{/if}
 	</div>
 
-	<LiveDebateSetting
-		live_debate={live_debate}
-		teams={teams}
-		bind:showSubmit={showSubmit}
-		bind:this={liveDebateInstance}
-	/>
+	<LiveFeedSetting {live_feed} {teams} bind:showSubmit bind:this={liveFeedInstance} />
 
 	<div class="mt-12">
-		<TeamSetting
-			live_debate={live_debate}
-			teams={teams}
-		/>
+		<TeamSetting {live_feed} {teams} />
 	</div>
 
 	<!-- Show list of teams below and the user can change the color -->

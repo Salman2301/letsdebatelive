@@ -17,26 +17,28 @@
 	let layerIdContent: LayerIdContent;
 	const pageCtx = new PageCtx('control-room');
 
-	const live_debate = pageCtx.get('ctx_table$live_debate');
+	const live_feed = pageCtx.get('ctx_table$live_feed');
 	const supabase = getSupabase();
 
 	// layer id of the content screen is same as 'layout', Instead of using LayerContentHeader
 	// made sense to use LayoutHeader for short
 
 	async function handleStopBroadcast() {
-		if (!$live_debate?.id) return;
+		if (!$live_feed?.id) return;
 
-		await supabase.from("live_debate").update({
-			ended: true,
-			ended_tz: new Date().toISOString(),
-		}).eq("id", $live_debate.id);
+		await supabase
+			.from('live_feed')
+			.update({
+				ended: true,
+				ended_tz: new Date().toISOString()
+			})
+			.eq('id', $live_feed.id);
 
-
-		emitBroadcastEvent(supabase, 'broadcast_end', $live_debate.id, {
-			liveDebateId: $live_debate.id
+		emitBroadcastEvent(supabase, 'broadcast_end', $live_feed.id, {
+			liveFeedId: $live_feed.id
 		});
 
-		emitSceneChange(supabase, $live_debate.id, {
+		emitSceneChange(supabase, $live_feed.id, {
 			sceneType: 'scene_end',
 			layerId: 'layer_text',
 			metadata: {
@@ -50,12 +52,12 @@
 	});
 
 	function setScreenLayout(newLayerIdContent?: LayerIdContent) {
-		if (!$live_debate?.id) return;
+		if (!$live_feed?.id) return;
 		if (newLayerIdContent) {
 			layerIdContent = newLayerIdContent;
 		}
 
-		emitSceneChange(supabase, $live_debate.id, {
+		emitSceneChange(supabase, $live_feed.id, {
 			sceneType: 'scene_content',
 			layerId: layerIdContent
 		});
@@ -106,7 +108,7 @@
 	{/if}
 	<div class="layout-break-end">
 		<TakeABreak />
-		<button class="btn-stop" onclick={()=>handleStopBroadcast()}> Stop Broadcast </button>
+		<button class="btn-stop" onclick={() => handleStopBroadcast()}> Stop Broadcast </button>
 	</div>
 </div>
 

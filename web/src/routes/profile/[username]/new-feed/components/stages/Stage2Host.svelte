@@ -17,29 +17,23 @@
 		DeviceCamera,
 		DeviceCameraDisabled,
 		DeviceScreen,
-		DeviceScreenDisabled,
+		DeviceScreenDisabled
 	} from '$src/lib/components/icon';
 	import { PageCtx } from '$src/lib/context';
 	import { getDevices } from '$lib/utils/media.utils';
 	import {
 		errorScreenShareFeed,
 		errorWebcamFeed,
-
 		toggleMedia,
-
 		micDeviceId,
 		micWavPercent,
-
 		screenShareEnable,
 		screenShareStream,
-
 		speakerDeviceId,
 		speakerIsPlaying,
-
 		webcamDeviceId,
 		webcamEnable,
 		webcamStream,
-
 		webcamIsPlaying,
 		screenShareIsPlaying
 	} from '$src/lib/stores/media.store';
@@ -57,8 +51,8 @@
 
 	const supabase = getSupabase();
 
-	const pageCtx = new PageCtx('new-debate');
-	const liveDebate = pageCtx.get('liveDebate');
+	const pageCtx = new PageCtx('new-feed');
+	const liveFeed = pageCtx.get('liveFeed');
 	const teams = pageCtx.get('teams');
 	const hostParticipant = pageCtx.get('hostParticipant');
 
@@ -80,11 +74,11 @@
 
 	onMount(async () => {
 		kindMapDevices = await getDevices();
-		if(!$webcamDeviceId) $webcamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
-		if(!$speakerDeviceId) $speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
-		if(!$micDeviceId) $micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
+		if (!$webcamDeviceId) $webcamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
+		if (!$speakerDeviceId) $speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
+		if (!$micDeviceId) $micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
 
-		if($webcamStream) {
+		if ($webcamStream) {
 			videoInstance.srcObject = $webcamStream;
 			videoInstance.play();
 		}
@@ -98,12 +92,12 @@
 	export async function beforeOnNext() {
 		try {
 			// add host to the current  participants table
-			// Create a live debate If the debate didn't exist in the store
+			// Create a live feed If the feed didn't exist in the store
 			//
-			if ($liveDebate?.id) {
+			if ($liveFeed?.id) {
 				// Move this after the user created team
 				const { data: hostData, error: hostError } = await supabase
-					.from('live_debate_participants')
+					.from('live_feed_participants')
 					.update({
 						cam_available: Boolean($errorWebcamFeed || $webcamEnable),
 						mic_available: kindMapDevices.audioinput.length > 0,
@@ -121,7 +115,7 @@
 						display_name: hostDisplayName,
 						team: hostTeamId
 					})
-					.eq('live_debate', $liveDebate.id)
+					.eq('live_feed', $liveFeed.id)
 					.eq('participant_id', $hostParticipant?.participant_id!)
 					.select();
 
@@ -140,7 +134,7 @@
 				type: 'error',
 				message: 'Something went wrong!'
 			});
-			throw new Error('Failed to create new debate');
+			throw new Error('Failed to create new feed');
 		}
 	}
 </script>
@@ -152,7 +146,7 @@
 				rounded="sm"
 				title="Display name"
 				width="240px"
-				placeholder="Enter title for your live debate"
+				placeholder="Enter title for your live feed"
 				bind:value={hostDisplayName}
 				testId="in-display-name"
 			/>
@@ -180,7 +174,11 @@
 	<div class="video-title-container">
 		<div class="video-container">
 			{#if !$webcamIsPlaying}
-				<NoFeedCard label="No web camera feed" feedType="profile" onclick={()=>toggleMedia("webcam")} />
+				<NoFeedCard
+					label="No web camera feed"
+					feedType="profile"
+					onclick={() => toggleMedia('webcam')}
+				/>
 			{/if}
 
 			<video bind:this={videoInstance} class="video-el" autoplay playsinline>
@@ -188,7 +186,7 @@
 			</video>
 		</div>
 		<div class="header">
-			<button onclick={()=>toggleMedia("webcam")} class="btn-icon">
+			<button onclick={() => toggleMedia('webcam')} class="btn-icon">
 				{#if $webcamEnable}
 					<DeviceCamera />
 				{:else}
@@ -213,12 +211,16 @@
 				<track kind="captions" />
 			</video>
 			{#if !$screenShareIsPlaying}
-				<NoFeedCard label="No screen share feed" onclick={()=>toggleMedia("screenShare")} feedType="screen" />
+				<NoFeedCard
+					label="No screen share feed"
+					onclick={() => toggleMedia('screenShare')}
+					feedType="screen"
+				/>
 			{/if}
 		</div>
 
 		<div class="header">
-			<button onclick={()=>toggleMedia("screenShare")} class="btn-icon">
+			<button onclick={() => toggleMedia('screenShare')} class="btn-icon">
 				{#if $screenShareEnable}
 					<DeviceScreen />
 				{:else}

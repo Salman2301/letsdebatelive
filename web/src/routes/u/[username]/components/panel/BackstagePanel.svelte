@@ -54,14 +54,14 @@
 	const supabase = getSupabase();
 
 	async function toggleDevice(device: keyof typeof audienceSetting) {
-		if (!(pageData?.live_debate?.id && pageData?.user?.id)) return;
+		if (!(pageData?.live_feed?.id && pageData?.user?.id)) return;
 
 		await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.update({
 				[device]: !audienceSetting[device]
 			})
-			.eq('live_debate', pageData.live_debate.id)
+			.eq('live_feed', pageData.live_feed.id)
 			.eq('participant_id', pageData.user.id)
 			.throwOnError();
 

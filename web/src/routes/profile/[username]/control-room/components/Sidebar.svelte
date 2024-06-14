@@ -4,7 +4,7 @@
 		ICON_BROADCAST,
 		ICON_PARTICIPANTS,
 		ICON_SETTINGS,
-		ICON_DEBATE_AGENDA,
+		ICON_AGENDA,
 		ICON_POLL_ANALYTICS,
 		ICON_QA,
 		ICON_BANNER,
@@ -60,8 +60,8 @@
 		},
 
 		agenda: {
-			label: 'Debate Agenda',
-			icon: ICON_DEBATE_AGENDA,
+			label: 'Feed Agenda',
+			icon: ICON_AGENDA,
 			sidebar: SidebarAgenda
 		},
 		poll: {

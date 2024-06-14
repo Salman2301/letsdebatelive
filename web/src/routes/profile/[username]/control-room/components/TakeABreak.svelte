@@ -7,16 +7,16 @@
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('control-room');
 
-	let live_debate = pageCtx.get('ctx_table$live_debate');
+	let live_feed = pageCtx.get('ctx_table$live_feed');
 
 	let timeout = $state('5min');
 	function handleLayoutShift() {
-		if (!$live_debate?.id) return;
+		if (!$live_feed?.id) return;
 		const breakEnd = new Date();
 		breakEnd.setMinutes(breakEnd.getMinutes() + parseInt(timeout.replace('mins', '')));
 		breakEnd.setSeconds(breakEnd.getSeconds() + 1);
 
-		emitSceneChange(supabase, $live_debate.id, {
+		emitSceneChange(supabase, $live_feed.id, {
 			sceneType: 'scene_break',
 			layerId: 'layer_break',
 			metadata: {

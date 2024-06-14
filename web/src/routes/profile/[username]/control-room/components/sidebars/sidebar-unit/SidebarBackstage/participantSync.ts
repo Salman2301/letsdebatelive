@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import type { Tables } from '$lib/schema/database.types';
 
-type CallBackParticipant = (participant: Tables<'live_debate_participants'>) => void;
+type CallBackParticipant = (participant: Tables<'live_feed_participants'>) => void;
 
 interface onParticpantChangeReturn {
 	participantSubId: string;
@@ -29,7 +29,7 @@ export function onParticpantChange(id: string, cb: CallBackParticipant): onParti
 
 export function triggerParticipantChange(
 	id: string,
-	participant: Tables<'live_debate_participants'>
+	participant: Tables<'live_feed_participants'>
 ) {
 	if (registeredCallBacks[id]) {
 		for (const cb of Object.values(registeredCallBacks[id])) {

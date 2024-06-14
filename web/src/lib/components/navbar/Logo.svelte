@@ -3,7 +3,7 @@
 
 <a href="/">
 	<span>
-		LETSDEBATE
+		VISTA
 		<span class="live">
 			<svg
 				width="10"

@@ -8,11 +8,11 @@ type BroadcastEvent = 'broadcast_start' | 'broadcast_end';
 export function emitBroadcastEvent(
 	supabase: SupabaseClient,
 	event: BroadcastEvent,
-	liveDebateId: string,
+	liveFeedId: string,
 	payload = {}
 ) {
-	if (!liveDebateId) throw new Error('Invalid liveDebateId id!');
-	return supabase.channel(`broadcast_${liveDebateId}`).send({
+	if (!liveFeedId) throw new Error('Invalid liveFeedId id!');
+	return supabase.channel(`broadcast_${liveFeedId}`).send({
 		type: 'broadcast',
 		event: event, // broadcast_suspended broadcast_ended
 		payload: payload
@@ -21,16 +21,16 @@ export function emitBroadcastEvent(
 
 export function emitSceneChange(
 	supabase: SupabaseClient,
-	liveDebateId: string,
+	liveFeedId: string,
 	payload: ScenePayload
 ) {
-	if (!liveDebateId) throw new Error('Invalid host id!');
+	if (!liveFeedId) throw new Error('Invalid host id!');
 
 	// Scene change also trigger self by default both the host and ghost have read
-	return supabase.channel(`scene_${liveDebateId}`, { config: { broadcast: { self: true } } }).send({
+	return supabase.channel(`scene_${liveFeedId}`, { config: { broadcast: { self: true } } }).send({
 		type: 'broadcast',
 		event: 'scene_change',
-		liveDebateId,
+		liveFeedId,
 		payload: payload
 	});
 }

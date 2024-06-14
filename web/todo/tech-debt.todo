@@ -48,14 +48,14 @@ Svelte V5:
   ✘ Avoide using svelte store? @cancelled(24-05-29 13:17)
   slot
 Optimization:
-  ☐ Have a field `username` in the `live_debate` table. so, we don't need to keep looking for `*, host(*)` in the select statement
+  ☐ Have a field `username` in the `live_feed` table. so, we don't need to keep looking for `*, host(*)` in the select statement
     ☐ We do need the host anyway...
     ☐ Don't let the user to change their username during the live stream
     ```ts
       const username = params.username;
       if (!username) throw redirect(303, "/?error=INVALID_USERID");
       
-      const { data, error } = await supabase.from("live_debate").select(", host(*)").eq("host.username", username)
+      const { data, error } = await supabase.from("live_feed").select(", host(*)").eq("host.username", username)
   ```
 
   ☐ Add Index optimization for all the slow query

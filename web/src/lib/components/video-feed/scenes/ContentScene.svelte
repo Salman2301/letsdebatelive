@@ -8,19 +8,19 @@
 
 	interface Props {
 		payload: ScenePayloadContent;
-		participantsList: Tables<'live_debate_participants'>[];
+		participantsList: Tables<'live_feed_participants'>[];
 	}
 
 	let { payload, participantsList }: Props = $props();
 	// let layoutId: LayoutContentType = "profile_multiple";
-	// let participantsList: Tables<'live_debate_participants'>[] = [ ];
+	// let participantsList: Tables<'live_feed_participants'>[] = [ ];
 
-	function filterParticipants(layoutId: LayerIdContent): Tables<'live_debate_participants'>[] {
+	function filterParticipants(layoutId: LayerIdContent): Tables<'live_feed_participants'>[] {
 		return participantsList;
 	}
 
-	function filterScreen(): Tables<'live_debate_participants'> | null {
-		// Find the active screen id from live debate setting
+	function filterScreen(): Tables<'live_feed_participants'> | null {
+		// Find the active screen id from live feed setting
 		// Filter the screen id based on the participant list
 		if (participantsList[0].screenshare_available) {
 			participantsList[0];

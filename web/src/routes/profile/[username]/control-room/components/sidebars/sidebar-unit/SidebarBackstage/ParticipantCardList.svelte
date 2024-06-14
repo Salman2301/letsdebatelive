@@ -24,13 +24,13 @@
 
 	interface Props {
 		participant: ParticipantsWithUserData;
-		live_debate: Tables<'live_debate'>;
+		live_feed: Tables<'live_feed'>;
 		teamMapColor: Record<string, string>;
 		isStageFull: boolean;
 		type: 'stage' | 'backstage';
 	}
 
-	let { participant, live_debate, teamMapColor, isStageFull, type }: Props = $props();
+	let { participant, live_feed, teamMapColor, isStageFull, type }: Props = $props();
 
 	let displayName = $state(participant.display_name);
 	let showNameSubmitBtn = $state(false);
@@ -43,9 +43,9 @@
 		};
 		// INFO: keep the `await`, on remove if removed it doesn't update
 		const { data, error } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.update(toUpdate)
-			.eq('live_debate', live_debate.id)
+			.eq('live_feed', live_feed.id)
 			.eq('participant_id', participant.participant_id.id);
 	}
 
@@ -74,16 +74,16 @@
 			});
 			return;
 		}
-		await updateLiveDebateParticipant({ display_name: name });
+		await updateLiveFeedParticipant({ display_name: name });
 		showNameSubmitBtn = false;
 	}
 
-	async function updateLiveDebateParticipant(row: Partial<Tables<'live_debate_participants'>>) {
+	async function updateLiveFeedParticipant(row: Partial<Tables<'live_feed_participants'>>) {
 		try {
 			await supabase
-				.from('live_debate_participants')
+				.from('live_feed_participants')
 				.update(row)
-				.eq('live_debate', live_debate.id)
+				.eq('live_feed', live_feed.id)
 				.eq('participant_id', participant.participant_id.id);
 		} catch (e) {
 			console.error(e);
@@ -95,7 +95,7 @@
 	}
 
 	async function toggleLocation() {
-		await updateLiveDebateParticipant({
+		await updateLiveFeedParticipant({
 			location: participant.location === 'stage' ? 'backstage' : 'stage'
 		});
 	}
@@ -103,9 +103,9 @@
 	async function deleteParticipant() {
 		try {
 			const { error } = await supabase
-				.from('live_debate_participants')
+				.from('live_feed_participants')
 				.delete()
-				.eq('live_debate', live_debate.id)
+				.eq('live_feed', live_feed.id)
 				.eq('participant_id', participant.participant_id.id)
 				.throwOnError();
 		} catch (e) {
@@ -129,7 +129,10 @@
 		</div>
 		<div>
 			<div class="username-text">
-				<div class="team-circle" style="background-color:{participant.team ? teamMapColor[participant.team.id as string] : "white"}"></div>
+				<div
+					class="team-circle"
+					style="background-color:{participant.team ? teamMapColor[participant.team.id as string] : "white"}"
+				></div>
 				<div class="input-container">
 					<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
 					{#if showNameSubmitBtn}

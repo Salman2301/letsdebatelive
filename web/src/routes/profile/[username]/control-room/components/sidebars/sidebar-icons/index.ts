@@ -2,7 +2,7 @@ export { default as ICON_BACKSTAGE_SETTINGS } from './ICON_BACKSTAGE_SETTINGS.sv
 export { default as ICON_BROADCAST } from './ICON_BROADCAST.svelte';
 export { default as ICON_PARTICIPANTS } from './ICON_PARTICIPANTS.svelte';
 export { default as ICON_SETTINGS } from './ICON_SETTINGS.svelte';
-export { default as ICON_DEBATE_AGENDA } from './ICON_DEBATE_AGENDA.svelte';
+export { default as ICON_AGENDA } from './ICON_AGENDA.svelte';
 export { default as ICON_POLL_ANALYTICS } from './ICON_POLL_ANALYTICS.svelte';
 export { default as ICON_QA } from './ICON_QA.svelte';
 export { default as ICON_BANNER } from './ICON_BANNER.svelte';

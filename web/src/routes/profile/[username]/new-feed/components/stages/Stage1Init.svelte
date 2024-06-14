@@ -5,8 +5,8 @@
 	import { getSupabase } from '$src/lib/supabase';
 	import { onMount } from 'svelte';
 
-	const page = new PageCtx('new-debate');
-	const liveDebate = page.get('liveDebate');
+	const page = new PageCtx('new-feed');
+	const liveFeed = page.get('liveFeed');
 	const teams = page.get('teams');
 
 	const supabase = getSupabase();
@@ -14,37 +14,37 @@
 	let title = $state('');
 	export async function beforeOnNext() {
 		// Add all stage to teams and participants table
-		if (!$liveDebate) return;
+		if (!$liveFeed) return;
 
 		const { data, error } = await supabase
-			.from('live_debate')
+			.from('live_feed')
 			.update({
 				title
 			})
-			.eq('id', $liveDebate.id)
+			.eq('id', $liveFeed.id)
 			.select();
 
-		if (data?.[0]) $liveDebate = data[0];
+		if (data?.[0]) $liveFeed = data[0];
 	}
 
 	onMount(() => {
-		if ($liveDebate?.title) title = $liveDebate?.title;
+		if ($liveFeed?.title) title = $liveFeed?.title;
 	});
 </script>
 
 <div class="in-title">
 	<Input
 		rounded="sm"
-		title="Debate title"
+		title="Feed title"
 		width="480px"
-		placeholder="Enter title for your live debate"
+		placeholder="Enter title for your live feed"
 		bind:value={title}
 	/>
 </div>
 
 <div class="flex justify-center">
 	<div class="container">
-		<TeamSetting live_debate={liveDebate} {teams} />
+		<TeamSetting live_feed={liveFeed} {teams} />
 	</div>
 </div>
 

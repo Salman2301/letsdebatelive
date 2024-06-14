@@ -16,7 +16,7 @@ export async function load({ locals, params }) {
 		user: null,
 		participants: [],
 		isJoined: false,
-		live_debate: null,
+		live_feed: null,
 		myBackstageInfo: null,
 		teamMapColor: {},
 		host: null,
@@ -27,7 +27,7 @@ export async function load({ locals, params }) {
 	const { session, user } = await locals.safeGetSession();
 	if (!session || !session.user) return PAGE_DATA;
 
-	// get the live debate id from the username
+	// get the live feed id from the username
 	// Get all the participant
 	// Check if one of the participant match with the userid
 	PAGE_DATA.isLoggedIn = true;
@@ -37,43 +37,48 @@ export async function load({ locals, params }) {
 	const username = params.username;
 	if (!username) throw redirect(303, '/?error=INVALID_USERID');
 
-	const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
-	
-	PAGE_DATA.live_debate = live_debates?.[0] ?? null;
-	const liveDebateId = live_debates?.[0]?.id;
-	PAGE_DATA.host = JSON.parse(JSON.stringify(PAGE_DATA?.live_debate?.host || {}));
+	const { data: live_feeds, error } = await getLatestLiveFeedId(supabase, username);
 
-	if (live_debates && live_debates?.length > 1) {
-		console.error("Cleanup: Database has more than one live debate");
+	PAGE_DATA.live_feed = live_feeds?.[0] ?? null;
+	const liveFeedId = live_feeds?.[0]?.id;
+	PAGE_DATA.host = JSON.parse(JSON.stringify(PAGE_DATA?.live_feed?.host || {}));
+
+	if (live_feeds && live_feeds?.length > 1) {
+		console.error('Cleanup: Database has more than one live feed');
 	}
 
-	if (error || !live_debates || live_debates.length === 0 || typeof liveDebateId !== 'string') {
-		throw redirect(303, '/?error=FAILED_LIVE_DEBATE_INFO');
+	if (error || !live_feeds || live_feeds.length === 0 || typeof liveFeedId !== 'string') {
+		throw redirect(303, '/?error=FAILED_live_feed_INFO');
 	}
 
 	const [
-		{ data: live_debate_participants, error: participantsError },
-		{ data: live_debate_team, error: teamError }
+		{ data: live_feed_participants, error: participantsError },
+		{ data: live_feed_team, error: teamError }
 	] = await Promise.all([
-		supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateId).order("created_at", { ascending: true }).returns<ParticipantsWithUserData[]>(),
-		supabase.from('live_debate_team').select('*').eq('live_debate', liveDebateId)
+		supabase
+			.from('live_feed_participants')
+			.select(participantsWithUserDataSelect)
+			.eq('live_feed', liveFeedId)
+			.order('created_at', { ascending: true })
+			.returns<ParticipantsWithUserData[]>(),
+		supabase.from('live_feed_team').select('*').eq('live_feed', liveFeedId)
 	]);
 
-	await supabaseAdmin.from("live_debate_user_role").insert({
-		live_debate: liveDebateId,
+	await supabaseAdmin.from('live_feed_user_role').insert({
+		live_feed: liveFeedId,
 		user_id: PAGE_DATA.user.id,
-		role: "guest"
+		role: 'guest'
 	});
 
-	PAGE_DATA.teams = live_debate_team || [];
+	PAGE_DATA.teams = live_feed_team || [];
 	PAGE_DATA.teamMapColor = PAGE_DATA.teams.reduce((obj: Record<string, string>, team) => {
 		obj[team.id] = team.color;
 		return obj;
 	}, {});
 
-	PAGE_DATA.participants = live_debate_participants || [];
+	PAGE_DATA.participants = live_feed_participants || [];
 	PAGE_DATA.myBackstageInfo =
-		live_debate_participants?.find((item) => item.participant_id.id === userId) || null;
+		live_feed_participants?.find((item) => item.participant_id.id === userId) || null;
 	PAGE_DATA.isJoined = !!PAGE_DATA.myBackstageInfo;
 
 	return PAGE_DATA;
@@ -111,51 +116,51 @@ export const actions = {
 		if (typeof username !== 'string' || username === '')
 			return fail(404, { message: 'Invalid username!' });
 
-		const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
+		const { data: live_feeds, error } = await getLatestLiveFeedId(supabase, username);
 
-		const live_debate = live_debates?.[0];
-		const liveDebateId = live_debate?.id;
-		if (error || !live_debate || live_debates.length === 0 || typeof liveDebateId !== 'string') {
-			return fail(404, { message: 'Failed to get the live_debate info from db' });
+		const live_feed = live_feeds?.[0];
+		const liveFeedId = live_feed?.id;
+		if (error || !live_feed || live_feeds.length === 0 || typeof liveFeedId !== 'string') {
+			return fail(404, { message: 'Failed to get the live_feed info from db' });
 		}
 
 		// temp fnc to get the team id, This should be sent from the current user
-		// or under live_debate_team
-		async function getAnyTeamId(liveDebateId: string): Promise<string | null> {			
+		// or under live_feed_team
+		async function getAnyTeamId(liveFeedId: string): Promise<string | null> {
 			if (!userData || !userData.id) return null;
 
 			const { data, error } = await supabase
-				.from('live_debate_user_team')
+				.from('live_feed_user_team')
 				.select('team')
-				.eq('live_debate', liveDebateId)
-				.eq("user_id", userData?.id);
-			
-			if (!data?.[0]?.team) console.error(`Invalid team found for ${liveDebateId}`);
+				.eq('live_feed', liveFeedId)
+				.eq('user_id', userData?.id);
+
+			if (!data?.[0]?.team) console.error(`Invalid team found for ${liveFeedId}`);
 			return data?.[0]?.team || null;
 		}
 
-		const toInsert: TablesInsert<"live_debate_participants"> = {
-			live_debate: liveDebateId,
+		const toInsert: TablesInsert<'live_feed_participants'> = {
+			live_feed: liveFeedId,
 			participant_id: userData?.id,
 			role: 'guest',
 			location: 'backstage',
 			display_name: userData?.username as string,
-			team: await getAnyTeamId(liveDebateId) // must get from the formdata
+			team: await getAnyTeamId(liveFeedId) // must get from the formdata
 		};
 
 		const { error: errorInsert } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.insert(toInsert)
 			.select('*');
 
 		if (errorInsert) {
 			// Check if the partocipant is full and update the error
 			const { count, error } = await supabase
-				.from('live_debate_participants')
+				.from('live_feed_participants')
 				.select('*', { count: 'exact' })
-				.eq('live_debate', liveDebateId);
+				.eq('live_feed', liveFeedId);
 
-			if (typeof count === 'number' && count >= live_debate.max_participants) {
+			if (typeof count === 'number' && count >= live_feed.max_participants) {
 				return fail(400, { message: 'Max. Participants reached!', error_code: 'MAX_PARTICIPANT' });
 			}
 			return fail(400, { message: 'Bad request sent', errorInsert });
@@ -179,19 +184,18 @@ export const actions = {
 		if (typeof username !== 'string' || username === '')
 			return fail(404, { message: 'Invalid username!' });
 
+		const { data: live_feeds, error } = await getLatestLiveFeedId(supabase, username);
 
-		const { data: live_debates, error } = await getLatestLiveDebateId(supabase, username);
-		
-		const liveDebateId = live_debates?.[0]?.id;
+		const liveFeedId = live_feeds?.[0]?.id;
 
-		if (error || !live_debates || live_debates.length === 0 || typeof liveDebateId !== 'string') {
-			return fail(404, { message: 'Failed to get the live_debate info from db' });
+		if (error || !live_feeds || live_feeds.length === 0 || typeof liveFeedId !== 'string') {
+			return fail(404, { message: 'Failed to get the live_feed info from db' });
 		}
 
 		const { data: removed, error: errorRemoved } = await supabase
-			.from('live_debate_participants')
+			.from('live_feed_participants')
 			.delete()
-			.eq('live_debate', liveDebateId)
+			.eq('live_feed', liveFeedId)
 			.eq('participant_id', user.id);
 
 		if (errorRemoved) {
@@ -202,18 +206,21 @@ export const actions = {
 	}
 };
 
-async function getLatestLiveDebateId(supabase: SupabaseClient, username: string): Promise<{
-	data: Tables<"live_debate">[] | null;
+async function getLatestLiveFeedId(
+	supabase: SupabaseClient,
+	username: string
+): Promise<{
+	data: Tables<'live_feed'>[] | null;
 	error: any;
 }> {
 	const { data, error } = await supabase
-		.from('live_debate')
+		.from('live_feed')
 		.select('*, host(*)')
 		.eq('host.username', username)
 		.eq('published', true)
 		.not('ended', 'is', true)
 		.not('host', 'is', null)
 		.order('published_tz', { ascending: false });
-	
+
 	return { data, error };
 }

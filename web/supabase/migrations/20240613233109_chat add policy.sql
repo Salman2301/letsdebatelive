@@ -76,20 +76,20 @@ CREATE TYPE "public"."role" AS ENUM (
 
 ALTER TYPE "public"."role" OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."is_space_left"("live_debate_id" "uuid") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."is_space_left"("live_feed_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   RETURN (
     (SELECT COUNT(*) 
-      FROM live_debate_participants AS ldp
-      WHERE ldp.live_debate = live_debate_id) < 
-    (SELECT ld.max_participants 
-      FROM live_debate AS ld 
-      WHERE ld.id = live_debate_id)
+      FROM live_feed_participants AS lfp
+      WHERE lfp.live_feed = live_feed_id) < 
+    (SELECT lf.max_participants 
+      FROM live_feed AS lf 
+      WHERE lf.id = live_feed_id)
   );
 END;$$;
 
-ALTER FUNCTION "public"."is_space_left"("live_debate_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."is_space_left"("live_feed_id" "uuid") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."turn_on_realtime"() RETURNS "text"
     LANGUAGE "plpgsql" SECURITY DEFINER
@@ -117,47 +117,47 @@ END;$$;
 
 ALTER FUNCTION "public"."turn_on_realtime"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."user_atleast_co_host"("live_debate_id" "uuid") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."user_atleast_co_host"("live_feed_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   RETURN EXISTS (
     SELECT 1 
-    FROM live_debate_user_role
+    FROM live_feed_user_role
     WHERE (SELECT auth.uid() as uid) = user_id
-    AND live_debate = live_debate_id
+    AND live_feed = live_feed_id
     AND role IN ('host', 'co-host')
   );
 END;$$;
 
-ALTER FUNCTION "public"."user_atleast_co_host"("live_debate_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."user_atleast_co_host"("live_feed_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."user_atleast_mod"("live_debate_id" "uuid") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."user_atleast_mod"("live_feed_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   RETURN EXISTS (
     SELECT 1 
-    FROM live_debate_user_role
+    FROM live_feed_user_role
     WHERE (SELECT auth.uid() as uid) = user_id
-    AND live_debate = live_debate_id
+    AND live_feed = live_feed_id
     AND role IN ('host', 'co-host', 'mod')
   );
 END;$$;
 
-ALTER FUNCTION "public"."user_atleast_mod"("live_debate_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."user_atleast_mod"("live_feed_id" "uuid") OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."user_is_host"("live_debate_id" "uuid") RETURNS boolean
+CREATE OR REPLACE FUNCTION "public"."user_is_host"("live_feed_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
   RETURN EXISTS (
     SELECT 1 
-    FROM live_debate_user_role
+    FROM live_feed_user_role
     WHERE (SELECT auth.uid() as uid) = user_id
-    AND live_debate = live_debate_id
+    AND live_feed = live_feed_id
     AND role IN ('host')
   );
 END;$$;
 
-ALTER FUNCTION "public"."user_is_host"("live_debate_id" "uuid") OWNER TO "postgres";
+ALTER FUNCTION "public"."user_is_host"("live_feed_id" "uuid") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."user_not_banned"() RETURNS boolean
     LANGUAGE "plpgsql"
@@ -183,17 +183,17 @@ CREATE TABLE IF NOT EXISTS "public"."host_stream_key" (
 
 ALTER TABLE "public"."host_stream_key" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "title" "text",
     "host" "uuid" DEFAULT "auth"."uid"(),
     "chat_rules" "text",
-    "debate_type" "text",
+    "feed_type" "text",
     "chat_filter_words" "text",
     "backstage_max" integer,
     "studio_mode" boolean,
-    "debater_card_show" boolean,
+    "feeder_card_show" boolean,
     "published" boolean,
     "max_participants" bigint DEFAULT '40'::bigint NOT NULL,
     "max_stage" bigint DEFAULT '30'::bigint NOT NULL,
@@ -206,11 +206,11 @@ CREATE TABLE IF NOT EXISTS "public"."live_debate" (
     "published_tz" timestamp with time zone
 );
 
-ALTER TABLE "public"."live_debate" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_agenda" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_agenda" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid",
+    "live_feed" "uuid",
     "title" "text",
     "time" time without time zone,
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
@@ -218,71 +218,71 @@ CREATE TABLE IF NOT EXISTS "public"."live_debate_agenda" (
     "team" "uuid"
 );
 
-ALTER TABLE "public"."live_debate_agenda" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_agenda" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_audience_team_only" (
-    "live_debate" "uuid" NOT NULL,
+CREATE TABLE IF NOT EXISTS "public"."live_feed_audience_team_only" (
+    "live_feed" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "service" "public"."audience_service" NOT NULL,
     "team" "uuid" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_audience_team_only" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_audience_team_only" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_backstage_chat" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_backstage_chat" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "chat" "text" NOT NULL,
-    "live_debate_id" "uuid" NOT NULL,
+    "live_feed_id" "uuid" NOT NULL,
     "sender_id" "uuid" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_backstage_chat" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_backstage_chat" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_chat" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_chat" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "chat" "text" NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "sender_id" "uuid" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_chat" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_chat" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_invite_co_host" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_invite_co_host" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "invited_by" "uuid" NOT NULL,
     "status" "text" NOT NULL,
     "email" "text" NOT NULL,
     "team" "uuid",
-    "live_debate" "uuid" NOT NULL
+    "live_feed" "uuid" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_invite_co_host" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_invite_co_host" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_kick" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_kick" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "kicked_by" "uuid" NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
     "reason" "text"
 );
 
-ALTER TABLE "public"."live_debate_kick" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_kick" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_notification" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_notification" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "service" "public"."notification_service" NOT NULL,
     "has_read" boolean NOT NULL,
     "missed_count" integer
 );
 
-ALTER TABLE "public"."live_debate_notification" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_notification" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_participants" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_participants" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "speaker_id" "text",
     "mic_id" "text",
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS "public"."live_debate_participants" (
     "display_name" "text" NOT NULL,
     "team" "uuid",
     "hand_raised" boolean,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "location" "public"."participant_location" NOT NULL,
     "participant_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "host_id" "uuid",
@@ -309,41 +309,41 @@ CREATE TABLE IF NOT EXISTS "public"."live_debate_participants" (
     "role" "public"."role" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_participants" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_participants" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_team" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_team" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "color" "text" NOT NULL,
     "title" "text" NOT NULL,
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "slug" character varying NOT NULL,
     "is_default" boolean
 );
 
-ALTER TABLE "public"."live_debate_team" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_team" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_user_role" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_user_role" (
     "user_id" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "role" "public"."role" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_user_role" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_user_role" OWNER TO "postgres";
 
-CREATE TABLE IF NOT EXISTS "public"."live_debate_user_team" (
+CREATE TABLE IF NOT EXISTS "public"."live_feed_user_team" (
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "team" "uuid" NOT NULL
 );
 
-ALTER TABLE "public"."live_debate_user_team" OWNER TO "postgres";
+ALTER TABLE "public"."live_feed_user_team" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."live_host_ban" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "live_debate" "uuid" NOT NULL,
+    "live_feed" "uuid" NOT NULL,
     "user_id" "uuid" NOT NULL,
     "reason_title" "text",
     "reason" "text",
@@ -428,47 +428,47 @@ CREATE TABLE IF NOT EXISTS "public"."user_phone" (
 
 ALTER TABLE "public"."user_phone" OWNER TO "postgres";
 
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_agenda"
+    ADD CONSTRAINT "feed_agenda_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_team"
-    ADD CONSTRAINT "debate_team_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_team"
+    ADD CONSTRAINT "feed_team_pkey" PRIMARY KEY ("id");
 
 ALTER TABLE ONLY "public"."host_stream_key"
     ADD CONSTRAINT "host_stream_key_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_audience_team_only"
-    ADD CONSTRAINT "live_debate_audience_team_only_pkey" PRIMARY KEY ("team", "live_debate", "service");
+ALTER TABLE ONLY "public"."live_feed_audience_team_only"
+    ADD CONSTRAINT "live_feed_audience_team_only_pkey" PRIMARY KEY ("team", "live_feed", "service");
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_backstage_chat"
+    ADD CONSTRAINT "live_feed_backstage_chat_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_chat"
+    ADD CONSTRAINT "live_feed_chat_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_invite_co_host"
-    ADD CONSTRAINT "live_debate_invite_co_host_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_invite_co_host"
+    ADD CONSTRAINT "live_feed_invite_co_host_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed_kick"
+    ADD CONSTRAINT "live_feed_kick_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_notification"
-    ADD CONSTRAINT "live_debate_notification_pkey" PRIMARY KEY ("live_debate", "service");
+ALTER TABLE ONLY "public"."live_feed_notification"
+    ADD CONSTRAINT "live_feed_notification_pkey" PRIMARY KEY ("live_feed", "service");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_pkey" PRIMARY KEY ("live_debate", "participant_id");
+ALTER TABLE ONLY "public"."live_feed_participants"
+    ADD CONSTRAINT "live_feed_participants_pkey" PRIMARY KEY ("live_feed", "participant_id");
 
-ALTER TABLE ONLY "public"."live_debate"
-    ADD CONSTRAINT "live_debate_pkey" PRIMARY KEY ("id");
+ALTER TABLE ONLY "public"."live_feed"
+    ADD CONSTRAINT "live_feed_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_user_role"
-    ADD CONSTRAINT "live_debate_user_role_pkey" PRIMARY KEY ("user_id", "live_debate");
+ALTER TABLE ONLY "public"."live_feed_user_role"
+    ADD CONSTRAINT "live_feed_user_role_pkey" PRIMARY KEY ("user_id", "live_feed");
 
-ALTER TABLE ONLY "public"."live_debate_user_team"
-    ADD CONSTRAINT "live_debate_user_team_pkey" PRIMARY KEY ("user_id", "live_debate");
+ALTER TABLE ONLY "public"."live_feed_user_team"
+    ADD CONSTRAINT "live_feed_user_team_pkey" PRIMARY KEY ("user_id", "live_feed");
 
 ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_pkey" PRIMARY KEY ("live_debate", "user_id");
+    ADD CONSTRAINT "live_host_ban_pkey" PRIMARY KEY ("live_feed", "user_id");
 
 ALTER TABLE ONLY "public"."live_host_follower"
     ADD CONSTRAINT "live_host_follower_pkey" PRIMARY KEY ("id");
@@ -494,80 +494,80 @@ ALTER TABLE ONLY "public"."user_email"
 ALTER TABLE ONLY "public"."user_phone"
     ADD CONSTRAINT "user_phone_pkey" PRIMARY KEY ("id");
 
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_agenda"
+    ADD CONSTRAINT "feed_agenda_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_agenda"
-    ADD CONSTRAINT "debate_agenda_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_agenda"
+    ADD CONSTRAINT "feed_agenda_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_feed_team"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_audience_team_only"
-    ADD CONSTRAINT "live_debate_audience_team_only_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_audience_team_only"
+    ADD CONSTRAINT "live_feed_audience_team_only_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_audience_team_only"
-    ADD CONSTRAINT "live_debate_audience_team_only_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_audience_team_only"
+    ADD CONSTRAINT "live_feed_audience_team_only_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_feed_team"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_live_debate_id_fkey" FOREIGN KEY ("live_debate_id") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_backstage_chat"
+    ADD CONSTRAINT "live_feed_backstage_chat_live_feed_id_fkey" FOREIGN KEY ("live_feed_id") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_backstage_chat"
-    ADD CONSTRAINT "live_debate_backstage_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed_backstage_chat"
+    ADD CONSTRAINT "live_feed_backstage_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_chat"
+    ADD CONSTRAINT "live_feed_chat_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_chat"
-    ADD CONSTRAINT "live_debate_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_chat"
+    ADD CONSTRAINT "live_feed_chat_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_invite_co_host"
-    ADD CONSTRAINT "live_debate_invite_co_host_invited_by_fkey" FOREIGN KEY ("invited_by") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed_invite_co_host"
+    ADD CONSTRAINT "live_feed_invite_co_host_invited_by_fkey" FOREIGN KEY ("invited_by") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_invite_co_host"
-    ADD CONSTRAINT "live_debate_invite_co_host_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id");
+ALTER TABLE ONLY "public"."live_feed_invite_co_host"
+    ADD CONSTRAINT "live_feed_invite_co_host_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id");
 
-ALTER TABLE ONLY "public"."live_debate_invite_co_host"
-    ADD CONSTRAINT "live_debate_invite_co_host_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id");
+ALTER TABLE ONLY "public"."live_feed_invite_co_host"
+    ADD CONSTRAINT "live_feed_invite_co_host_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_feed_team"("id");
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_kicked_by_fkey" FOREIGN KEY ("kicked_by") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_kick"
+    ADD CONSTRAINT "live_feed_kick_kicked_by_fkey" FOREIGN KEY ("kicked_by") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_kick"
+    ADD CONSTRAINT "live_feed_kick_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_kick"
-    ADD CONSTRAINT "live_debate_kick_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_kick"
+    ADD CONSTRAINT "live_feed_kick_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_notification"
-    ADD CONSTRAINT "live_debate_notification_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_notification"
+    ADD CONSTRAINT "live_feed_notification_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_host_id_fkey" FOREIGN KEY ("host_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_participants"
+    ADD CONSTRAINT "live_feed_participants_host_id_fkey" FOREIGN KEY ("host_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed_participants"
+    ADD CONSTRAINT "live_feed_participants_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "live_debate_participants_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_participants"
+    ADD CONSTRAINT "live_feed_participants_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_team"
-    ADD CONSTRAINT "live_debate_team_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."live_feed_team"
+    ADD CONSTRAINT "live_feed_team_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate_user_role"
-    ADD CONSTRAINT "live_debate_user_role_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id");
+ALTER TABLE ONLY "public"."live_feed_user_role"
+    ADD CONSTRAINT "live_feed_user_role_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id");
 
-ALTER TABLE ONLY "public"."live_debate_user_role"
-    ADD CONSTRAINT "live_debate_user_role_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed_user_role"
+    ADD CONSTRAINT "live_feed_user_role_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_user_team"
-    ADD CONSTRAINT "live_debate_user_team_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id");
+ALTER TABLE ONLY "public"."live_feed_user_team"
+    ADD CONSTRAINT "live_feed_user_team_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id");
 
-ALTER TABLE ONLY "public"."live_debate_user_team"
-    ADD CONSTRAINT "live_debate_user_team_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed_user_team"
+    ADD CONSTRAINT "live_feed_user_team_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id");
 
 ALTER TABLE ONLY "public"."live_host_ban"
     ADD CONSTRAINT "live_host_ban_banned_by_fkey" FOREIGN KEY ("banned_by") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."live_host_ban"
-    ADD CONSTRAINT "live_host_ban_live_debate_fkey" FOREIGN KEY ("live_debate") REFERENCES "public"."live_debate"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "live_host_ban_live_feed_fkey" FOREIGN KEY ("live_feed") REFERENCES "public"."live_feed"("id") ON DELETE CASCADE;
 
 ALTER TABLE ONLY "public"."live_host_ban"
     ADD CONSTRAINT "live_host_ban_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
@@ -581,11 +581,11 @@ ALTER TABLE ONLY "public"."live_host_support"
 ALTER TABLE ONLY "public"."live_user_ban"
     ADD CONSTRAINT "live_user_ban_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_data"("id") ON DELETE CASCADE;
 
-ALTER TABLE ONLY "public"."live_debate"
-    ADD CONSTRAINT "public_live_debate_host_fkey" FOREIGN KEY ("host") REFERENCES "public"."user_data"("id");
+ALTER TABLE ONLY "public"."live_feed"
+    ADD CONSTRAINT "public_live_feed_host_fkey" FOREIGN KEY ("host") REFERENCES "public"."user_data"("id");
 
-ALTER TABLE ONLY "public"."live_debate_participants"
-    ADD CONSTRAINT "public_live_debate_participants_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_debate_team"("id") ON DELETE SET NULL;
+ALTER TABLE ONLY "public"."live_feed_participants"
+    ADD CONSTRAINT "public_live_feed_participants_team_fkey" FOREIGN KEY ("team") REFERENCES "public"."live_feed_team"("id") ON DELETE SET NULL;
 
 ALTER TABLE ONLY "public"."social_links"
     ADD CONSTRAINT "social_links_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
@@ -596,93 +596,93 @@ ALTER TABLE ONLY "public"."user_data"
 ALTER TABLE ONLY "public"."user_email"
     ADD CONSTRAINT "user_email_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
-CREATE POLICY "Anyone can insert" ON "public"."live_debate_chat" FOR INSERT TO "authenticated", "anon" WITH CHECK (true);
+CREATE POLICY "Anyone can insert" ON "public"."live_feed_chat" FOR INSERT TO "authenticated", "anon" WITH CHECK (true);
 
-CREATE POLICY "Anyone can read" ON "public"."live_debate_user_role" FOR SELECT TO "authenticated", "anon" USING (true);
+CREATE POLICY "Anyone can read" ON "public"."live_feed_user_role" FOR SELECT TO "authenticated", "anon" USING (true);
 
-CREATE POLICY "Anyone can see" ON "public"."live_debate_audience_team_only" FOR SELECT USING (true);
+CREATE POLICY "Anyone can see" ON "public"."live_feed_audience_team_only" FOR SELECT USING (true);
 
-CREATE POLICY "Anyone can see" ON "public"."live_debate_chat" FOR SELECT USING (true);
+CREATE POLICY "Anyone can see" ON "public"."live_feed_chat" FOR SELECT USING (true);
 
-CREATE POLICY "Anyone can see" ON "public"."live_debate_user_team" FOR SELECT TO "authenticated", "anon" USING (true);
+CREATE POLICY "Anyone can see" ON "public"."live_feed_user_team" FOR SELECT TO "authenticated", "anon" USING (true);
 
 CREATE POLICY "Anyone can see" ON "public"."social_links" FOR SELECT TO "authenticated", "anon" USING (true);
 
 CREATE POLICY "Anyone can view" ON "public"."user_data" FOR SELECT USING (true);
 
-CREATE POLICY "Atleast co-host" ON "public"."live_debate_team" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "Atleast co-host" ON "public"."live_feed_team" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_co_host"("live_feed"));
 
-CREATE POLICY "Atleast mod or the user can see" ON "public"."live_host_ban" FOR SELECT TO "authenticated" USING (("public"."user_atleast_mod"("live_debate") OR ("user_id" = "auth"."uid"())));
+CREATE POLICY "Atleast mod or the user can see" ON "public"."live_host_ban" FOR SELECT TO "authenticated" USING (("public"."user_atleast_mod"("live_feed") OR ("user_id" = "auth"."uid"())));
 
-CREATE POLICY "Delete either by host or current owner" ON "public"."live_debate_participants" FOR DELETE TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_debate")));
+CREATE POLICY "Delete either by host or current owner" ON "public"."live_feed_participants" FOR DELETE TO "authenticated" USING (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_feed")));
 
 CREATE POLICY "Enable delete for users based on user_id" ON "public"."social_links" FOR DELETE USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_debate" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_not_banned"());
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_feed" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_not_banned"());
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_debate_participants" FOR INSERT TO "authenticated", "anon" WITH CHECK (((( SELECT "auth"."uid"() AS "uid") = "participant_id") AND "public"."is_space_left"("live_debate")));
+CREATE POLICY "Enable insert for authenticated users only" ON "public"."live_feed_participants" FOR INSERT TO "authenticated", "anon" WITH CHECK (((( SELECT "auth"."uid"() AS "uid") = "participant_id") AND "public"."is_space_left"("live_feed")));
 
 CREATE POLICY "Enable insert for users based on user_id" ON "public"."social_links" FOR INSERT WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 CREATE POLICY "Enable insert for users based on user_id, also check if the use" ON "public"."user_data" FOR INSERT WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
-CREATE POLICY "Enable read access for all users" ON "public"."live_debate" FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON "public"."live_feed" FOR SELECT USING (true);
 
-CREATE POLICY "Enable read access for all users" ON "public"."live_debate_participants" FOR SELECT USING (true);
+CREATE POLICY "Enable read access for all users" ON "public"."live_feed_participants" FOR SELECT USING (true);
 
 CREATE POLICY "Enable read access for all users" ON "public"."live_user_ban" FOR SELECT TO "authenticated" USING (( SELECT ("auth"."uid"() = "live_user_ban"."user_id")));
 
-CREATE POLICY "Enable read access for any" ON "public"."live_debate_team" FOR SELECT USING (true);
+CREATE POLICY "Enable read access for any" ON "public"."live_feed_team" FOR SELECT USING (true);
 
 CREATE POLICY "Enable update for users based on id, also check if username is " ON "public"."user_data" FOR UPDATE USING ((( SELECT "auth"."uid"() AS "uid") = "id")) WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
-CREATE POLICY "Enable update for users based on user id" ON "public"."live_debate_participants" FOR UPDATE TO "authenticated", "anon" USING (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_debate"))) WITH CHECK (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_debate")));
+CREATE POLICY "Enable update for users based on user id" ON "public"."live_feed_participants" FOR UPDATE TO "authenticated", "anon" USING (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_feed"))) WITH CHECK (((( SELECT "auth"."uid"() AS "uid") = "participant_id") OR "public"."user_atleast_co_host"("live_feed")));
 
-CREATE POLICY "Only mods can ban" ON "public"."live_host_ban" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can ban" ON "public"."live_host_ban" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only mods can delete" ON "public"."live_debate_kick" FOR DELETE TO "authenticated" USING ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can delete" ON "public"."live_feed_kick" FOR DELETE TO "authenticated" USING ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only mods can delete" ON "public"."live_host_ban" FOR DELETE TO "authenticated" USING ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can delete" ON "public"."live_host_ban" FOR DELETE TO "authenticated" USING ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only mods can kick" ON "public"."live_debate_kick" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can kick" ON "public"."live_feed_kick" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only mods can update" ON "public"."live_debate_kick" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can update" ON "public"."live_feed_kick" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only mods can update" ON "public"."live_host_ban" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_mod"("live_debate"));
+CREATE POLICY "Only mods can update" ON "public"."live_host_ban" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_mod"("live_feed"));
 
-CREATE POLICY "Only user and mods can see" ON "public"."live_debate_kick" FOR SELECT TO "authenticated" USING (("public"."user_atleast_mod"("live_debate") OR ("user_id" = "auth"."uid"())));
+CREATE POLICY "Only user and mods can see" ON "public"."live_feed_kick" FOR SELECT TO "authenticated" USING (("public"."user_atleast_mod"("live_feed") OR ("user_id" = "auth"."uid"())));
 
-CREATE POLICY "User atleast co-host" ON "public"."live_debate_team" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "User atleast co-host" ON "public"."live_feed_team" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("live_feed"));
 
-CREATE POLICY "User not banned" ON "public"."live_debate" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("id"));
+CREATE POLICY "User not banned" ON "public"."live_feed" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("id"));
 
-CREATE POLICY "host only" ON "public"."live_debate_audience_team_only" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "host only" ON "public"."live_feed_audience_team_only" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_atleast_co_host"("live_feed"));
 
 ALTER TABLE "public"."host_stream_key" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_agenda" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_agenda" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_audience_team_only" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_audience_team_only" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_backstage_chat" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_backstage_chat" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_chat" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_chat" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_invite_co_host" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_invite_co_host" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_kick" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_kick" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_notification" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_notification" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_participants" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_participants" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_team" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_team" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_user_role" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_user_role" ENABLE ROW LEVEL SECURITY;
 
-ALTER TABLE "public"."live_debate_user_team" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."live_feed_user_team" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."live_host_ban" ENABLE ROW LEVEL SECURITY;
 
@@ -692,29 +692,29 @@ ALTER TABLE "public"."live_host_support" ENABLE ROW LEVEL SECURITY;
 
 ALTER TABLE "public"."live_user_ban" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "only host can delete" ON "public"."live_debate_invite_co_host" FOR DELETE TO "authenticated" USING ("public"."user_is_host"("live_debate"));
+CREATE POLICY "only host can delete" ON "public"."live_feed_invite_co_host" FOR DELETE TO "authenticated" USING ("public"."user_is_host"("live_feed"));
 
-CREATE POLICY "only host can insert" ON "public"."live_debate_invite_co_host" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_is_host"("live_debate"));
+CREATE POLICY "only host can insert" ON "public"."live_feed_invite_co_host" FOR INSERT TO "authenticated" WITH CHECK ("public"."user_is_host"("live_feed"));
 
-CREATE POLICY "only host can see" ON "public"."live_debate_invite_co_host" FOR SELECT TO "authenticated" USING ("public"."user_is_host"("live_debate"));
+CREATE POLICY "only host can see" ON "public"."live_feed_invite_co_host" FOR SELECT TO "authenticated" USING ("public"."user_is_host"("live_feed"));
 
-CREATE POLICY "only host can update" ON "public"."live_debate_invite_co_host" FOR UPDATE TO "authenticated" USING ("public"."user_is_host"("live_debate"));
+CREATE POLICY "only host can update" ON "public"."live_feed_invite_co_host" FOR UPDATE TO "authenticated" USING ("public"."user_is_host"("live_feed"));
 
 CREATE POLICY "only owner can update" ON "public"."social_links" FOR UPDATE TO "authenticated", "anon" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "only user can delete" ON "public"."live_debate_user_team" FOR DELETE TO "authenticated", "anon" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+CREATE POLICY "only user can delete" ON "public"."live_feed_user_team" FOR DELETE TO "authenticated", "anon" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 ALTER TABLE "public"."social_links" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "user atleast co-host" ON "public"."live_debate_audience_team_only" FOR SELECT USING ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "user atleast co-host" ON "public"."live_feed_audience_team_only" FOR SELECT USING ("public"."user_atleast_co_host"("live_feed"));
 
-CREATE POLICY "user atleast co-host" ON "public"."live_debate_team" FOR DELETE TO "authenticated" USING ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "user atleast co-host" ON "public"."live_feed_team" FOR DELETE TO "authenticated" USING ("public"."user_atleast_co_host"("live_feed"));
 
-CREATE POLICY "user atleast code-host" ON "public"."live_debate_audience_team_only" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("live_debate"));
+CREATE POLICY "user atleast code-host" ON "public"."live_feed_audience_team_only" FOR UPDATE TO "authenticated" USING ("public"."user_atleast_co_host"("live_feed"));
 
-CREATE POLICY "user insert" ON "public"."live_debate_user_team" FOR INSERT TO "authenticated", "anon" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+CREATE POLICY "user insert" ON "public"."live_feed_user_team" FOR INSERT TO "authenticated", "anon" WITH CHECK ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-CREATE POLICY "user update" ON "public"."live_debate_user_team" FOR UPDATE TO "authenticated", "anon" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+CREATE POLICY "user update" ON "public"."live_feed_user_team" FOR UPDATE TO "authenticated", "anon" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 ALTER TABLE "public"."user_data" ENABLE ROW LEVEL SECURITY;
 
@@ -733,25 +733,25 @@ GRANT USAGE ON SCHEMA "public" TO "anon";
 GRANT USAGE ON SCHEMA "public" TO "authenticated";
 GRANT USAGE ON SCHEMA "public" TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."is_space_left"("live_debate_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."is_space_left"("live_debate_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."is_space_left"("live_debate_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."is_space_left"("live_feed_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."is_space_left"("live_feed_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."is_space_left"("live_feed_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."turn_on_realtime"() TO "anon";
 GRANT ALL ON FUNCTION "public"."turn_on_realtime"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."turn_on_realtime"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_debate_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_debate_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_debate_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_feed_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_feed_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."user_atleast_co_host"("live_feed_id" "uuid") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_debate_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_debate_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_debate_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_feed_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_feed_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."user_atleast_mod"("live_feed_id" "uuid") TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."user_is_host"("live_debate_id" "uuid") TO "anon";
-GRANT ALL ON FUNCTION "public"."user_is_host"("live_debate_id" "uuid") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."user_is_host"("live_debate_id" "uuid") TO "service_role";
+GRANT ALL ON FUNCTION "public"."user_is_host"("live_feed_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."user_is_host"("live_feed_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."user_is_host"("live_feed_id" "uuid") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."user_not_banned"() TO "anon";
 GRANT ALL ON FUNCTION "public"."user_not_banned"() TO "authenticated";
@@ -761,53 +761,53 @@ GRANT ALL ON TABLE "public"."host_stream_key" TO "anon";
 GRANT ALL ON TABLE "public"."host_stream_key" TO "authenticated";
 GRANT ALL ON TABLE "public"."host_stream_key" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_agenda" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_agenda" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_agenda" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_agenda" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_audience_team_only" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_audience_team_only" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_audience_team_only" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_audience_team_only" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_audience_team_only" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_audience_team_only" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_backstage_chat" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_backstage_chat" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_backstage_chat" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_backstage_chat" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_chat" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_chat" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_chat" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_chat" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_invite_co_host" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_invite_co_host" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_invite_co_host" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_invite_co_host" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_invite_co_host" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_invite_co_host" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_kick" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_kick" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_kick" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_kick" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_notification" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_notification" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_notification" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_notification" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_participants" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_participants" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_participants" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_participants" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_team" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_team" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_team" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_team" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_team" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_team" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_user_role" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_user_role" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_user_role" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_user_role" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_user_role" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_user_role" TO "service_role";
 
-GRANT ALL ON TABLE "public"."live_debate_user_team" TO "anon";
-GRANT ALL ON TABLE "public"."live_debate_user_team" TO "authenticated";
-GRANT ALL ON TABLE "public"."live_debate_user_team" TO "service_role";
+GRANT ALL ON TABLE "public"."live_feed_user_team" TO "anon";
+GRANT ALL ON TABLE "public"."live_feed_user_team" TO "authenticated";
+GRANT ALL ON TABLE "public"."live_feed_user_team" TO "service_role";
 
 GRANT ALL ON TABLE "public"."live_host_ban" TO "anon";
 GRANT ALL ON TABLE "public"."live_host_ban" TO "authenticated";

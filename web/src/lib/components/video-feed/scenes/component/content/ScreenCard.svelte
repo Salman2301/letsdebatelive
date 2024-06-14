@@ -2,7 +2,7 @@
 	import type { Tables } from '$lib/schema/database.types';
 
 	interface Props {
-		screen: Tables<'live_debate_participants'> | null;
+		screen: Tables<'live_feed_participants'> | null;
 	}
 	let { screen }: Props = $props();
 </script>

@@ -6,30 +6,36 @@ export async function load({ locals, params }) {
 	const username = params.username;
 	if (!username) throw redirect(303, '/?error=INVALID_USERNAME');
 	// TODO: check only for published VOD
-	// check username against the live debate and get the live debate
+	// check username against the live feed and get the live feed
 	const { data, error } = await supabase
-		.from('live_debate')
+		.from('live_feed')
 		.select('*, host(*)')
 		.eq('host.username', username)
 		.not('host', 'is', null)
 		.not('published', 'is', null)
-		.not("ended", "is", true);
+		.not('ended', 'is', true);
 
 	if (error) {
 		console.error(error);
-		throw redirect(303, '/?error=SERVER_ERROR_LIVE_DEBATE');
+		throw redirect(303, '/?error=SERVER_ERROR_live_feed');
 	}
 
-	if (!data || data.length === 0) throw redirect(303, `/profile/${username}/new-debate?error=NO_DEBATE_CREATE_ONE`);
+	if (!data || data.length === 0)
+		throw redirect(303, `/profile/${username}/new-feed?error=NO_DEBATE_CREATE_ONE`);
 
-	const liveDebateId = data[0].id;
+	const liveFeedId = data[0].id;
 
 	const [
 		{ data: teamData, error: teamError },
 		{ data: participantsData, error: participantsError }
 	] = await Promise.all([
-		supabase.from('live_debate_team').select().eq('live_debate', liveDebateId).order('title'),
-		supabase.from('live_debate_participants').select(participantsWithUserDataSelect).eq('live_debate', liveDebateId).order("created_at", { ascending: true }).returns<ParticipantsWithUserData[]>()
+		supabase.from('live_feed_team').select().eq('live_feed', liveFeedId).order('title'),
+		supabase
+			.from('live_feed_participants')
+			.select(participantsWithUserDataSelect)
+			.eq('live_feed', liveFeedId)
+			.order('created_at', { ascending: true })
+			.returns<ParticipantsWithUserData[]>()
 	]);
 	if (teamError) {
 		console.error(teamError);
@@ -42,7 +48,7 @@ export async function load({ locals, params }) {
 	}
 
 	return {
-		live_debate: data[0],
+		live_feed: data[0],
 		teamData,
 		userData: locals.userData,
 		participantsData

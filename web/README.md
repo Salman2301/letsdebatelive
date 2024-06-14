@@ -1,20 +1,20 @@
 # Intro
 
-Letsdebatelive is a video-conference platform to organize debates and live stream to audience at ease.
+Video-conference platform to organize debates and live stream to audience at ease.
 
 We are also trying to solve OBS in browsers and make it more accessible to everyone.
 
-- **Audience** get a chance to participate in the live debate and
-- **Host** will seemlessly host different debate to multiple platform with less hassel.
+- **Audience** get a chance to participate in the live feed and
+- **Host** will seemlessly host different live feed to multiple platform with less hassel.
   Since we will be taking care of the setup, OBS, streams, recording, add / removing participants, adding moderators and co-host with a link and login.
-- **Moderator/Participant** of the debates will get portion of earning based on the host custmoization how much percent will be split between them.
+- **Moderator/Participant** of the live feed will get portion of earning based on the host custmoization how much percent will be split between them.
 
 It's useful for:
 
-- Different community, that wants to take down different radical views/ideas and debate it live
+- Different community, that wants to take down different radical views/ideas and live feed it live
 - Will have an engaging poll / live chat for audience to act on it
 
-### Tech:
+## Tech
 
 - SvelteKit
 - TailwindCSS
@@ -56,7 +56,7 @@ suapabse db push
 ## Seed
 
 User A
-email: TeamUser1-A@example.com
+email: <TeamUser1-A@example.com>
 password: TeamUser1-A
 
 > Dump the current data from local database to seed `.sql` file

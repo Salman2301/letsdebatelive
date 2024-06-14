@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export type InstanceType = { submit: () => Promise<Tables<'live_debate'>> };
+	export type InstanceType = { submit: () => Promise<Tables<'live_feed'>> };
 </script>
 
 <script lang="ts">
@@ -14,8 +14,8 @@
 	import type { Writable } from 'svelte/store';
 
 	interface Props {
-		live_debate: Writable<Tables<'live_debate'> | null>;
-		teams: Writable<Tables<'live_debate_team'>[]>;
+		live_feed: Writable<Tables<'live_feed'> | null>;
+		teams: Writable<Tables<'live_feed_team'>[]>;
 		showSubmit: boolean;
 	}
 
@@ -24,22 +24,22 @@
 
 	const supabase = getSupabase();
 
-	let { live_debate, teams, showSubmit = $bindable() }: Props = $props();
+	let { live_feed, teams, showSubmit = $bindable() }: Props = $props();
 
 	let settingForm = $state({
-		maxParticipant: $live_debate?.max_participants,
-		maxStage: $live_debate?.max_stage,
-		autoMoveToStage: !!$live_debate?.auto_move_to_stage,
-		backstageAudienceType: $live_debate?.backstage_audience?.[0] as string,
-		chatAudienceType: $live_debate?.chat_audience?.[0] as string,
-		viewerAudienceType: $live_debate?.viewer_audience?.[0] as string
+		maxParticipant: $live_feed?.max_participants,
+		maxStage: $live_feed?.max_stage,
+		autoMoveToStage: !!$live_feed?.auto_move_to_stage,
+		backstageAudienceType: $live_feed?.backstage_audience?.[0] as string,
+		chatAudienceType: $live_feed?.chat_audience?.[0] as string,
+		viewerAudienceType: $live_feed?.viewer_audience?.[0] as string
 	});
 
 	$effect(() => {
 		showSubmit = isChanged();
 	});
 
-	live_debate.subscribe(() => {
+	live_feed.subscribe(() => {
 		getLatestSetting();
 	});
 
@@ -49,56 +49,56 @@
 
 	function isChanged() {
 		return (
-			settingForm.maxParticipant !== $live_debate?.max_participants ||
-			settingForm.maxStage !== $live_debate?.max_stage ||
-			settingForm.autoMoveToStage !== !!$live_debate?.auto_move_to_stage ||
-			settingForm.backstageAudienceType !== $live_debate?.backstage_audience?.[0] ||
-			settingForm.chatAudienceType !== $live_debate?.chat_audience?.[0] ||
-			settingForm.viewerAudienceType !== $live_debate?.viewer_audience?.[0]
+			settingForm.maxParticipant !== $live_feed?.max_participants ||
+			settingForm.maxStage !== $live_feed?.max_stage ||
+			settingForm.autoMoveToStage !== !!$live_feed?.auto_move_to_stage ||
+			settingForm.backstageAudienceType !== $live_feed?.backstage_audience?.[0] ||
+			settingForm.chatAudienceType !== $live_feed?.chat_audience?.[0] ||
+			settingForm.viewerAudienceType !== $live_feed?.viewer_audience?.[0]
 		);
 	}
 
-	export async function submit(): Promise<Tables<'live_debate'>> {
-		if (!$live_debate || !settingForm) return $live_debate!;
+	export async function submit(): Promise<Tables<'live_feed'>> {
+		if (!$live_feed || !settingForm) return $live_feed!;
 
 		// Check if the max stage is less than max participant
-		const toUpdate: Partial<Tables<'live_debate'>> = {};
+		const toUpdate: Partial<Tables<'live_feed'>> = {};
 
 		if (Number(settingForm.maxParticipant) <= Number(settingForm.maxStage)) {
 			newToast({
 				type: 'error',
 				message: "Max participants can't be less than max. stage member"
 			});
-			return $live_debate!;
+			return $live_feed!;
 		}
 
 		if (
 			typeof settingForm.maxParticipant === 'number' &&
-			settingForm.maxParticipant !== $live_debate.max_participants
+			settingForm.maxParticipant !== $live_feed.max_participants
 		) {
 			toUpdate.max_participants = settingForm.maxParticipant;
 		}
 
-		if (settingForm.maxStage !== $live_debate.max_stage) {
+		if (settingForm.maxStage !== $live_feed.max_stage) {
 			toUpdate.max_stage = settingForm.maxStage;
 		}
 
 		// Check if maxStage is less than maxParticipant
 
-		if (settingForm.autoMoveToStage !== $live_debate.auto_move_to_stage) {
+		if (settingForm.autoMoveToStage !== $live_feed.auto_move_to_stage) {
 			toUpdate.auto_move_to_stage = settingForm.autoMoveToStage;
 		}
 
 		if (
 			settingForm.backstageAudienceType &&
-			settingForm.backstageAudienceType !== $live_debate.backstage_audience?.[0]
+			settingForm.backstageAudienceType !== $live_feed.backstage_audience?.[0]
 		) {
 			if (settingForm.backstageAudienceType.startsWith('team-only-')) {
 				const { error: teamError } = await setTeamOnly(
 					'backstage',
 					settingForm.backstageAudienceType
 				);
-				if (teamError) return $live_debate!;
+				if (teamError) return $live_feed!;
 				toUpdate.backstage_audience = ['team-only'];
 			} else {
 				toUpdate.backstage_audience = [settingForm.backstageAudienceType as audience_type];
@@ -107,11 +107,11 @@
 
 		if (
 			settingForm.chatAudienceType &&
-			settingForm.chatAudienceType !== $live_debate.chat_audience?.[0]
+			settingForm.chatAudienceType !== $live_feed.chat_audience?.[0]
 		) {
 			if (settingForm.chatAudienceType.startsWith('team-only-')) {
 				const { error: teamError } = await setTeamOnly('chat', settingForm.chatAudienceType);
-				if (teamError) return $live_debate!;
+				if (teamError) return $live_feed!;
 				toUpdate.chat_audience = ['team-only'];
 			} else {
 				toUpdate.chat_audience = [settingForm.chatAudienceType as audience_type];
@@ -120,11 +120,11 @@
 
 		if (
 			settingForm.viewerAudienceType &&
-			settingForm.viewerAudienceType !== $live_debate.viewer_audience?.[0]
+			settingForm.viewerAudienceType !== $live_feed.viewer_audience?.[0]
 		) {
 			if (settingForm.viewerAudienceType.startsWith('team-only-')) {
 				const { error: teamError } = await setTeamOnly('viewer', settingForm.viewerAudienceType);
-				if (teamError) return $live_debate!;
+				if (teamError) return $live_feed!;
 				toUpdate.viewer_audience = ['team-only'];
 			} else {
 				toUpdate.viewer_audience = [settingForm.viewerAudienceType as audience_type];
@@ -132,9 +132,9 @@
 		}
 
 		const { data, error } = await supabase
-			.from('live_debate')
+			.from('live_feed')
 			.update(toUpdate)
-			.eq('id', $live_debate.id)
+			.eq('id', $live_feed.id)
 			.select();
 
 		if (error) {
@@ -150,41 +150,41 @@
 			});
 		}
 
-		if (data?.[0]) $live_debate = data[0];
-		return $live_debate;
+		if (data?.[0]) $live_feed = data[0];
+		return $live_feed;
 	}
 	type TeamService = Record<audience_service, string | undefined>;
 
-	let cacheLiveDebateTeamOnlyServiceMap: TeamService = {
+	let cacheLiveFeedTeamOnlyServiceMap: TeamService = {
 		backstage: undefined,
 		chat: undefined,
 		viewer: undefined
 	};
 
-	async function getLiveDebateTeamOnlyServiceMap(liveDebateId: string) {
+	async function getLiveFeedTeamOnlyServiceMap(liveFeedId: string) {
 		const { data, error } = await supabase
-			.from('live_debate_audience_team_only')
+			.from('live_feed_audience_team_only')
 			.select()
-			.eq('live_debate', liveDebateId);
+			.eq('live_feed', liveFeedId);
 
 		data?.forEach((item) => {
-			cacheLiveDebateTeamOnlyServiceMap[item.service] = item.team;
+			cacheLiveFeedTeamOnlyServiceMap[item.service] = item.team;
 		});
-		return cacheLiveDebateTeamOnlyServiceMap;
+		return cacheLiveFeedTeamOnlyServiceMap;
 	}
 
 	async function setTeamOnly(
 		service: audience_service,
 		value: string
 	): Promise<{ data: any; error: any }> {
-		if (!$live_debate) return { data: null, error: 'Invalid live debate id' };
+		if (!$live_feed) return { data: null, error: 'Invalid live feed id' };
 		if (!value.startsWith('team-only-')) {
 			console.error("Value must be in this format:'team-only-{teamId}'");
 		}
 		const { data, error } = await supabase
-			.from('live_debate_audience_team_only')
+			.from('live_feed_audience_team_only')
 			.upsert({
-				live_debate: $live_debate.id,
+				live_feed: $live_feed.id,
 				service: service,
 				team: value.replace('team-only-', '')
 			})
@@ -203,31 +203,31 @@
 
 	async function syncSettingForm() {
 		settingForm = {
-			maxParticipant: $live_debate?.max_participants,
-			maxStage: $live_debate?.max_stage,
-			autoMoveToStage: !!$live_debate?.auto_move_to_stage,
-			backstageAudienceType: $live_debate?.backstage_audience?.[0] as string,
-			chatAudienceType: $live_debate?.chat_audience?.[0] as string,
-			viewerAudienceType: $live_debate?.viewer_audience?.[0] as string
+			maxParticipant: $live_feed?.max_participants,
+			maxStage: $live_feed?.max_stage,
+			autoMoveToStage: !!$live_feed?.auto_move_to_stage,
+			backstageAudienceType: $live_feed?.backstage_audience?.[0] as string,
+			chatAudienceType: $live_feed?.chat_audience?.[0] as string,
+			viewerAudienceType: $live_feed?.viewer_audience?.[0] as string
 		};
 
 		let teamServiceMap: TeamService;
 		if (
-			$live_debate?.backstage_audience?.[0] === 'team-only' ||
-			$live_debate?.chat_audience?.[0] === 'team-only' ||
-			$live_debate?.viewer_audience?.[0] === 'team-only'
+			$live_feed?.backstage_audience?.[0] === 'team-only' ||
+			$live_feed?.chat_audience?.[0] === 'team-only' ||
+			$live_feed?.viewer_audience?.[0] === 'team-only'
 		) {
-			teamServiceMap = await getLiveDebateTeamOnlyServiceMap($live_debate.id);
+			teamServiceMap = await getLiveFeedTeamOnlyServiceMap($live_feed.id);
 
-			if ($live_debate?.backstage_audience?.[0] === 'team-only') {
+			if ($live_feed?.backstage_audience?.[0] === 'team-only') {
 				const teamId = teamServiceMap?.backstage;
 				settingForm.backstageAudienceType = `team-only-${teamId}`;
 			}
-			if ($live_debate?.chat_audience?.[0] === 'team-only') {
+			if ($live_feed?.chat_audience?.[0] === 'team-only') {
 				const teamId = teamServiceMap?.chat;
 				settingForm.chatAudienceType = `team-only-${teamId}`;
 			}
-			if ($live_debate?.viewer_audience?.[0] === 'team-only') {
+			if ($live_feed?.viewer_audience?.[0] === 'team-only') {
 				const teamId = teamServiceMap?.viewer;
 				settingForm.viewerAudienceType = `team-only-${teamId}`;
 			}

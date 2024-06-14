@@ -16,11 +16,11 @@
 	let inputRef: HTMLInputElement;
 
 	interface Props {
-		live_debate: Writable<Tables<'live_debate'> | null>;
-		teams: Writable<Tables<'live_debate_team'>[]>;
+		live_feed: Writable<Tables<'live_feed'> | null>;
+		teams: Writable<Tables<'live_feed_team'>[]>;
 	}
 
-	let { live_debate, teams }: Props = $props();
+	let { live_feed, teams }: Props = $props();
 
 	let newTeamValue = $state('');
 	let showSubmitBtn = $derived(!!newTeamValue);
@@ -42,22 +42,25 @@
 	onMount(refreshTeamData);
 
 	async function newTeam() {
-		if (!$live_debate?.id) return;
+		if (!$live_feed?.id) return;
 
-		const { data, error } = await supabase.from('live_debate_team').insert({
-			color: getAvailableColor(),
-			live_debate: $live_debate?.id,
-			slug: slugify(newTeamValue),
-			title: newTeamValue,
-			is_default: false
-		}).select();
+		const { data, error } = await supabase
+			.from('live_feed_team')
+			.insert({
+				color: getAvailableColor(),
+				live_feed: $live_feed?.id,
+				slug: slugify(newTeamValue),
+				title: newTeamValue,
+				is_default: false
+			})
+			.select();
 
-		if( error) {
+		if (error) {
 			console.error(error);
 			newToast({
 				type: 'error',
 				message: 'Failed to add team'
-			})
+			});
 		}
 		newTeamValue = '';
 		refreshTeamData();
@@ -78,12 +81,12 @@
 	}
 
 	async function refreshTeamData() {
-		if (!$live_debate?.id) return;
+		if (!$live_feed?.id) return;
 
 		const { data: newTeamsData } = await supabase
-			.from('live_debate_team')
+			.from('live_feed_team')
 			.select()
-			.eq('live_debate', $live_debate.id)
+			.eq('live_feed', $live_feed.id)
 			.order('title');
 
 		if (newTeamsData) teams.set(newTeamsData);
@@ -94,7 +97,7 @@
 <p class="team-desc">Split your audience into different teams</p>
 <div class="teams-container" class:empty={!$teams.length}>
 	{#each $teams as team (team.id)}
-		<TeamSettingItem {team} {live_debate} onsubmit={refreshTeamData} />
+		<TeamSettingItem {team} {live_feed} onsubmit={refreshTeamData} />
 	{/each}
 </div>
 <div class="new-team-container">
@@ -107,7 +110,12 @@
 		bind:this={inputRef}
 	/>
 
-	<button class="btn-new-team" data-testid="team-submit-btn" onclick={newTeam} class:hidden={!showSubmitBtn}>
+	<button
+		class="btn-new-team"
+		data-testid="team-submit-btn"
+		onclick={newTeam}
+		class:hidden={!showSubmitBtn}
+	>
 		<CheckMark />
 	</button>
 </div>

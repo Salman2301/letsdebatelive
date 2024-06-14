@@ -10,11 +10,11 @@
 
 	interface Props {
 		onsubmit: () => void;
-		team: Tables<'live_debate_team'>;
-		live_debate: Writable<Tables<'live_debate'> | null>;
+		team: Tables<'live_feed_team'>;
+		live_feed: Writable<Tables<'live_feed'> | null>;
 	}
 
-	let { team, live_debate, onsubmit }: Props = $props();
+	let { team, live_feed, onsubmit }: Props = $props();
 
 	const supabase = getSupabase();
 
@@ -39,21 +39,21 @@
 	}
 
 	async function updateTeamTitle() {
-		await supabase.from('live_debate_team').update({ title: newTeamValue }).eq('id', team.id);
+		await supabase.from('live_feed_team').update({ title: newTeamValue }).eq('id', team.id);
 		onsubmit?.();
 		showSubmitBtn = false;
 	}
 
 	async function updateDefault() {
-		if (!$live_debate) return;
+		if (!$live_feed) return;
 
 		await supabase
-			.from('live_debate_team')
+			.from('live_feed_team')
 			.update({ is_default: false })
-			.eq('live_debate', $live_debate.id);
+			.eq('live_feed', $live_feed.id);
 
 		if (!team.is_default) {
-			await supabase.from('live_debate_team').update({ is_default: true }).eq('id', team.id);
+			await supabase.from('live_feed_team').update({ is_default: true }).eq('id', team.id);
 		}
 
 		onsubmit?.();
@@ -61,8 +61,8 @@
 	}
 
 	async function remove() {
-		if (!$live_debate) return;
-		const { data, error } = await supabase.from('live_debate_team').delete().eq('id', team.id);
+		if (!$live_feed) return;
+		const { data, error } = await supabase.from('live_feed_team').delete().eq('id', team.id);
 		if (error) {
 			console.error({ error });
 			newToast({
@@ -93,7 +93,12 @@
 			Default
 		</button>
 	</div>
-	<button class="delete-icon" class:hidden={team.is_default} onclick={remove} data-testid="btn-team-del">
+	<button
+		class="delete-icon"
+		class:hidden={team.is_default}
+		onclick={remove}
+		data-testid="btn-team-del"
+	>
 		<CloseX />
 	</button>
 </div>

@@ -20,32 +20,32 @@
 	let stageInstance: [Stage1Init, Stage2Host, Stage3CoHost, Stage4Setting, Stage5Broadcast] = [];
 
 	const supabase = getSupabase();
-	const pageCtx = new PageCtx('new-debate');
+	const pageCtx = new PageCtx('new-feed');
 
 	const title = pageCtx.get('title');
-	const liveDebate = pageCtx.get('liveDebate');
+	const liveFeed = pageCtx.get('liveFeed');
 	const hostParticipant = pageCtx.get('hostParticipant');
 
 	async function handleNext() {
 		await stageInstance[currentState - 1].beforeOnNext();
 		if (currentState === 5) {
 			// redirect to control room
-			if (!$liveDebate) {
+			if (!$liveFeed) {
 				newToast({
 					type: 'error',
 					message: 'Something went wrong!'
 				});
-				throw new Error('Failed to get the live debate');
+				throw new Error('Failed to get the live feed');
 			}
 
-			$liveDebate.published = true;
-			$liveDebate.published_tz = new Date().toISOString();
+			$liveFeed.published = true;
+			$liveFeed.published_tz = new Date().toISOString();
 
-			sessionStorage.removeItem('store$liveDebateId');
+			sessionStorage.removeItem('store$liveFeedId');
 			await supabase
-				.from('live_debate')
-				.update({ ...$liveDebate })
-				.eq('id', $liveDebate.id);
+				.from('live_feed')
+				.update({ ...$liveFeed })
+				.eq('id', $liveFeed.id);
 
 			goto(`/profile/${$page.params.username}/control-room`);
 		}
@@ -57,7 +57,7 @@
 	}
 
 	let stages = [
-		'New Debate (1 / 5)',
+		'New Feed (1 / 5)',
 		'My (Host) Setup (2 / 5)',
 		'Invite Co-host (3 / 5)',
 		'Setting (4 / 5)',
