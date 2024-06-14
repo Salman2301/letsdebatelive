@@ -17,9 +17,14 @@
 	const myBackstageInfo = pageCtx.get('myBackstageInfo');
 	let teamId: string = $state('');
 
+	let chats: ChatWithSenderData[] = $state([]);
+	let isSending: boolean = $state(false);
+	let isLoading: boolean = $state(true);
+
 	$effect(() => {
 		getTeamId();
 	});
+
 
 	function handleOpenTeamSelect() {
 		if (!ctx) {
@@ -91,10 +96,6 @@
 		if (data?.[0]?.team) teamId = data?.[0]?.team;
 		return;
 	}
-
-	let chats: ChatWithSenderData[] = $state([]);
-	let isSending: boolean = $state(false);
-	let isLoading: boolean = $state(true);
 	let value: string = $state('');
 	async function submitChat() {
 		if (!ctx?.live_feed || !$authUserData) return;

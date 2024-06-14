@@ -6,8 +6,9 @@
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
 
-	import type { Tables } from '$src/lib/schema/database.types';
 	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
+	import { onDestroy, tick } from 'svelte';
+
 	// User able to popup the chat
 	// User can see multiple chats from different broadcasts
 	// User can
@@ -63,8 +64,63 @@
 		isLoading = false;
 	}
 
+	let intervalId: NodeJS.Timeout;
+	let scrollContainer: HTMLDivElement;
+	let scrollStream: boolean = $state(true);
+	let maxChatLen: number = $state(80);
+	let hasScrollbar: boolean = $state(false);
+
 	$effect(() => {
 		fetchChats();
+		// mockChat();	
+		scrollContainer.addEventListener("wheel", handleWheel);
+	});
+
+	function mockChat() {
+		let i = 0;
+		intervalId = setInterval(async () => {
+			balanacePush([{...chats[0], chat: "test " + i}]);
+			await tick();
+			if(scrollStream) scrollToEnd();
+			i ++;
+		}, 300);
+	}
+
+	function handleWheel(e: WheelEvent) {
+		if (e.deltaY < 0) {
+			scrollStream = false;
+		}
+		else {
+			// user try to scoll to the bottom of the chat
+			// contiue streaming if the container hit the bottom
+			const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
+			if ( ( scrollHeight - scrollTop ) === clientHeight) {
+				handleContinueScroll();
+			}
+		}
+	}
+
+	function handleContinueScroll() {
+		scrollStream = true;
+		scrollToEnd();
+	}
+
+	function balanacePush(newChats: ChatWithSenderData[]) {
+		let oldChats: ChatWithSenderData[] = chats;
+		if (scrollStream && chats.length > maxChatLen) {
+			oldChats = chats.slice(-maxChatLen);
+		}
+		chats = [...oldChats, ...newChats];
+		hasScrollbar = scrollContainer.scrollHeight > scrollContainer.clientHeight;
+		if(scrollStream) scrollToEnd();
+	}
+
+	function scrollToEnd() {
+		scrollContainer.scrollTop = scrollContainer.scrollHeight;
+	}
+
+	onDestroy(() => {
+		clearInterval(intervalId);
 	});
 
 	supabase
@@ -84,7 +140,10 @@
 
 <div class="sidebar-chat-live">
 	<Heading2 content="Chat"></Heading2>
-	<div class="chat-container">
+	<div
+		class="chat-container"
+		bind:this={scrollContainer}
+	>
 		{#if isLoading}
 			<div class="loader-container mt-2">
 				<Loader />
@@ -99,6 +158,17 @@
 		{/if}
 	</div>
 	<div class="input-chat">
+		{#if hasScrollbar && !scrollStream}
+			<button
+				class="stream-scroll-btn"
+				onclick={handleContinueScroll}
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" transform="scale(1.4)" class="bi bi-pause" viewBox="0 0 16 16">
+					<path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
+				</svg>
+				Chat Streaming is Paused
+			</button>
+		{/if}
 		<textarea
 			class="input-chat-text"
 			placeholder="Type your message here..."
@@ -129,8 +199,19 @@
 	.chat-container {
 		width: 100%;
 		height: stretch;
+		scrollbar-color: rgb(var(--color-primary)) black;
 		overflow: scroll;
 	}
+
+	.stream-scroll-btn {
+		@apply border border-light-gray;
+		@apply px-4 py-2;
+		@apply flex items-center justify-center gap-2;
+		&:hover {
+			@apply underline;
+		}
+	}
+
 	.input-chat {
 		@apply flex flex-col justify-end;
 		@apply pt-1;
