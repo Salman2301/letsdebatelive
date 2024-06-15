@@ -5,7 +5,7 @@
   I want the user to send multiple different feeds not just screenshare and webcam
 
 
-  ☐ Work on streaming chat with scrol not functionality
+  ✔ Work on streaming chat with scroll not functionality @done(24-06-15 04:38)
   ✔ Rename "live_debate" to "live_feed" @done(24-06-14 05:22)
   ✘ Activate all the live* not live_* @cancelled(24-06-14 05:22)
   Rethink layers:
@@ -36,6 +36,40 @@
         Image:
           ☐ Upload
         ☐ logo upload and corner selection
+
+
+    Chat: 
+      ☐ Render the chat item
+        ☐ For Emoji
+        ✔ For bold, italic, underline, mixed @done(24-06-15 05:09)
+        ☐ user mention
+        ☐ bold
+        ☐ italic
+        ☐ strikethrough
+
+      
+      ☐ User chat have ICONS
+        BADGE:
+          AUTH:
+            ☐ MOD ICON
+            ☐ ADMIN ICON
+            ☐ CO-HOST ICON
+            ☐ SUPPORT ICON
+          SUPPORT:
+            ☐ Tier 1
+            ☐ Tier 2
+            ☐ Tier 3
+          Event bot:
+
+        
+      ☐ Chat options
+        ☐ Copy username
+        ☐ Copy message
+        ☐ Admin
+          ☐ Ban
+          ☐ Kick
+          ☐ Timeout
+          ☐ Chat ban
 
     Stream: 
       ☐ WebRTC 

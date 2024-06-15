@@ -7,6 +7,7 @@
 	import { getSupabase } from '$src/lib/supabase';
 
 	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
+	import { convetToHtml } from '$src/lib/utils/html.utils';
 	import { onDestroy, tick } from 'svelte';
 
 	// User able to popup the chat
@@ -152,7 +153,8 @@
 			{#each chats as chat}
 				<div class="chat-item">
 					<span class="username">{chat.sender_id.username}</span>
-					<span class="chat">: {chat.chat}</span>
+					<span>:</span>
+					<span class="chat">{@html convetToHtml(chat.chat)}</span>
 				</div>
 			{/each}
 		{/if}
@@ -238,7 +240,10 @@
 		@apply py-1;
 	}
 	.chat-item {
-		@apply text-sm;
+		@apply text-white;
+	}
+	:global(.chat a) {
+		@apply underline; 
 	}
 	.username {
 		@apply font-bold;
