@@ -1,14 +1,15 @@
 <script lang="ts">
+	import EmojiBoard, { type EmojiItem } from '$src/lib/components/emoji-board/EmojiBoard.svelte';
 	import Heading2 from '$src/lib/components/form/Heading2.svelte';
 	import Loader from '$src/lib/components/icon/Loader.svelte';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { PageCtx } from '$src/lib/context';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
-
-	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
 	import { convetToHtml } from '$src/lib/utils/html.utils';
 	import { onDestroy, tick } from 'svelte';
+
+	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
 
 	// User able to popup the chat
 	// User can see multiple chats from different broadcasts
@@ -18,10 +19,37 @@
 	let chats: ChatWithSenderData[] = $state([]);
 	const supabase = getSupabase();
 
+	let textAreaInstance: HTMLTextAreaElement;
+
 	const pageCtx = new PageCtx('control-room');
 	const liveFeed = pageCtx.get('ctx_table$live_feed');
 
 	let value: string = $state('');
+
+	let intervalId: NodeJS.Timeout;
+	let scrollContainer: HTMLDivElement;
+	let scrollStream: boolean = $state(true);
+	let maxChatLen: number = $state(80);
+	let hasScrollbar: boolean = $state(false);
+
+	let lastCaretPos: number = $state(0);
+
+	$effect(() => {
+		fetchChats();
+		// mockChat();	
+		scrollContainer.addEventListener("wheel", handleWheel);
+	});
+
+	function mockChat() {
+		let i = 0;
+		intervalId = setInterval(async () => {
+			balanacePush([{...chats[0], chat: "test " + i}]);
+			await tick();
+			if(scrollStream) scrollToEnd();
+			i ++;
+		}, 300);
+	}
+
 	async function submitChat() {
 		try {
 			if (value.trim().length === 0) return;
@@ -63,28 +91,6 @@
 
 		chats = last20Data || [];
 		isLoading = false;
-	}
-
-	let intervalId: NodeJS.Timeout;
-	let scrollContainer: HTMLDivElement;
-	let scrollStream: boolean = $state(true);
-	let maxChatLen: number = $state(80);
-	let hasScrollbar: boolean = $state(false);
-
-	$effect(() => {
-		fetchChats();
-		// mockChat();	
-		scrollContainer.addEventListener("wheel", handleWheel);
-	});
-
-	function mockChat() {
-		let i = 0;
-		intervalId = setInterval(async () => {
-			balanacePush([{...chats[0], chat: "test " + i}]);
-			await tick();
-			if(scrollStream) scrollToEnd();
-			i ++;
-		}, 300);
 	}
 
 	function handleWheel(e: WheelEvent) {
@@ -137,6 +143,13 @@
 			fetchChats
 		)
 		.subscribe();
+
+		function handleEmojiSelected(emoji: EmojiItem) {
+			value = value.slice(0, lastCaretPos) + emoji.unicode + value.slice(lastCaretPos);
+			lastCaretPos += emoji.unicode.length;
+			textAreaInstance.selectionStart = lastCaretPos;
+			textAreaInstance.selectionEnd = lastCaretPos;
+		}
 </script>
 
 <div class="sidebar-chat-live">
@@ -175,18 +188,23 @@
 			class="input-chat-text"
 			placeholder="Type your message here..."
 			bind:value
+			bind:this={textAreaInstance}
+			onblur={()=> lastCaretPos = textAreaInstance.selectionStart}
 			onkeydown={handleKeyDown}
 		>
 		</textarea>
-		<button class="input-chat-btn" onclick={submitChat}>
-			{#if isSending}
-				<div class="loader-icon">
-					<Loader />
-				</div>
-			{:else}
-				Send
-			{/if}
-		</button>
+		<div class="footer">
+			<EmojiBoard onEmojiSelected={handleEmojiSelected} />
+			<button class="input-chat-btn" onclick={submitChat}>
+				{#if isSending}
+					<div class="loader-icon">
+						<Loader />
+					</div>
+				{:else}
+					Send
+				{/if}
+			</button>
+		</div>
 	</div>
 </div>
 
@@ -231,9 +249,12 @@
 		@apply focus-within:bg-secondary-dark;
 		@apply px-2;
 	}
+	.footer {
+		@apply flex gap-2 justify-end;
+		@apply w-full
+	}
 	.input-chat-btn {
 		width: 100px;
-		@apply self-end;
 		@apply my-1;
 		@apply rounded;
 		@apply bg-primary hover:bg-primary-dark;
