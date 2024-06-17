@@ -35,6 +35,7 @@ export type Database = {
 					feed_type: string | null;
 					feeder_card_show: boolean | null;
 					host: string | null;
+					host_username: string | null;
 					id: string;
 					max_participants: number;
 					max_stage: number;
@@ -57,6 +58,7 @@ export type Database = {
 					feed_type?: string | null;
 					feeder_card_show?: boolean | null;
 					host?: string | null;
+					host_username?: string | null;
 					id?: string;
 					max_participants?: number;
 					max_stage?: number;
@@ -79,6 +81,7 @@ export type Database = {
 					feed_type?: string | null;
 					feeder_card_show?: boolean | null;
 					host?: string | null;
+					host_username?: string | null;
 					id?: string;
 					max_participants?: number;
 					max_stage?: number;

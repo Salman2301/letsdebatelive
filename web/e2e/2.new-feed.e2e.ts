@@ -14,7 +14,7 @@ const test = base.extend<{ authPage: AuthPage }>({
 
 test('index page should have logo', async ({ page }) => {
 	await page.goto('/');
-	await expect(page.getByRole('link', { name:'VISTA LVE' })).toBeVisible();
+	await expect(page.getByRole('link', { name:'VISTA LIVE' })).toBeVisible();
 });
 
 test('Create a  new feed', async ({ page, authPage }) => {

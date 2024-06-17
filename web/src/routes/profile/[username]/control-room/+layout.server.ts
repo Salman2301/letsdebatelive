@@ -9,8 +9,8 @@ export async function load({ locals, params }) {
 	// check username against the live feed and get the live feed
 	const { data, error } = await supabase
 		.from('live_feed')
-		.select('*, host(*)')
-		.eq('host.username', username)
+		.select()
+		.eq('host_username', username)
 		.not('host', 'is', null)
 		.not('published', 'is', null)
 		.not('ended', 'is', true);

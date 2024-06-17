@@ -126,7 +126,6 @@
 	}
 
 	function scrollToEnd() {
-		console.log("scroll to end!");
 		scrollContainer.scrollTop = scrollContainer.scrollHeight;
 	}
 

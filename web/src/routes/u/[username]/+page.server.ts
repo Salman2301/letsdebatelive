@@ -215,8 +215,8 @@ async function getLatestLiveFeedId(
 }> {
 	const { data, error } = await supabase
 		.from('live_feed')
-		.select('*, host(*)')
-		.eq('host.username', username)
+		.select()
+		.eq('host_username', username)
 		.eq('published', true)
 		.not('ended', 'is', true)
 		.not('host', 'is', null)

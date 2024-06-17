@@ -26,8 +26,8 @@ export async function load({ locals, params, parent }): Promise<ReturnCreateLive
 	// check username against the live feed and get the live feed
 	const { data, error } = await supabase
 		.from('live_feed')
-		.select('*, host(*)')
-		.eq('host.username', userData.username)
+		.select()
+		.eq('host_username', userData.username)
 		.not('host', 'is', null)
 		.not('published', 'is', null)
 		.not('ended', 'is', true);
@@ -44,7 +44,8 @@ export async function load({ locals, params, parent }): Promise<ReturnCreateLive
 	const { data: newLiveFeed, error: newLiveFeedError } = await supabase
 		.from('live_feed')
 		.insert({
-			host: userData.id
+			host: userData.id,
+			host_username: userData.username
 		})
 		.select();
 	if (!newLiveFeed?.[0]?.id) return { liveFeed: null, hostParticipant: null };
@@ -92,8 +93,8 @@ async function oldLiveFeed(
 ): Promise<{ data: ReturnCreateLiveFeed | null; error: any }> {
 	const { data: oldLiveFeeds, error } = await supabase
 		.from('live_feed')
-		.select('*, host(*)')
-		.eq('host.username', userData.username)
+		.select()
+		.eq('host_username', userData.username)
 		.not('host', 'is', null)
 		.not('published', 'is', true)
 		.order('created_at', { ascending: false });
