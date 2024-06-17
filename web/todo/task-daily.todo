@@ -4,10 +4,12 @@
     USERID
   I want the user to send multiple different feeds not just screenshare and webcam
 
-
   ✔ Work on streaming chat with scroll not functionality @done(24-06-15 04:38)
   ✔ Rename "live_debate" to "live_feed" @done(24-06-14 05:22)
   ✘ Activate all the live* not live_* @cancelled(24-06-14 05:22)
+
+  ☐ Build the Video chat platform for participants
+
   Rethink layers:
     Layer planel:
       ☐ User able to drag above and below the feed

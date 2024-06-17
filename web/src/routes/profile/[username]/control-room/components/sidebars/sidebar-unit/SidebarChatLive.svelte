@@ -43,7 +43,7 @@
 	function mockChat() {
 		let i = 0;
 		intervalId = setInterval(async () => {
-			balanacePush([{...chats[0], chat: "test " + i}]);
+			balancePush([{...chats[0], chat: "test " + i}]);
 			await tick();
 			if(scrollStream) scrollToEnd();
 			i ++;
@@ -85,11 +85,14 @@
 		const { data: last20Data } = await supabase
 			.from('live_feed_chat')
 			.select(chatWithSenderData)
-			.order('created_at', { ascending: true })
-			.limit(20)
+			.order('created_at', { ascending: false })
+			.limit(100)
 			.returns<ChatWithSenderData[]>();
 
-		chats = last20Data || [];
+		chats = last20Data?.reverse() || [];
+		await tick()
+
+		if(scrollStream) scrollToEnd();
 		isLoading = false;
 	}
 
@@ -112,7 +115,7 @@
 		scrollToEnd();
 	}
 
-	function balanacePush(newChats: ChatWithSenderData[]) {
+	function balancePush(newChats: ChatWithSenderData[]) {
 		let oldChats: ChatWithSenderData[] = chats;
 		if (scrollStream && chats.length > maxChatLen) {
 			oldChats = chats.slice(-maxChatLen);
@@ -123,6 +126,7 @@
 	}
 
 	function scrollToEnd() {
+		console.log("scroll to end!");
 		scrollContainer.scrollTop = scrollContainer.scrollHeight;
 	}
 

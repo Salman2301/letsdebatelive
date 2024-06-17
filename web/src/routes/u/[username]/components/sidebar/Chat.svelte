@@ -6,9 +6,10 @@
 	import { getSupabase } from '$src/lib/supabase';
 	import { getContext } from 'svelte';
 
-	import type { Tables } from '$src/lib/schema/database.types';
 	import { PageCtx } from '$src/lib/context';
 	import { chatWithSenderData, type ChatWithSenderData } from '$src/lib/types';
+
+	import type { Tables } from '$src/lib/schema/database.types';
 
 	const supabase = getSupabase();
 	const pageCtx = new PageCtx('live');
@@ -133,11 +134,11 @@
 		const { data: last20Data } = await supabase
 			.from('live_feed_chat')
 			.select(chatWithSenderData)
-			.order('created_at', { ascending: true })
+			.order('created_at', { ascending: false })
 			.limit(20)
 			.returns<ChatWithSenderData[]>();
 
-		chats = last20Data || [];
+		chats = (last20Data || []).reverse();
 		isLoading = false;
 	}
 
