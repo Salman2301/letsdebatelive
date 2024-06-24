@@ -40,12 +40,18 @@
 
 	{#if showPopup}
 		<div class="popup">
+			{#if $authUserData}
+				<div class="signed-in">
+					<input class="username" value={$authUserData.username} readonly/>
+				</div>
+			{/if}
 			<button class="btn-popup" onclick={handleCreateFeed}> Create Feed </button>
 			{#if $authUserData === null}
 				<button class="btn-popup" onclick={openLogin}> Login </button>
 				<button class="btn-popup bg-primary/70" onclick={openRegister}> Create account </button>
 			{:else}
 				{@const username = $authUserData.username}
+			
 				<button
 					class="btn-popup"
 					onclick={() => gotoClosePopup(`/profile/${username}/control-room`)}
@@ -86,6 +92,25 @@
 		border-radius: 4px;
 		overflow: hidden;
 		z-index: 1000;
+	}
+
+	.signed-in {
+		@apply flex justify-center;
+		@apply px-1 py-2;
+		border-bottom: 1px solid var(--color-light-gray);
+		&::before {
+			content: '@';
+			@apply pr-1;
+			@apply text-white/60;
+		}
+
+		input {
+			@apply bg-transparent border-none outline-none;
+			@apply text-sm;
+			@apply text-white/60;
+			field-sizing: content;
+			max-width: 140px;
+		}
 	}
 
 	.btn-popup {
