@@ -4,6 +4,28 @@
     USERID
   I want the user to send multiple different feeds not just screenshare and webcam
 
+  ☐ On Debate created, On the control room, the user can see his feeds
+    ☐ When the user join the debate, the user can see his feeds
+    ☐ Send the participant stream to the control room via RTC
+    ☐ Send the host screen to the participant
+    ☐ Keep the layout based on host setting!
+
+  ☐ Create a `webRTC` class to handle the webRTC connection
+    User A:
+      ☐ `const room = new Room(liveFeedId, remoteVideoInstance);`
+      ☐ `room.init();`
+      ☐ `room.makeCall();`
+      
+      User B:
+      ☐ `const room = new Room(liveFeedId, remoteVideoInstance);`
+      ☐ `room.init();`
+      
+  
+
+
+  
+
+
   ✔ Work on streaming chat with scroll not functionality @done(24-06-15 04:38)
   ✔ Rename "live_debate" to "live_feed" @done(24-06-14 05:22)
   ✘ Activate all the live* not live_* @cancelled(24-06-14 05:22)

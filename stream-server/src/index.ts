@@ -1,11 +1,13 @@
 // require('dotenv').config();
 import "dotenv/config";
 import supabase from "./supabase";
+import puppeteer from "puppeteer";
+
 import { spawn } from "node:child_process";
 import { PuppeteerScreenRecorder } from "puppeteer-screen-recorder";
-import puppeteer from "puppeteer";
 import { PassThrough } from "node:stream";
 import { logger } from "./logger";
+import { Tables } from "./db/schema/database.types";
 
 // 1080p
 let width = 1920;
@@ -32,30 +34,51 @@ const Config = {
   },
 };
 
-logger().info("Listening for broadcast_start");
-
-let hostId = "123-456-789";
+logger().info("Server listening for new live feed");
 
 let lastRecording: { unsubscribe: () => Promise<void> } | null;
 
-const channel = supabase.channel(`broadcast_${hostId}`);
+const channel = supabase.channel("debate");
 
-channel
-  .on("broadcast", { event: "broadcast_start" }, async () => {
-    lastRecording = await onNewLiveDebate();
-  })
-
-channel
-  .on("broadcast", { event: "broadcast_end" }, async () => {
-    setTimeout(async () => {
-      if (lastRecording) await lastRecording.unsubscribe();
-      else logger().warn(`Nothing to end?`)
-    }, 3000);
-  })
+channel.on(
+  "postgres_changes",
+  {
+    event: "*",
+    schema: "public",
+    table: "live_feed",
+    filter: "published.eq=true"
+  },
+  async (payload) => {
+    console.log({ payload });
+    if (payload.eventType === "DELETE") return;
+    if (!payload.new) return;
+    if (!payload.new.username) return;
+    onNewLiveDebate(payload.new.username);
+  }
+)
 
 channel.subscribe();
 
-async function onNewLiveDebate() {
+// const channel = supabase.channel(`broadcast_${hostId}`);
+
+// const channel = supabase.channel("debate");
+
+// channel
+//   .on("broadcast", { event: "broadcast_start" }, async () => {
+//     lastRecording = await onNewLiveDebate();
+//   })
+
+// channel
+//   .on("broadcast", { event: "broadcast_end" }, async () => {
+//     setTimeout(async () => {
+//       if (lastRecording) await lastRecording.unsubscribe();
+//       else logger().warn(`Nothing to end?`)
+//     }, 3000);
+//   })
+
+// channel.subscribe();
+
+async function onNewLiveDebate(liveFeed: Tables<"live_feed">) {
   if (lastRecording) await lastRecording.unsubscribe();
 
   const browser = await puppeteer.launch({
@@ -63,7 +86,7 @@ async function onNewLiveDebate() {
   });
   const page = await browser.newPage();
 
-  await page.goto("http://localhost:5172/username/salman2301/record-view");
+  await page.goto(`http://localhost:5172/video-feed/${liveFeed.id}?bot_id=${1234}`);
 
   // There is a bug in the app where the screen is stuck in loading.
   // Fix the bug in the video element

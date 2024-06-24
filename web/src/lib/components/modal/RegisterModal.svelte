@@ -40,7 +40,10 @@
 			hasErrors = hasErrorParse(parsed);
 			isLoading = true;
 
-			if (!parsed.success) throw new Error('Form error');
+			if (!parsed.success) {
+				console.log(parsed.error);
+				throw new Error('Form error');
+			}
 
 			const {
 				data: { session }

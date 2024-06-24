@@ -4,18 +4,19 @@
 	import SceneLayout from './component/SceneLayout.svelte';
 	import type { LayerIdContent, ScenePayloadContent } from '../video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 	// import { lastScreenPayloadContent } from './store/scente.store';
 
 	interface Props {
 		payload: ScenePayloadContent;
-		participantsList: Tables<'live_feed_participants'>[];
+		participantsList: ParticipantsWithUserData[];
 	}
 
 	let { payload, participantsList }: Props = $props();
 	// let layoutId: LayoutContentType = "profile_multiple";
 	// let participantsList: Tables<'live_feed_participants'>[] = [ ];
 
-	function filterParticipants(layoutId: LayerIdContent): Tables<'live_feed_participants'>[] {
+	function filterParticipants(layoutId: LayerIdContent): ParticipantsWithUserData[] {
 		return participantsList;
 	}
 

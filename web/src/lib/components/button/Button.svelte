@@ -15,6 +15,7 @@
 		onclick?: () => void;
 		disabled?: boolean;
 		fontType?: 'bold' | 'semibold' | 'normal';
+		children?: any;
 	}
 	let {
 		label = 'Button',
@@ -24,7 +25,8 @@
 		testId,
 		width,
 		onclick = () => {},
-		fontType = 'bold'
+		fontType = 'bold',
+		children 
 	}: Props = $props();
 </script>
 

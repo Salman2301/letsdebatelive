@@ -21,7 +21,8 @@
 		"db:reset": "npm run db:migration:new && supabase db reset --local && node --env-file=.env ./script/turn-on-realtime && supabase stop && supabase start",
 		"db:reset:force": "supabase db reset --local && node --env-file=.env ./script/turn-on-realtime && supabase stop && supabase start",
 		"db:seed:dump": "supabase db dump -f supabase/seed.sql --local --schema storage,auth,public --data-only -x auth.audit_log_entries,auth.mfa_amr_claims,auth.sessions,auth.refresh_tokens",
-		"db:diff": "supabase db diff --schema storage,auth,public"
+		"db:diff": "supabase db diff --schema storage,auth,public",
+		"db:delete:all": "node --env-file=.env ./script/delete-all"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",

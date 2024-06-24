@@ -405,6 +405,7 @@ export type Database = {
 					hand_raised_at: string | null;
 					host_id: string | null;
 					is_kicked: boolean | null;
+					joined: boolean | null;
 					live_feed: string;
 					location: Database['public']['Enums']['participant_location'];
 					mic_available: boolean | null;
@@ -431,6 +432,7 @@ export type Database = {
 					hand_raised_at?: string | null;
 					host_id?: string | null;
 					is_kicked?: boolean | null;
+					joined?: boolean | null;
 					live_feed: string;
 					location: Database['public']['Enums']['participant_location'];
 					mic_available?: boolean | null;
@@ -457,6 +459,7 @@ export type Database = {
 					hand_raised_at?: string | null;
 					host_id?: string | null;
 					is_kicked?: boolean | null;
+					joined?: boolean | null;
 					live_feed?: string;
 					location?: Database['public']['Enums']['participant_location'];
 					mic_available?: boolean | null;

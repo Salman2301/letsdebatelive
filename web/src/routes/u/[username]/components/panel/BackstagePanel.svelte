@@ -22,12 +22,11 @@
 		SettingGear
 	} from '$lib/components/icon';
 	import { getSupabase } from '$lib/supabase';
-	import { getContext } from 'svelte';
-
-	import type { PageData, ParticipantsWithUserData } from '../../page.types';
-	import type { Tables } from '$lib/schema/database.types';
 	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 	import { openSidePanel } from '$src/lib/components/side-panel/side-panel.store';
+
+	import type { ParticipantsWithUserData } from '$src/lib/types';
+	import type { PageData } from '../../page.types';
 
 	interface Props {
 		pageData: PageData | null;

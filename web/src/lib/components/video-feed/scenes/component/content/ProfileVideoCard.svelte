@@ -1,21 +1,35 @@
 <script lang="ts">
 	import type { Tables } from '$lib/schema/database.types';
-
-	let profileImage: string;
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 
 	interface Props {
 		type?: 'audio' | 'video';
-		participant: Tables<'live_feed_participants'>;
+		participant: ParticipantsWithUserData;
 	}
 	let { type, participant }: Props = $props();
+
+	// Listen for the stream WebRTC
 </script>
 
 <div class="card">
-	<div class="image-container">
-		<div class="circle-icon">
-			{participant.display_name?.[0].toUpperCase() || 'A'}
+	{#if type === "audio"}
+
+		<div class="image-container">
+			<div class="circle-icon">
+				{#if participant.participant_id.profile_image}
+					<img src={participant.participant_id.profile_image} alt="participant profile" />
+				{:else}
+					{participant.display_name?.[0].toUpperCase() || 'A'}
+				{/if}
+			</div>
 		</div>
-	</div>
+
+		<div class="video-container">
+			<video data-participant={participant.participant_id} >
+				<track kind="captions">
+			</video>
+		</div>
+	{/if}
 	<div class="profile-name">
 		{participant?.display_name}
 	</div>
@@ -32,6 +46,10 @@
 		width: 200px;
 		@apply flex items-center justify-center;
 	}
+	.video-container {
+		aspect-ratio: 4 / 3;
+		width: 200px;
+	}
 	.circle-icon {
 		width: 60px;
 		height: 60px;
@@ -42,5 +60,6 @@
 		font-size: 32px;
 		background-color: white;
 		@apply text-secondary-dark;
+		@apply overflow-hidden;
 	}
 </style>

@@ -6,13 +6,14 @@
 	import Loader from '$lib/components/icon/Loader.svelte';
 
 	import { getSupabase } from '$lib/supabase';
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { lastScreenPayloadContent } from './scenes/store/scene';
 
-	import type { ScenePayload, SceneType } from './video-feed.types';
+	import type { ScenePayload } from './video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';
-	import type { SubscriptionCB } from '$lib/schema/subscription.types';
 	import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+	import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
+
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = $state({
 		sceneType: 'scene_loading',
@@ -27,7 +28,7 @@
 	let { live_feed_id }: Props = $props();
 
 	const supabase = getSupabase();
-	let participantsList: Tables<'live_feed_participants'>[] = $state([]);
+	let participantsList: ParticipantsWithUserData[] = $state([]);
 
 	onMount(async () => {
 		supabase
@@ -57,9 +58,10 @@
 		if (!live_feed_id) return;
 		const { data, error } = await supabase
 			.from('live_feed_participants')
-			.select()
+			.select(participantsWithUserDataSelect)
 			.eq('live_feed', live_feed_id)
-			.eq('location', 'stage');
+			.eq('location', 'stage')
+			.returns<ParticipantsWithUserData[]>();
 		participantsList = data ?? [];
 	}
 

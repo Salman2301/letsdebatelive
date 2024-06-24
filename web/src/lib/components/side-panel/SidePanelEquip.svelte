@@ -8,7 +8,7 @@
 	import BubbleError from '$lib/components/bubble/BubbleError.svelte';
 	import VolumeProgress from '$lib/components/mic/VolumeProgress.svelte';
 
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import {
 		DeviceScreen,
 		DeviceScreenDisabled,
@@ -25,15 +25,12 @@
 		micDeviceId,
 		micWavPercent,
 
-		screenShareEnable,
 		screenShareStream,
 
 		speakerDeviceId,
-		speakerEnabled,
 		speakerIsPlaying,
 
 		webcamDeviceId,
-		webcamEnable,
 		webcamStream,
 
 		webcamIsPlaying,
@@ -48,11 +45,11 @@
 	let videoInstance: HTMLVideoElement;
 	let videoScreenShareInstance: HTMLVideoElement;
 
-	let kindMapDevices: Record<MediaDeviceKind, MediaDeviceInfo[]> = {
+	let kindMapDevices: Record<MediaDeviceKind, MediaDeviceInfo[]> = $state({
 		audioinput: [],
 		videoinput: [],
 		audiooutput: []
-	};
+	});
 
 
 	webcamStream.subscribe((stream) => {
@@ -70,6 +67,7 @@
 
 	onMount(async () => {
 		kindMapDevices = await getDevices();
+		console.log("kindMapDevices 1", kindMapDevices);
 		if(!$webcamDeviceId) $webcamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
 		if(!$speakerDeviceId) $speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
 		if(!$micDeviceId) $micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
@@ -114,7 +112,7 @@
 					<DeviceCameraDisabled />
 				{/if}
 			</button>
-			<select bind:value={$webcamDeviceId}>
+			<select bind:value={$webcamDeviceId} class="select-video-1">
 				{#each kindMapDevices['videoinput'] as device}
 					<option value={device.deviceId}>{device.label}</option>
 				{:else}
@@ -141,7 +139,7 @@
 
 		<div class="header">
 			<button onclick={()=>toggleMedia("screenShare")} class="btn-icon">
-				{#if !$screenShareEnable}}
+				{#if $screenShareIsPlaying}
 					<DeviceScreen />
 				{:else}
 					<DeviceScreenDisabled />
