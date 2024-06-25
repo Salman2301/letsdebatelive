@@ -34,8 +34,9 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key.toLocaleLowerCase() === 'k' && e.metaKey) {
-			openSidePanel("equip");
+		const userKey = e.key.toLocaleLowerCase();
+		if ( userKey === 'k' ) {
+			if( e.metaKey || e.ctrlKey )openSidePanel("equip");
 		}
 	}
 	onMount(()=>{

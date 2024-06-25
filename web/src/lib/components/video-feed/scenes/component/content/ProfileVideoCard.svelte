@@ -1,14 +1,29 @@
 <script lang="ts">
-	import type { Tables } from '$lib/schema/database.types';
-	import type { ParticipantsWithUserData } from '$src/lib/types';
+	import { authUserData } from '$src/lib/stores/auth.store';
+	import { webcamStream } from '$src/lib/stores/media.store';
 	import { getProfileImage } from '$src/lib/utils/profile.utils';
+	import { onMount } from 'svelte';
+
+	import type { ParticipantsWithUserData } from '$src/lib/types';
 
 	interface Props {
 		type?: 'audio' | 'video';
 		participant: ParticipantsWithUserData;
 	}
 
-	let { type = "audio", participant }: Props = $props();
+	let { type = "video", participant }: Props = $props();
+
+	let videoEl: HTMLVideoElement | null = $state(null);
+
+	onMount(()=>{
+		if(!$authUserData) return;
+		if(!videoEl) return;
+		if(!participant.participant_id.id) return;
+		if( $authUserData.username === participant.participant_id.username && $webcamStream ) {
+			videoEl.srcObject = $webcamStream;
+			console.log({ videoEl })
+		}
+	});
 
 	// Listen for the stream WebRTC
 </script>
@@ -27,7 +42,12 @@
 		</div>
 	{:else}
 		<div class="video-container">
-			<video data-participant={participant.participant_id} >
+			<video
+				playsinline
+				autoplay
+				data-participant={participant.participant_id.id}
+				bind:this={videoEl}
+			>
 				<track kind="captions">
 			</video>
 		</div>

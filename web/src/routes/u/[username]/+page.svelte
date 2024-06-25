@@ -5,6 +5,7 @@
 	import JoinBackstagePanel from './components/panel/JoinBackstagePanel.svelte';
 	import UserImage from '$src/lib/components/user-image/UserImage.svelte';
 	import Chat from './components/sidebar/Chat.svelte';
+	import VideoFeed from '$src/lib/components/video-feed/VideoFeed.svelte';
 
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -101,7 +102,11 @@
 
 <div class="page-container">
 	<div class="live-video-content">
-		<div class="video-container"></div>
+		<div class="video-container">
+			{#if data?.live_feed?.id}
+				<VideoFeed live_feed_id={data.live_feed.id}/>
+			{/if}
+		</div>
 		{#if $isJoined}
 			<BackstagePanel
 				bind:participants={$participants}

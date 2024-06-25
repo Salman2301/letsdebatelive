@@ -17,6 +17,7 @@
 		type ParticipantsWithUserData
 	}
 	from '$src/lib/types';
+	import { WebRTCRoom } from '$src/lib/utils/webRTC.utils';
 
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = $state({
@@ -26,10 +27,11 @@
 	});
 
 	interface Props {
-		live_feed_id?: string;
+		live_feed_id: string;
+		makeCall?: boolean;
 	}
 
-	let { live_feed_id }: Props = $props();
+	let { live_feed_id, makeCall }: Props = $props();
 
 	const supabase = getSupabase();
 	let participantsList: ParticipantsWithUserData[] = $state([]);
@@ -69,7 +71,7 @@
 		participantsList = data ?? [];
 	}
 
-	function onSceneChange({ payload }: { payload: ScenePayload }) {
+	async function onSceneChange({ payload }: { payload: ScenePayload }) {
 		if (!payload || !payload.sceneType) {
 			console.error('Empty payload received?', payload);
 			return;
@@ -78,12 +80,17 @@
 
 		if (payload.sceneType === 'scene_content') {
 			lastScreenPayloadContent.set(payload);
+
+			const rtc = new WebRTCRoom(live_feed_id, supabase);
+			await rtc.init();
+			if(makeCall) await rtc.makeCall();
+
 		}
 	}
 
 </script>
 
-<div class="video-container" data-feed-id={live_feed_id}>
+<div class="video-container" id="video-el-{live_feed_id}" data-feed-id={live_feed_id}>
 	{#if !!payloadData.sceneType}
 		<!-- Need to communicate with puppetter page ready -->
 		<div class="loaded-video-el"></div>

@@ -20,8 +20,6 @@ export class WebRTCRoom {
   liveFeed: Tables<"live_feed"> | null;
   liveFeedId: string;
 
-  remoteVideoInstance: HTMLVideoElement | null;
-
   rtc: RTCPeerConnection | null;
   channel: RealtimeChannel | null;
   supabase: SupabaseClient<Database>;
@@ -36,9 +34,8 @@ export class WebRTCRoom {
   errorCode: string;
   errorMessage: string;
 
-  constructor(liveFeedId: string, remoteVideoInstance: HTMLVideoElement, supabase: SupabaseClient<Database>) {
+  constructor(liveFeedId: string, supabase: SupabaseClient<Database>) {
     this.liveFeedId = liveFeedId;
-    this.remoteVideoInstance = remoteVideoInstance;
 
     this.liveFeed = null;
 
@@ -71,13 +68,13 @@ export class WebRTCRoom {
 
       console.error(error);
 
-      throw new Error("Failed to get the live feed");
+      throw new Error(`Failed to get the live feed: ${this.liveFeedId}`);
     }
     if (!data) {
       this.errorCode = "NO_LIVE_FEED";
       this.error = true;
 
-      throw new Error("Failed to get the live feed");
+      throw new Error(`Failed to get the live feed: ${this.liveFeedId}`);
     }
     this.liveFeed = data;
     const $authUserData = get(authUserData);
@@ -118,17 +115,22 @@ export class WebRTCRoom {
 
     await this.checkDB();
     const $webcamStream = get(webcamStream);
-    if (!$webcamStream) {
-      console.log("Init failed, no webcam stream");
-      return;
-    }
-
     this.rtc = new RTCPeerConnection(CONFIG);
 
-    $webcamStream.getTracks().forEach(track => this.rtc?.addTrack(track, $webcamStream));
+    if ($webcamStream) {
+      console.warn("user has no webcam feed")
+      $webcamStream.getTracks().forEach(track => this.rtc?.addTrack(track, $webcamStream));
+    }
+
     this.rtc.ontrack = e => {
-      console.log('ontrack', e);
-      this.remoteVideoInstance!.srcObject = e.streams[0]
+      const vidEl = document.getElementById(`video-el-${this.liveFeedId}`) as HTMLDivElement;
+      const videos = vidEl.getElementsByTagName("video");
+      // This should be mapped based on the pariticipant id
+      if( videos.length > 0 ) {
+        videos[0].srcObject = e.streams[0];
+      }
+      
+      // this.remoteVideoInstance!.srcObject = e.streams[0]
     };
     
     this.rtc.addEventListener("icecandidate", event => {
@@ -185,11 +187,14 @@ export class WebRTCRoom {
 
   async makeCall() {
     if (!this.isInit) {
-      throw new Error("The live feed is not initialized");
+      throw new Error(`The live feed is not initialized: ${this.liveFeedId}`);
     }
 
     await this.createRTC();
-    const offer = await this.rtc!.createOffer();
+    if (!this.rtc) {
+      throw new Error(`Failed to create RTC: ${this.liveFeedId}`);
+    }
+    const offer = await this.rtc.createOffer();
     const { sdp } = offer;
     this.channel!.send({ type: "broadcast", event: "offer", payload: {sdp}});
     await this.rtc!.setLocalDescription(offer);
@@ -199,18 +204,18 @@ export class WebRTCRoom {
   // This will init peer, add local and remote sdp and sent the answer
   async handleOffer(sdpOffer: RTCSessionDescriptionInit["sdp"]) {
     if (!this.isInit) {
-      throw new Error("The live feed is not initialized");
+      throw new Error(`The live feed is not initialized: ${this.liveFeedId}`);
     }
 
     if (this.isRTCCreated) {
-      console.error('existing peerconnection');
+      console.error('existing peerconnection, Skipping handling offer');
       return;
     }
     
     await this.createRTC();
 
     if (this.rtc === null) {
-      console.error('Failed to create RTC');
+      console.error(`Failed to create RTC: ${this.liveFeedId}`);
       return;
     }
 
@@ -230,11 +235,11 @@ export class WebRTCRoom {
   // Once we get the answer from the other peer, we can update the remote sdp
   async handleAnswer(sdpAnswer: RTCSessionDescriptionInit["sdp"]) {
     if (!this.isInit) {
-      throw new Error("The live feed is not initialized");
+      throw new Error(`The live feed is not initialized: ${this.liveFeedId}`);
     }
 
     if (!this.isRTCCreated) {
-      console.error('existing peerconnection');
+      console.error(`existing peerconnection: ${this.liveFeedId}`);
       return;
     }
     const answer = {

@@ -21,6 +21,7 @@
 			layerId: 'profile_multiple'
 		});
 
+
 		handleLive();
 	});
 
@@ -32,7 +33,9 @@
 </script>
 
 <div class="control-room-container hidden">
-	<VideoFeed live_feed_id={$live_feed?.id} />
+	{#if $live_feed?.id}
+		<VideoFeed live_feed_id={$live_feed?.id} makeCall={true} />
+	{/if}
 	<LayoutHeader />
 	<div class="small-panel-container">
 		<div class="small-panel small-panel-1">
