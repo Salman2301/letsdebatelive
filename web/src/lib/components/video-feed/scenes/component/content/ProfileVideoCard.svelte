@@ -1,12 +1,14 @@
 <script lang="ts">
 	import type { Tables } from '$lib/schema/database.types';
 	import type { ParticipantsWithUserData } from '$src/lib/types';
+	import { getProfileImage } from '$src/lib/utils/profile.utils';
 
 	interface Props {
 		type?: 'audio' | 'video';
 		participant: ParticipantsWithUserData;
 	}
-	let { type, participant }: Props = $props();
+
+	let { type = "audio", participant }: Props = $props();
 
 	// Listen for the stream WebRTC
 </script>
@@ -17,13 +19,13 @@
 		<div class="image-container">
 			<div class="circle-icon">
 				{#if participant.participant_id.profile_image}
-					<img src={participant.participant_id.profile_image} alt="participant profile" />
+					<img class="img-participant" src={getProfileImage(participant?.participant_id?.profile_image)} alt="participant profile" />
 				{:else}
 					{participant.display_name?.[0].toUpperCase() || 'A'}
 				{/if}
 			</div>
 		</div>
-
+	{:else}
 		<div class="video-container">
 			<video data-participant={participant.participant_id} >
 				<track kind="captions">
@@ -37,14 +39,21 @@
 
 <style lang="postcss">
 	.card {
-		border: 1px solid white;
+		/* border: 1px solid white; */
 		@apply flex flex-col items-center justify-center;
 		@apply m-1 p-1;
+	}
+	.img-participant {
+		width: 100%;
+		height: 100%;
 	}
 	.image-container {
 		aspect-ratio: 4 / 3;
 		width: 200px;
 		@apply flex items-center justify-center;
+		border: 1px solid;
+		@apply border-light-gray;
+		@apply rounded;
 	}
 	.video-container {
 		aspect-ratio: 4 / 3;
@@ -61,5 +70,11 @@
 		background-color: white;
 		@apply text-secondary-dark;
 		@apply overflow-hidden;
+	}
+	video {
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 4 / 3;
+		background-color: black;
 	}
 </style>

@@ -1,5 +1,6 @@
 import { get } from "svelte/store";
 import { errorSpeakerFeed, speakerCtx, speakerDeviceId, speakerEnabled, speakerIsPlaying, speakerNode } from "../stores/media.store";
+import { newToast } from "../components/toast/Toast.svelte";
 
 let audioBuffer: AudioBufferSourceNode | null;
 
@@ -79,7 +80,15 @@ async function getDecodedAudioData(): Promise<AudioBuffer> {
   }
 
   if (decodedAudioData) return decodedAudioData;
-  const audioData = await fetch('/sounds/test/guitar.mp3').then((resp) => resp.arrayBuffer());
+  const audioData = await fetch('/sounds/test/guitar.mp3').then((resp) => {
+    if (resp.status !== 200) {
+      newToast({
+        message: 'Failed to load audio file',
+        type: 'error',
+      })
+    }
+    return resp.arrayBuffer()
+  });
   decodedAudioData = await $speakerCtx.decodeAudioData(audioData);
   return decodedAudioData;
 }

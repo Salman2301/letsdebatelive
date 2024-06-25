@@ -4,6 +4,30 @@
     USERID
   I want the user to send multiple different feeds not just screenshare and webcam
 
+
+  Improve RTC Module:
+    ☐ Better error handling
+    ☐ Ghost participant can skip webcam stream
+    ☐ Improve channeling
+      ☐ WebCam Channel
+      ☐ Screen Channel
+      ☐ Audio with Image
+    ☐ Connect to the RTC server
+    ☐ Group connection
+    ☐ Add ghost participant
+    ☐ Leave the call
+    ☐ Rejoin the call
+    ☐ State of the call, store in the database
+    ☐ Mute the call
+    ☐ Hide the video
+
+
+
+    Write the user b need to listen and then user a need to call?
+    It should be act like
+      ☐ user a started a call
+      ☐ user b will init and join the call
+
   ☐ On Debate created, On the control room, the user can see his feeds
     ☐ When the user join the debate, the user can see his feeds
     ☐ Send the participant stream to the control room via RTC

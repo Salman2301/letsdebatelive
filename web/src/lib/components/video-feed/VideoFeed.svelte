@@ -12,7 +12,11 @@
 	import type { ScenePayload } from './video-feed.types';
 	import type { Tables } from '$lib/schema/database.types';
 	import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-	import { participantsWithUserDataSelect, type ParticipantsWithUserData } from '$src/lib/types';
+	import {
+		participantsWithUserDataSelect,
+		type ParticipantsWithUserData
+	}
+	from '$src/lib/types';
 
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = $state({
@@ -76,9 +80,10 @@
 			lastScreenPayloadContent.set(payload);
 		}
 	}
+
 </script>
 
-<div class="video-container">
+<div class="video-container" data-feed-id={live_feed_id}>
 	{#if !!payloadData.sceneType}
 		<!-- Need to communicate with puppetter page ready -->
 		<div class="loaded-video-el"></div>

@@ -15,6 +15,7 @@
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
 	import { NO_PROFILE_DEFAULT } from '$src/lib/constatnt/file';
+	import { getProfileImage } from '$src/lib/utils/profile.utils';
 
 	const supabase = getSupabase();
 	let isUploading = $state(false);
@@ -103,19 +104,6 @@
 		}
 	}
 
-	function getProfileImage(): string {
-		if (!$authUserData?.profile_image) return NO_PROFILE_DEFAULT;
-
-		return (
-			supabase.storage.from('profile_image').getPublicUrl($authUserData?.profile_image!, {
-				transform: {
-					height: 400,
-					width: 400,
-					format: 'origin'
-				}
-			}).data.publicUrl || NO_PROFILE_DEFAULT
-		);
-	}
 </script>
 
 <div class="page-setting">
@@ -189,7 +177,7 @@
 	</div>
 	<div class="right-content">
 		<div class="profile-img">
-			<img src={getProfileImage()} alt="user image" />
+			<img src={getProfileImage($authUserData?.profile_image)} alt="user" />
 			<label for="file-upload" class="upload-icon" class:uploading={isUploading}>
 				{#if isUploading}
 					<Loader />
@@ -289,6 +277,10 @@
 
 		img {
 			@apply rounded;
+			width: 400px;
+			height: 400px;
+			max-height: 100%;
+			background-size: cover;
 		}
 		.upload-icon.uploading {
 			opacity: 1;
