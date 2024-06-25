@@ -135,7 +135,7 @@
 	<div class="username-text">
 		<div
 			class="team-circle"
-			style="background-color:{teamMapColor[participant.team.id as string]}"
+			style="background-color:{participant?.team?.id ? teamMapColor[participant?.team?.id]: "white"}"
 		></div>
 		<div class="input-container">
 			<input class="username-input" bind:value={displayName} onkeyup={onKeydownChange} />
