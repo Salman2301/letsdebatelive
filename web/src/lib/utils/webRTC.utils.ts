@@ -20,8 +20,8 @@ export class WebRTCRoom {
   liveFeed: Tables<"live_feed"> | null;
   liveFeedId: string;
 
-  rtc: RTCPeerConnection | null;
-  channel: RealtimeChannel | null;
+  rtc: Map<string,RTCPeerConnection>;
+  channel: Map<string, RealtimeChannel>;
   supabase: SupabaseClient<Database>;
 
   isHost: boolean;
@@ -49,12 +49,13 @@ export class WebRTCRoom {
     this.isRTCCreated = false;
     this.isInit = false;
 
-    this.rtc = null;
-    this.channel = null;
+    this.rtc = new Map();
+    this.channel = new Map();
 
     this.supabase = supabase;
   }
 
+  // Setup signaling server
   async init() {
     const { data, error } = await this.supabase.from("live_feed")
       .select()
@@ -79,80 +80,143 @@ export class WebRTCRoom {
     this.liveFeed = data;
     const $authUserData = get(authUserData);
     this.isHost = this.liveFeed.host === $authUserData?.id;
+    this.isInit = true;
 
-    this.channel = this.supabase.channel(`live_feed_${this.liveFeedId}`);
+    if ($authUserData?.id) {
+      this.setupSignalingServer($authUserData.id);
+    }
+    // this.runForAllParticipant(this.setupSignalingServer);
+  }
 
-    this.channel.on("broadcast", { event: "icecandidate" }, async (data) => {
-      const { payload } = data;
-      if (payload.candidate) {
-        const candidate = new RTCIceCandidate({
-          candidate: payload.candidate,
-          sdpMid: payload.sdpMid,
-          sdpMLineIndex: payload.sdpMLineIndex
+  getChannel(participant_id: string): RealtimeChannel {
+    return this.supabase.channel(`live_feed_${this.liveFeedId}_${participant_id}`);
+  }
+
+  async setupSignalingServer(user_id: string) {
+    const supabaseChannel = this.getChannel(user_id);
+
+    supabaseChannel.on("broadcast", { event: "icecandidate" }, async (data) => {
+
+      const { candidate, sdpMid, sdpMLineIndex, participant_id } = data.payload;
+      if (candidate) {
+        const rtcCandidate = new RTCIceCandidate({
+          candidate,
+          sdpMid,
+          sdpMLineIndex
         });
-        await this.rtc!.addIceCandidate(candidate);
+        // console.log("adding ice candidate", { user_id, candidate, participant_id })
+        await this.rtc.get(participant_id)!.addIceCandidate(rtcCandidate);
       }
     });
 
-    this.channel.on("broadcast", { event: "offer" }, async (data) => {
+    supabaseChannel.on("broadcast", { event: "offer" }, async (data) => {
       console.debug("recieve offer", data);
-      this.handleOffer(data.payload.sdp); 
+      const { sdp, by } = data.payload;
+      this.handleOffer(by, sdp); 
     });
 
-    this.channel.on("broadcast", { event: "answer" }, async (data) => {
+    supabaseChannel.on("broadcast", { event: "answer" }, async (data) => {
       console.debug("recieve answer", data);
-      this.handleAnswer(data.payload.sdp); 
+      const { sdp, by } = data.payload;
+      this.handleAnswer(by, sdp); 
     });
 
-    this.channel.subscribe();
-    this.isInit = true;
+    supabaseChannel.subscribe();
+ 
   }
-
   async createRTC() {
     if (!this.isInit) {
       throw new Error("The live feed is not initialized");
     }
 
     await this.checkDB();
-    const $webcamStream = get(webcamStream);
-    this.rtc = new RTCPeerConnection(CONFIG);
+    this.isRTCCreated = true;
 
-    if ($webcamStream) {
-      console.warn("user has no webcam feed")
-      $webcamStream.getTracks().forEach(track => this.rtc?.addTrack(track, $webcamStream));
+    // send stream to all the other peer
+    // create a connect to other peer
+   
+
+    await this.runForAllParticipant(this.createRTCPeerConnection);
+  }
+
+  async sendMyStreamToPeer(participant_id: string) {
+    if (!this.rtc?.get(participant_id)) {
+      throw new Error(`No rtc connection for ${participant_id}`);
     }
 
-    this.rtc.ontrack = e => {
+    const $webcamStream = get(webcamStream);
+    console.log("webcam stream", $webcamStream, this)
+
+    if( !$webcamStream ) {
+      throw new Error(`No webcam feed to send ${participant_id}`);
+    }
+
+    console.warn("Sending my webcam feed to the peer", { participant_id });
+    const track = $webcamStream.getTracks()[0];
+    this.rtc?.get(participant_id)?.addTrack(track, $webcamStream);
+
+  }
+
+  async createRTCPeerConnection(participant_id: string) {
+    this.rtc.set(participant_id, new RTCPeerConnection(CONFIG));
+    console.log("creating RTC for peer ", participant_id)
+    this.rtc.get(participant_id)!.ontrack = e => {
+      // debugger;
       const vidEl = document.getElementById(`video-el-${this.liveFeedId}`) as HTMLDivElement;
-      const videos = vidEl.getElementsByTagName("video");
+      const video = vidEl.querySelector(`#video-${participant_id}`) as HTMLVideoElement;
+      console.log({
+        video,
+        vidEl
+      })
       // This should be mapped based on the pariticipant id
-      if( videos.length > 0 ) {
-        videos[0].srcObject = e.streams[0];
+      if( video ) {
+        console.log("setting src object", { video, s: e.streams[0] })
+        video.srcObject = e.streams[0];
       }
-      
+
       // this.remoteVideoInstance!.srcObject = e.streams[0]
     };
-    
-    this.rtc.addEventListener("icecandidate", event => {
-      const message: RTCIceCandidateInit & { type: 'candidate' } = {
+
+    this.rtc.get(participant_id)!.addEventListener("icecandidate", event => {
+      const message: RTCIceCandidateInit & { type: 'candidate', participant_id: string } = {
         type: 'candidate',
-        candidate: undefined
+        candidate: undefined,
+        participant_id: get(authUserData)?.id!
       };
+
       if (event.candidate) {
         message.candidate = event.candidate.candidate;
         message.sdpMid = event.candidate.sdpMid;
         message.sdpMLineIndex = event.candidate.sdpMLineIndex;
       }
-  
-      this.channel!.send({
+
+      this.getChannel(participant_id)!.send({
         payload: message,
         type: "broadcast",
         event: "icecandidate"
       });
 
     });
+  }
 
-    this.isRTCCreated = true;
+  async runForAllParticipant(fn: (participant_id: string) => Promise<void>) {
+    const { data, error } = await this.supabase
+      .from("live_feed_participants")
+      .select("participant_id")
+      .eq("live_feed", this.liveFeedId)
+      .not("participant_id", "eq", get(authUserData)?.id)
+
+    if (error || !data) {
+      this.errorCode = "NO_PARTICIPANT";
+      this.errorMessage = "Failed to join the live feed";
+      this.error = true;
+      console.error(error);
+      return;
+    }
+
+    for (const { participant_id } of data) {
+      fn.apply(this, [participant_id]);
+    }
   }
 
   async checkDB() {
@@ -191,18 +255,30 @@ export class WebRTCRoom {
     }
 
     await this.createRTC();
-    if (!this.rtc) {
+    if (!this.isRTCCreated) {
       throw new Error(`Failed to create RTC: ${this.liveFeedId}`);
     }
-    const offer = await this.rtc.createOffer();
+    console.log("make call")
+    await this.runForAllParticipant(this.sendOffer);
+ }
+
+  async sendOffer(participant_id: string) {
+    console.log("sending offer ... ", participant_id)
+    const offer = await this.rtc.get(participant_id)!.createOffer();
     const { sdp } = offer;
-    this.channel!.send({ type: "broadcast", event: "offer", payload: {sdp}});
-    await this.rtc!.setLocalDescription(offer);
+    this.getChannel(participant_id)!.send({
+      type: "broadcast", event: "offer", payload: {
+        sdp,
+        by: get(authUserData)?.id
+      }
+    });
+    await this.rtc.get(participant_id)!.setLocalDescription(offer);
   }
 
   // Handle offfer is sent to the other peer who listen
   // This will init peer, add local and remote sdp and sent the answer
-  async handleOffer(sdpOffer: RTCSessionDescriptionInit["sdp"]) {
+  // handling offer is listened, so the participant id here should be peer not the current user
+  async handleOffer(participant_id: string, sdpOffer: RTCSessionDescriptionInit["sdp"]) {
     if (!this.isInit) {
       throw new Error(`The live feed is not initialized: ${this.liveFeedId}`);
     }
@@ -224,16 +300,25 @@ export class WebRTCRoom {
       sdp: sdpOffer
     } as RTCSessionDescriptionInit;
 
-    await this.rtc.setRemoteDescription(offer);
+    await this.rtc.get(participant_id)!.setRemoteDescription(offer);
 
-    const answer = await this.rtc!.createAnswer();
+    const answer = await this.rtc.get(participant_id)!.createAnswer();
     const { sdp } = answer;
-    this.channel!.send({ type: "broadcast", event: "answer", payload: {sdp}});
-    await this.rtc!.setLocalDescription(answer);
+    this.getChannel(participant_id)!.send({
+      type: "broadcast", event: "answer", payload: {
+        sdp,
+        by: get(authUserData)?.id
+      }
+    });
+
+    await this.rtc.get(participant_id)!.setLocalDescription(answer);
+
+    console.log("sending my stream?????")
+    await this.sendMyStreamToPeer(participant_id);
   }
 
   // Once we get the answer from the other peer, we can update the remote sdp
-  async handleAnswer(sdpAnswer: RTCSessionDescriptionInit["sdp"]) {
+  async handleAnswer(participant_id: string, sdpAnswer: RTCSessionDescriptionInit["sdp"]) {
     if (!this.isInit) {
       throw new Error(`The live feed is not initialized: ${this.liveFeedId}`);
     }
@@ -246,7 +331,8 @@ export class WebRTCRoom {
       type: "answer",
       sdp: sdpAnswer
     } as RTCSessionDescriptionInit;
-    await this.rtc!.setRemoteDescription(answer);
+    await this.rtc.get(participant_id)!.setRemoteDescription(answer);
+    await this.sendMyStreamToPeer(participant_id);
   }
 }
 
@@ -255,163 +341,4 @@ export class WebRTCRoom {
 //     Answer SDP <---
 //     ICE Candidates(A) --->
 //     ICE Candidates(B) <---
-
-
-
-
-
-// There is the
-// 1. host video stream ( VIDEO & AUDIO )
-// 2. A Screenshare element ( VIDEO & AUDIO )
-// 3.
-// Server send the host stream to stream server
-// Get the stream from the stream server based on the
-// 1. https://stream.local/stream/:liveid/cam/:participantid:
-// 2. https://stream.local/stream/:liveid/screen/
-// 3. Get the layout from the web server
-// 4. Layout contains the position and size of the element and the source
-// 5. Loop through the layout and create the element
-// 6. This class is only worry about sending the stream to the stream server not sync
-// 7. Video element is 
-
-// let startTime;
-// let localStream: MediaStream;
-// let pc1: RTCPeerConnection;
-// let pc2: RTCPeerConnection;
-
-// const offerOptions = {
-//   offerToReceiveAudio: true,
-//   offerToReceiveVideo: true
-// };
-
-// async function call() {
-//   console.log('Starting call');
-//   startTime = window.performance.now();
-//   const videoTracks = localStream.getVideoTracks();
-//   const audioTracks = localStream.getAudioTracks();
-//   if (videoTracks.length > 0) {
-//     console.log(`Using video device: ${videoTracks[0].label}`);
-//   }
-//   if (audioTracks.length > 0) {
-//     console.log(`Using audio device: ${audioTracks[0].label}`);
-//   }
-//   const configuration = {};
-//   console.log('RTCPeerConnection configuration:', configuration);
-//   pc1 = new RTCPeerConnection(configuration);
-//   console.log('Created local peer connection object pc1');
-//   pc1.addEventListener('icecandidate', e => onIceCandidate(pc1, e));
-//   pc2 = new RTCPeerConnection(configuration);
-//   console.log('Created remote peer connection object pc2');
-//   pc2.addEventListener('icecandidate', e => onIceCandidate(pc2, e));
-//   pc1.addEventListener('iceconnectionstatechange', e => onIceStateChange(pc1, e));
-//   pc2.addEventListener('iceconnectionstatechange', e => onIceStateChange(pc2, e));
-//   pc2.addEventListener('track', gotRemoteStream);
-
-//   localStream.getTracks().forEach(track => pc1.addTrack(track, localStream));
-//   console.log('Added local stream to pc1');
-
-//   try {
-//     console.log('pc1 createOffer start');
-//     const offer = await pc1.createOffer(offerOptions);
-//     await onCreateOfferSuccess(offer);
-//   } catch (e: any) {
-//     onCreateSessionDescriptionError(e);
-//   }
-// }
-
-// function onCreateSessionDescriptionError(error: Error) {
-//   console.log(`Failed to create session description: ${error.toString()}`);
-// }
-
-// async function onCreateOfferSuccess(desc: RTCSessionDescriptionInit) {
-//   console.log(`Offer from pc1\n${desc.sdp}`);
-//   console.log('pc1 setLocalDescription start');
-//   try {
-//     await pc1.setLocalDescription(desc);
-//     onSetLocalSuccess(pc1);
-//   } catch (e) {
-//     onSetSessionDescriptionError();
-//   }
-
-//   console.log('pc2 setRemoteDescription start');
-//   try {
-//     await pc2.setRemoteDescription(desc);
-//     onSetRemoteSuccess(pc2);
-//   } catch (e) {
-//     onSetSessionDescriptionError();
-//   }
-
-//   console.log('pc2 createAnswer start');
-//   // Since the 'remote' side has no media stream we need
-//   // to pass in the right constraints in order for it to
-//   // accept the incoming offer of audio and video.
-//   try {
-//     const answer = await pc2.createAnswer();
-//     await onCreateAnswerSuccess(answer);
-//   } catch (e) {
-//     onCreateSessionDescriptionError(e);
-//   }
-// }
-
-// function onSetLocalSuccess(pc) {
-//   console.log(`${getName(pc)} setLocalDescription complete`);
-// }
-
-// function onSetRemoteSuccess(pc) {
-//   console.log(`${getName(pc)} setRemoteDescription complete`);
-// }
-
-// function onSetSessionDescriptionError(error?: any) {
-//   console.log(`Failed to set session description: ${error.toString()}`);
-// }
-
-// function gotRemoteStream(e: any) {
-//   // if (remoteVideo.srcObject !== e.streams[0]) {
-//   //   remoteVideo.srcObject = e.streams[0];
-//   //   console.log('pc2 received remote stream');
-//   // }
-// }
-
-// async function onCreateAnswerSuccess(desc) {
-//   console.log(`Answer from pc2:\n${desc.sdp}`);
-//   console.log('pc2 setLocalDescription start');
-//   try {
-//     await pc2.setLocalDescription(desc);
-//     onSetLocalSuccess(pc2);
-//   } catch (e) {
-//     onSetSessionDescriptionError(e);
-//   }
-//   console.log('pc1 setRemoteDescription start');
-//   try {
-//     await pc1.setRemoteDescription(desc);
-//     onSetRemoteSuccess(pc1);
-//   } catch (e) {
-//     onSetSessionDescriptionError(e);
-//   }
-// }
-
-// async function onIceCandidate(pc, event) {
-//   try {
-//     await (getOtherPc(pc).addIceCandidate(event.candidate));
-//     console.log(`${getName(pc)} addIceCandidate success`);
-//   } catch (e) {
-//     console.log(`${getName(pc)} failed to add ICE Candidate: ${error.toString()}`);
-//   }
-//   console.log(`${getName(pc)} ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
-// }
-
-// function getName(pc: any) {
-//   return (pc === pc1) ? 'pc1' : 'pc2';
-// }
-
-// function getOtherPc(pc: any) {
-//   return (pc === pc1) ? pc2 : pc1;
-// }
-
-// function onIceStateChange(pc, event) {
-//   if (pc) {
-//     console.log(`${getName(pc)} ICE state: ${pc.iceConnectionState}`);
-//     console.log('ICE state change event: ', event);
-//   }
-// }
 

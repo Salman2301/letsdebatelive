@@ -46,6 +46,8 @@
 				playsinline
 				autoplay
 				data-participant={participant.participant_id.id}
+				id="video-{participant.participant_id.id}"
+				controls={true}
 				bind:this={videoEl}
 			>
 				<track kind="captions">

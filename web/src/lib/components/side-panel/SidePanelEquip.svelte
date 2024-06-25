@@ -67,7 +67,7 @@
 
 	onMount(async () => {
 		kindMapDevices = await getDevices();
-		console.log("kindMapDevices 1", kindMapDevices);
+		// console.log("kindMapDevices 1", kindMapDevices);
 		if(!$webcamDeviceId) $webcamDeviceId = kindMapDevices['videoinput']?.[0]?.deviceId;
 		if(!$speakerDeviceId) $speakerDeviceId = kindMapDevices['audiooutput']?.[0]?.deviceId;
 		if(!$micDeviceId) $micDeviceId = kindMapDevices['audioinput']?.[0]?.deviceId;
