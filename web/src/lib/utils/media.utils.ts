@@ -27,7 +27,7 @@ export async function getDevices(): Promise<DeviceMapOpt> {
     console.error("Failed to get the user media devices");
     console.error(e);
   }
-  console.log("kindMapDevices", kindMapDevices);
+  // console.log("kindMapDevices", kindMapDevices);
   return kindMapDevices; 
 }
 

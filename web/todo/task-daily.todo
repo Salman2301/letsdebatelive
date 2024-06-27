@@ -9,6 +9,7 @@
     ☐ Better error handling
     ☐ Ghost participant can skip webcam stream
     ☐ Improve channeling
+    Do i need to create a new connection for each channel?
       ☐ WebCam Channel
       ☐ Screen Channel
       ☐ Audio with Image
@@ -20,8 +21,6 @@
     ☐ State of the call, store in the database
     ☐ Mute the call
     ☐ Hide the video
-
-
 
     Write the user b need to listen and then user a need to call?
     It should be act like
@@ -154,6 +153,8 @@
     - Audience join
     - Audience filter
 
+  Sidebar:
+    ☐  needs to be reizable
   Screen:
     ☐ List all the screen
 

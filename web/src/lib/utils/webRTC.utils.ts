@@ -10,10 +10,17 @@ import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 // For the listener, they will use the RTMP stream
 
 const CONFIG = {
-  iceServers: [{
-    urls: 'stun:stun.l.google.com:19302'
-    // urls: 'stun:stun.cloudflare.com:3478'
-  }]
+  iceServers: [
+    {
+      // urls: 'stun:stun.l.google.com:19302'
+      urls: 'stun:stun.cloudflare.com:3478'
+    },
+    // {
+    //   urls: 'turn:mac.local:3478', // Replace with your TURN server IP or domain
+    //   username: 'user', // You can configure this in Coturn if needed
+    //   credential: 'your_secret_key' // Should match the static-auth-secret in turnserver.conf
+    // }
+  ]
 };
 
 export class WebRTCRoom {
@@ -25,7 +32,7 @@ export class WebRTCRoom {
   supabase: SupabaseClient<Database>;
 
   isHost: boolean;
-  isJoined: boolean;
+  isJoined: Map<string, boolean>;
   isGhost: boolean;
   isRTCCreated: boolean;
   isInit: boolean;
@@ -44,7 +51,7 @@ export class WebRTCRoom {
     this.errorMessage = "";
     
     this.isHost = false;
-    this.isJoined = false;
+    this.isJoined = new Map();
     this.isGhost = false;
     this.isRTCCreated = false;
     this.isInit = false;
@@ -80,11 +87,10 @@ export class WebRTCRoom {
     this.liveFeed = data;
     const $authUserData = get(authUserData);
     this.isHost = this.liveFeed.host === $authUserData?.id;
-    this.isInit = true;
-
     if ($authUserData?.id) {
       this.setupSignalingServer($authUserData.id);
     }
+    this.isInit = true;
     // this.runForAllParticipant(this.setupSignalingServer);
   }
 
@@ -96,16 +102,20 @@ export class WebRTCRoom {
     const supabaseChannel = this.getChannel(user_id);
 
     supabaseChannel.on("broadcast", { event: "icecandidate" }, async (data) => {
-
       const { candidate, sdpMid, sdpMLineIndex, participant_id } = data.payload;
       if (candidate) {
+        console.log("icecandidate", { data });
+
         const rtcCandidate = new RTCIceCandidate({
           candidate,
           sdpMid,
           sdpMLineIndex
         });
         // console.log("adding ice candidate", { user_id, candidate, participant_id })
-        await this.rtc.get(participant_id)!.addIceCandidate(rtcCandidate);
+        await this.rtc.get(participant_id)!.addIceCandidate(rtcCandidate).catch((e) => {
+          console.error("Failed to add ice candidate", { user_id, candidate, participant_id, e })
+          debugger;
+        });
       }
     });
 
@@ -139,27 +149,14 @@ export class WebRTCRoom {
     await this.runForAllParticipant(this.createRTCPeerConnection);
   }
 
-  async sendMyStreamToPeer(participant_id: string) {
-    if (!this.rtc?.get(participant_id)) {
-      throw new Error(`No rtc connection for ${participant_id}`);
-    }
-
-    const $webcamStream = get(webcamStream);
-    console.log("webcam stream", $webcamStream, this)
-
-    if( !$webcamStream ) {
-      throw new Error(`No webcam feed to send ${participant_id}`);
-    }
-
-    console.warn("Sending my webcam feed to the peer", { participant_id });
-    const track = $webcamStream.getTracks()[0];
-    this.rtc?.get(participant_id)?.addTrack(track, $webcamStream);
-
-  }
-
   async createRTCPeerConnection(participant_id: string) {
     this.rtc.set(participant_id, new RTCPeerConnection(CONFIG));
     console.log("creating RTC for peer ", participant_id)
+
+
+    // video stream track exchange
+    this.sendMyStreamToPeer(participant_id);
+
     this.rtc.get(participant_id)!.ontrack = e => {
       // debugger;
       const vidEl = document.getElementById(`video-el-${this.liveFeedId}`) as HTMLDivElement;
@@ -199,6 +196,24 @@ export class WebRTCRoom {
     });
   }
 
+
+  async sendMyStreamToPeer(participant_id: string) {
+    if (!this.rtc?.get(participant_id)) {
+      throw new Error(`No rtc connection for ${participant_id}`);
+    }
+
+    const $webcamStream = get(webcamStream);
+    console.log("webcam stream", $webcamStream, this)
+
+    if( !$webcamStream ) {
+      throw new Error(`No webcam feed to send ${participant_id}`);
+    }
+
+    console.warn("Sending my webcam feed to the peer", { participant_id });
+    const track = $webcamStream.getTracks()[0];
+    this.rtc?.get(participant_id)?.addTrack(track, $webcamStream);
+
+  }
   async runForAllParticipant(fn: (participant_id: string) => Promise<void>) {
     const { data, error } = await this.supabase
       .from("live_feed_participants")
@@ -232,21 +247,7 @@ export class WebRTCRoom {
       this.error = true;
       return;
     }
-    // const { data, error } = await this.supabase
-    //   .from("live_feed_participants")
-    //   .select()
-    //   .eq("participant_id", $authUserData.id)
-    //   .eq("live_feed", this.liveFeedId)
-    //   .single();
-    
-    // if (error || !data) {
-    //   this.errorCode = "NO_PARTICIPANT";
-    //   this.errorMessage = "Failed to join the live feed";
-    //   this.error = true;
-    //   console.error(error);
-    //   return;
-    // }
-    this.isJoined = true;
+
   }
 
   async makeCall() {
@@ -313,8 +314,7 @@ export class WebRTCRoom {
 
     await this.rtc.get(participant_id)!.setLocalDescription(answer);
 
-    console.log("sending my stream?????")
-    await this.sendMyStreamToPeer(participant_id);
+    this.isJoined.set(participant_id, true);
   }
 
   // Once we get the answer from the other peer, we can update the remote sdp
@@ -332,7 +332,8 @@ export class WebRTCRoom {
       sdp: sdpAnswer
     } as RTCSessionDescriptionInit;
     await this.rtc.get(participant_id)!.setRemoteDescription(answer);
-    await this.sendMyStreamToPeer(participant_id);
+
+    this.isJoined.set(participant_id, true);
   }
 }
 
