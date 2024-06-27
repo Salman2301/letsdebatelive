@@ -13,4 +13,5 @@ export interface PageData {
 	teams: Tables<'live_feed_team'>[] | [];
 	teamMapColor: Record<string, string>;
 	host: Tables<'user_data'> | null;
+	followerCount: number;
 }

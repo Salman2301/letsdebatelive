@@ -17,6 +17,7 @@
 
 	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import type { ActionData, PageData } from './$types';
+	import { formatNum } from '$src/lib/utils/formatter.utils';
 
 	interface Props {
 		data: PageData;
@@ -131,8 +132,12 @@
 				<UserImage user={data.host} />
 			</div>
 			<div class="host-title-desc">
-				<div class="host-detail">{data.host?.displayName}</div>
-				<div class="followers">11.k followers</div>
+				<div class="host-detail">{data.host?.displayName || data.host?.username}</div>
+				<div class="followers">
+					{#if data.followerCount}
+						{formatNum(data.followerCount)} follower{data.followerCount > 1 ? "s": ""}
+					{/if}
+				</div>
 			</div>
 		</div>
 		<!-- <div class="comment-section">After fact comment section</div> -->

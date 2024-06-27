@@ -20,8 +20,10 @@ export async function load({ locals, params }) {
 		myBackstageInfo: null,
 		teamMapColor: {},
 		host: null,
-		teams: []
+		teams: [],
+		followerCount: 0
 	};
+
 	const supabase = locals.supabase;
 
 	const { session, user } = await locals.safeGetSession();
@@ -39,31 +41,37 @@ export async function load({ locals, params }) {
 
 	const { data: live_feeds, error } = await getLatestLiveFeedId(supabase, username);
 
-	PAGE_DATA.live_feed = live_feeds?.[0] ?? null;
-	const liveFeedId = live_feeds?.[0]?.id;
-	PAGE_DATA.host = JSON.parse(JSON.stringify(PAGE_DATA?.live_feed?.host || {}));
+	const live_feed = live_feeds?.[0] ?? null; 
+	const liveFeedId = live_feed?.id;
+
+	PAGE_DATA.live_feed = live_feed;
 
 	if (live_feeds && live_feeds?.length > 1) {
 		console.error('Cleanup: Database has more than one live feed');
 	}
 
-	if (error || !live_feeds || live_feeds.length === 0 || typeof liveFeedId !== 'string') {
+	if (error || !live_feeds || !live_feed || live_feeds.length === 0 || typeof liveFeedId !== 'string') {
 		throw redirect(303, '/?error=FAILED_live_feed_INFO');
 	}
 
 	const [
+		{ data: host, error: hostError },
 		{ data: live_feed_participants, error: participantsError },
-		{ data: live_feed_team, error: teamError }
+		{ data: live_feed_team, error: teamError },
+		{ count: followerCount, error: followerCountError }
 	] = await Promise.all([
+		supabase.from("user_data").select().eq("username", username),
 		supabase
 			.from('live_feed_participants')
 			.select(participantsWithUserDataSelect)
 			.eq('live_feed', liveFeedId)
 			.order('created_at', { ascending: true })
 			.returns<ParticipantsWithUserData[]>(),
-		supabase.from('live_feed_team').select('*').eq('live_feed', liveFeedId)
+		supabase.from('live_feed_team').select('*').eq('live_feed', liveFeedId),
+		supabase.from("user_follow").select("*", { count: "exact" }).eq("user_id", live_feed.host!)
 	]);
 
+	PAGE_DATA.host = host?.[0]!;
 	await supabaseAdmin.from('live_feed_user_role').insert({
 		live_feed: liveFeedId,
 		user_id: PAGE_DATA.user.id,
@@ -80,6 +88,7 @@ export async function load({ locals, params }) {
 	PAGE_DATA.myBackstageInfo =
 		live_feed_participants?.find((item) => item.participant_id.id === userId) || null;
 	PAGE_DATA.isJoined = !!PAGE_DATA.myBackstageInfo;
+	PAGE_DATA.followerCount = followerCount || 0;
 
 	return PAGE_DATA;
 }
