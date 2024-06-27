@@ -670,16 +670,19 @@ export type Database = {
 					count: number | null;
 					created_at: string;
 					id: string;
+					last_updated: string | null;
 				};
 				Insert: {
 					count?: number | null;
 					created_at?: string;
 					id?: string;
+					last_updated?: string | null;
 				};
 				Update: {
 					count?: number | null;
 					created_at?: string;
 					id?: string;
+					last_updated?: string | null;
 				};
 				Relationships: [
 					{
@@ -862,6 +865,39 @@ export type Database = {
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			user_follow: {
+				Row: {
+					created_at: string;
+					follow: string;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					follow: string;
+					user_id?: string;
+				};
+				Update: {
+					created_at?: string;
+					follow?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'user_follow_follow_fkey';
+						columns: ['follow'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'user_follow_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
 						referencedColumns: ['id'];
 					}
 				];

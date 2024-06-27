@@ -120,7 +120,9 @@
 		<div class="title-action">
 			<div class="title">Title</div>
 			<div class="support-follower">
-				<FollowButton />
+				<FollowButton 
+					userId={data.live_feed?.host}
+				/>
 				<SupportButton />
 			</div>
 		</div>

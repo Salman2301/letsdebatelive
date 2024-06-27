@@ -4,6 +4,11 @@
     USERID
   I want the user to send multiple different feeds not just screenshare and webcam
 
+  Can we use Docker stream as a WebRTC?
+    ☐ A fake cam expose by ffmpeg? no? WebRTC require a browser anyway?
+
+  ☐ Create a webRTC group feed stream
+    ☐ Each participant can have their own stream
 
   Improve RTC Module:
     ☐ Better error handling
@@ -42,12 +47,6 @@
       User B:
       ☐ `const room = new Room(liveFeedId, remoteVideoInstance);`
       ☐ `room.init();`
-      
-  
-
-
-  
-
 
   ✔ Work on streaming chat with scroll not functionality @done(24-06-15 04:38)
   ✔ Rename "live_debate" to "live_feed" @done(24-06-14 05:22)
@@ -63,9 +62,6 @@
 
   New Debate:
     ☐ Screen sidebar
-
-  ☐ Create a webRTC group feed stream
-    ☐ Each participant can have their own stream
 
     Sidebar:
       Bulk Action:
@@ -198,10 +194,16 @@
 
   Chat system:
     ☐ Once user focus on backstage chat
-    ☐ Create a basic chat system between control-room / user / backstage
+    ✔ Create a basic chat system between control-room / user / backstage @done(24-06-27 07:34)
     ✔ User can send chat @done(24-06-14 04:31)
     ✔ Control room host can send the chat @done(24-06-14 04:31)
     ☐ Backstage user can send the chat
+  
+  Notifications:
+    Bubble Notiification:
+      ☐ A notification that display unread message or number of message missed so far.
+    Notification:
+      ☐ That stays in the notification panel
 
   Sidebar:
     ☐ Add screenshare for the sidebar
