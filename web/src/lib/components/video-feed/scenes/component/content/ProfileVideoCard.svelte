@@ -11,7 +11,7 @@
 		participant: ParticipantsWithUserData;
 	}
 
-	let { type = "video", participant }: Props = $props();
+	let { type = "audio", participant }: Props = $props();
 
 	let videoEl: HTMLVideoElement | null = $state(null);
 
@@ -53,15 +53,16 @@
 		</div>
 	{/if}
 	<div class="profile-name">
-		{participant?.display_name}
+		<p>{participant?.display_name}</p>
 	</div>
 </div>
 
 <style lang="postcss">
 	.card {
-		/* border: 1px solid white; */
 		@apply flex flex-col items-center justify-center;
-		@apply m-1 p-1;
+		@apply m-1;
+		@apply relative;
+		aspect-ratio: 4 / 3;
 	}
 	.img-participant {
 		width: 100%;
@@ -69,7 +70,7 @@
 	}
 	.image-container {
 		aspect-ratio: 4 / 3;
-		width: 200px;
+		width: 400px;
 		@apply flex items-center justify-center;
 		border: 1px solid;
 		@apply border-light-gray;
@@ -77,7 +78,7 @@
 	}
 	.video-container {
 		aspect-ratio: 4 / 3;
-		width: 200px;
+		width: 300px;
 	}
 	.circle-icon {
 		width: 60px;
@@ -96,5 +97,22 @@
 		height: 100%;
 		aspect-ratio: 4 / 3;
 		background-color: black;
+	}
+	.profile-name {
+		@apply absolute;
+		@apply bottom-0;
+		@apply left-0;
+
+		@apply flex items-center justify-center;
+
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+
+		@apply bg-white;
+		@apply px-4;
+
+		p {
+			@apply text-black;
+		}
 	}
 </style>
