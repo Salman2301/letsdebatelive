@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Heading2 from "$src/lib/components/form/Heading2.svelte";
+	import AlertWidget from "./Widgets/AlertWidget.svelte";
 	import BackgroundWidgets from "./Widgets/BackgroundWidgets.svelte";
 	import LogoWidgets from "./Widgets/LogoWidgets.svelte";
 	import RunningTextWidget from "./Widgets/RunningTextWidget.svelte";
+	import SoundBoardWidget from "./Widgets/SoundBoardWidget.svelte";
 	import WatermarkWidget from "./Widgets/WatermarkWidget.svelte";
 </script>
 
@@ -15,6 +17,13 @@
 	<LogoWidgets />
 	<WatermarkWidget />
 	<RunningTextWidget />
+	<AlertWidget />
+	<SoundBoardWidget />
+	<!--
+		Chat Widget
+		User able to change different theme for the chat message 
+	-->
+		
 </div>
 
 <!--

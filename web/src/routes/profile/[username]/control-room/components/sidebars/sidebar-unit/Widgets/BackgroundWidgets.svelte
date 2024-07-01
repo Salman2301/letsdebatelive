@@ -96,14 +96,16 @@
 	</div>
 
 	<div class="footer-container">
-		<UploadSlot
-			bucket="user_asset"
-			path="{$authUserData!.id}/background/{uuid()}"
-			isUploading={false}
-			onSuccess={handleSucess}
-		>
-			<div class="add-item">Upload a background</div>
-		</UploadSlot>
+		{#if $authUserData}
+			<UploadSlot
+				bucket="user_asset"
+				path="{$authUserData!.id}/background/{uuid()}"
+				isUploading={false}
+				onSuccess={handleSucess}
+			>
+				<div class="add-item">Upload a background</div>
+			</UploadSlot>
+		{/if}
 	</div>
 </WidgetContainer>
 
