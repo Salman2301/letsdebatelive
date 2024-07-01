@@ -33,9 +33,7 @@
 
 
   async function fetchEmojisSupbase() {
-    const { data: { publicUrl} } = await supabase.storage.from("data").getPublicUrl("emojis.json", {download: true});
-
-    const res = await fetch(publicUrl);
+    const res = await fetch(`/data/emojis.json`);
 
     if(!res.ok) {
       console.error({ res });
