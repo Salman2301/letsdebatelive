@@ -6,6 +6,11 @@ Code:
   ✔ Remove too many relative parent folder in import statement `../../../../../Component` @done(24-05-26 00:23)
   ✔ Convert all the svg icons and move to `$lib/component/icon` @done(24-05-26 00:23)
 
+Lint: 
+  ☐ Add raindow indent to see the space
+  ☐ Add eslint to auto remove the empty indent?
+  ☐ Add macro? to sort a long attribution to line by line
+
 Design:
   ☐ Update pixel perfect setup and design it in figma
   ☐ Update the figma design with proper white space and universal font-size
@@ -46,7 +51,9 @@ Security:
 Svelte V5:
   ✔ Remove on:click @done(24-05-25 22:52)
   ✘ Avoide using svelte store? @cancelled(24-05-29 13:17)
-  slot
+    ☐ File need to ends with .svelte.ts to make the $state available?
+  ☐ slot
+  ☐ onMount
 Optimization:
   ✔ Have a field `username` in the `live_feed` table. so, we don't need to keep looking for `*, host(*)` in the select statement @done(24-06-17 23:36)
     ✔ We do need the host anyway... @done(24-06-17 23:36)

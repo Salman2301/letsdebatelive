@@ -46,6 +46,7 @@
 				playsinline
 				autoplay
 				data-participant={participant.participant_id.id}
+				id="video-{participant.participant_id.id}"
 				bind:this={videoEl}
 			>
 				<track kind="captions">
@@ -59,6 +60,7 @@
 
 <style lang="postcss">
 	.card {
+		border: 1px solid var(--color-light-gray);
 		@apply flex flex-col items-center justify-center;
 		@apply m-1;
 		@apply relative;
@@ -73,7 +75,7 @@
 		width: 400px;
 		@apply flex items-center justify-center;
 		border: 1px solid;
-		@apply border-light-gray;
+		@apply border-none border-light-gray;
 		@apply rounded;
 	}
 	.video-container {

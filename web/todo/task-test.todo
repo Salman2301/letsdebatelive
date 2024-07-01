@@ -1,4 +1,10 @@
 
+
+Unit:
+  Utils:
+    ☐ Add test for all the utils file `*.utils.ts`
+
+
 E2E:
   Auth: 
     ✔ Register @done(24-06-03 01:39)

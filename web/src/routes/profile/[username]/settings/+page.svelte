@@ -11,10 +11,8 @@
 	import { v4 as uuid } from 'uuid';
 	import { authUserData } from '$lib/stores/auth.store';
 	import { getSupabase } from '$lib/supabase';
-	import { getContext } from 'svelte';
 	import { newToast } from '$lib/components/toast/Toast.svelte';
 	import { goto } from '$app/navigation';
-	import { NO_PROFILE_DEFAULT } from '$src/lib/constatnt/file';
 	import { getProfileImage } from '$src/lib/utils/profile.utils';
 
 	const supabase = getSupabase();

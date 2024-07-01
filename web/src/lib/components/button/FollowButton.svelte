@@ -1,14 +1,67 @@
 <script lang="ts">
+	import { authUserData } from '$src/lib/stores/auth.store';
+	import { getSupabase } from '$src/lib/supabase';
 	import Button from './Button.svelte';
 
 	interface Props {
 		followed?: boolean;
+		userId?: string | null;
 	}
 
-	let { followed = false }: Props = $props();
+	const supabase = getSupabase();	
+	let { followed = false, userId }: Props = $props();
+
+	let disabled = $state(false);
+
+	$effect(()=>{
+		initFollow();
+	});
+
+	async function initFollow() {
+		if( !userId ) {
+			disabled = true;
+			return;
+		}
+
+		if( !$authUserData ) return;
+
+		const { count, error } = await supabase.from("user_follow")
+			.select("*", { count: "exact"})
+			.eq("user_id", userId!)
+			.eq("follow", $authUserData.id)
+
+		followed = !!count;
+	}
+
+	async function handleFollow() {
+		if( !userId || !$authUserData?.id ) {
+			return;
+		}
+
+		if( !followed ) {
+			await supabase.from("user_follow").insert({
+				follow: $authUserData?.id,
+				user_id: userId
+			}).throwOnError();
+			followed = true;
+			return;
+		}
+
+		await supabase.from("user_follow").delete()
+		.eq("user_id", userId)
+		.eq("follow", $authUserData.id)
+		.throwOnError();
+
+		followed = false;
+	}
+
 </script>
 
-<Button label="" onclick={() => (followed = !followed)}>
+<Button
+	disabled={disabled}
+	label=""
+	onclick={handleFollow}
+>
 	<span slot="icon-left" class="follow-icon">
 		<svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path

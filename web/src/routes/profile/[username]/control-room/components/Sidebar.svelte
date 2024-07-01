@@ -15,7 +15,7 @@
 
 	import {
 		SidebarBroadcast,
-		SidebarAgenda,
+		SidebarWidget,
 		SidebarPoll,
 		SidebarQA,
 		SidebarBanner,
@@ -59,10 +59,10 @@
 			divider: true
 		},
 
-		agenda: {
-			label: 'Feed Agenda',
+		widget: {
+			label: 'Widgets',
 			icon: ICON_AGENDA,
-			sidebar: SidebarAgenda
+			sidebar: SidebarWidget
 		},
 		poll: {
 			label: 'Poll',

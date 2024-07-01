@@ -670,16 +670,19 @@ export type Database = {
 					count: number | null;
 					created_at: string;
 					id: string;
+					last_updated: string | null;
 				};
 				Insert: {
 					count?: number | null;
 					created_at?: string;
 					id?: string;
+					last_updated?: string | null;
 				};
 				Update: {
 					count?: number | null;
 					created_at?: string;
 					id?: string;
+					last_updated?: string | null;
 				};
 				Relationships: [
 					{
@@ -784,6 +787,30 @@ export type Database = {
 					}
 				];
 			};
+			user_asset: {
+				Row: {
+					created_at: string;
+					id: string;
+					path: string;
+					type: Database['public']['Enums']['asset_type'] | null;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					id?: string;
+					path: string;
+					type?: Database['public']['Enums']['asset_type'] | null;
+					user_id: string;
+				};
+				Update: {
+					created_at?: string;
+					id?: string;
+					path?: string;
+					type?: Database['public']['Enums']['asset_type'] | null;
+					user_id?: string;
+				};
+				Relationships: [];
+			};
 			user_data: {
 				Row: {
 					created_at: string;
@@ -866,6 +893,39 @@ export type Database = {
 					}
 				];
 			};
+			user_follow: {
+				Row: {
+					created_at: string;
+					follow: string;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					follow: string;
+					user_id?: string;
+				};
+				Update: {
+					created_at?: string;
+					follow?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'user_follow_follow_fkey';
+						columns: ['follow'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'user_follow_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_data';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			user_phone: {
 				Row: {
 					country: string | null;
@@ -932,6 +992,7 @@ export type Database = {
 			};
 		};
 		Enums: {
+			asset_type: 'image' | 'video' | 'background' | 'frame' | 'logo' | 'watermark';
 			audience_service: 'viewer' | 'chat' | 'backstage';
 			audience_type:
 				| 'supporter'
