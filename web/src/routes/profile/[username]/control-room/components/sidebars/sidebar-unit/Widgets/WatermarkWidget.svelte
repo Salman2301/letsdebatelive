@@ -11,6 +11,7 @@
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import PositionalBox from './components/PositionalBox.svelte';
 
 	type Props = {
 		selectedId?: string;
@@ -27,7 +28,7 @@
 	const handleSucess: OnSucess = async ({ bucket, path }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
 			path,
-			type: 'background',
+			type: 'watermark',
 			user_id: $authUserData?.id!
 		});
 
@@ -36,12 +37,12 @@
 
 	let assetBg: Tables<'user_asset'>[] = $state([]);
 	async function refreshBackgrounAsset() {
-		const { data, error } = await supabase.from('user_asset').select().eq('type', 'background');
+		const { data, error } = await supabase.from('user_asset').select().eq('type', 'watermark');
 
 		if (error) {
 			newToast({
 				type: 'error',
-				message: 'Failed to get the background assets'
+				message: 'Failed to get the watermark assets'
 			});
 		}
 		assetBg = data || [];
@@ -59,7 +60,7 @@
 		// on User prompt close check if t
 		if (!confirmed) {
 			newPrompt({
-				question: 'Are you sure you want to delete the background Image?',
+				question: 'Are you sure you want to delete the watermark Image?',
 				yesLabel: 'Delete',
 				type: 'danger',
 				onYes: () => handleDeleteImage(itemId, true)
@@ -74,9 +75,8 @@
 </script>
 
 <WidgetContainer
-	title="Background"
-	desc="Upload / Select a background image that suites your brand!."
-	expand={true}
+	title="Watermark"
+	desc="Upload / Select a your watermark that suites your brand!"
 >
 	<div class="content-container">
 		{#each assetBg as asset}
@@ -98,13 +98,15 @@
 	<div class="footer-container">
 		<UploadSlot
 			bucket="user_asset"
-			path="{$authUserData!.id}/background/{uuid()}"
+			path="{$authUserData!.id}/watermark/{uuid()}"
 			isUploading={false}
 			onSuccess={handleSucess}
 		>
-			<div class="add-item">Upload a background</div>
+			<div class="add-item">Upload a watermark</div>
 		</UploadSlot>
 	</div>
+
+	<PositionalBox setInitBox={{ colIndex: 2, rowIndex: 1}} onBoxChange={console.log}	/>
 </WidgetContainer>
 
 <style lang="postcss">

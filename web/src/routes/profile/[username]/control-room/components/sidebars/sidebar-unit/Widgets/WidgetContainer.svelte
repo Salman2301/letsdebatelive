@@ -9,7 +9,7 @@
     children: any;
     expand?: boolean;
   }
-  let { title, desc, children, expand=$bindable(true) }: Props = $props();
+  let { title, desc, children, expand=$bindable(false) }: Props = $props();
 
 </script>
 
