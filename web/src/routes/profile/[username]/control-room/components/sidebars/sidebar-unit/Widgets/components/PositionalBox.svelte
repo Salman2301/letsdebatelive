@@ -13,6 +13,12 @@
 		[false, false, false]
 	]);
 
+	let boxesLabel = [
+		[ "Top Left", "Top", "Top Right"],
+		[ "Middle Left", "Middle", "Middle Right"],
+		[ "Bottom Left", "Bottom", "Bottom Right"]
+	]
+
 	type CB = ({ colIndex, rowIndex }: { colIndex: number; rowIndex: number }) => void;
 	type Props = {
 		onBoxChange?: CB;
@@ -43,6 +49,9 @@
 							boxes[colIndex][rowIndex] = !box;
 						}}
 					>
+						<div class="box-label">
+							{boxesLabel[colIndex][rowIndex]}
+						</div>
 					</button>
 				{/each}
 			</div>
@@ -67,14 +76,27 @@
 	}
 
 	button.box {
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 		@apply border border-light-gray;
+		@apply relative;
     &:hover {
       @apply bg-secondary/40;
+			.box-label {
+				@apply block;
+			}
     }
 		&.active {
 			@apply bg-secondary;
 		}
+	}
+	.box-label {
+		@apply absolute -top-5 right-2  w-full h-full;
+		@apply bg-white;
+		@apply text-black;
+		@apply font-semibold text-xs;
+		@apply hidden;
+		z-index: 1000;
+		min-width: 80px;
 	}
 </style>

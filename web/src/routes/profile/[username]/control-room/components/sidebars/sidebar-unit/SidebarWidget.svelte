@@ -2,6 +2,7 @@
 	import Heading2 from "$src/lib/components/form/Heading2.svelte";
 	import BackgroundWidgets from "./Widgets/BackgroundWidgets.svelte";
 	import LogoWidgets from "./Widgets/LogoWidgets.svelte";
+	import RunningTextWidget from "./Widgets/RunningTextWidget.svelte";
 	import WatermarkWidget from "./Widgets/WatermarkWidget.svelte";
 </script>
 
@@ -13,6 +14,7 @@
 	<BackgroundWidgets />
 	<LogoWidgets />
 	<WatermarkWidget />
+	<RunningTextWidget />
 </div>
 
 <!--
