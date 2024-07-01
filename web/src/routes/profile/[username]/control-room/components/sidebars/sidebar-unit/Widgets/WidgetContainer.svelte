@@ -50,9 +50,8 @@
 
   .widget-heading {
     @apply flex items-center justify-between;
-    @apply w-full px-2;
+    @apply w-full px-2 py-2;
     font-size: 18px;
-    @apply mt-1;
   }
 
   .widget-desc {

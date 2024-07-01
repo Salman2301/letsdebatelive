@@ -74,5 +74,7 @@
 />
 
 <style lang="postcss">
-
+	label {
+		@apply cursor-pointer;
+	}
 </style>

@@ -1,14 +1,16 @@
 <script lang="ts">
+	import Loader from '$src/lib/components/icon/Loader.svelte';
+	import WidgetContainer from './WidgetContainer.svelte';
 	import UploadSlot, { type OnSucess } from '$src/lib/components/slots/UploadSlot.svelte';
+
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
-	import WidgetContainer from './WidgetContainer.svelte';
 	import { v4 as uuid } from 'uuid';
-	import type { Tables } from '$src/lib/schema/database.types';
 	import { CloseX } from '$src/lib/components/icon';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
-	import Loader from '$src/lib/components/icon/Loader.svelte';
+
+	import type { Tables } from '$src/lib/schema/database.types';
 
 	type Props = {
 		selectedId?: string;
@@ -76,15 +78,6 @@
 	desc="Upload / Select a background image that suites your brand!."
 >
 	<div class="content-container">
-		<UploadSlot
-			bucket="user_asset"
-			path="{$authUserData!.id}/background/{uuid()}"
-			isUploading={false}
-			onSuccess={handleSucess}
-		>
-			<div class="image-btn add-item">+</div>
-		</UploadSlot>
-
 		{#each assetBg as asset}
 			<div class="image-container">
 				<button class="image-btn" class:selected={selectedId === asset.id}>
@@ -99,6 +92,17 @@
 				</button>
 			</div>
 		{/each}
+	</div>
+
+	<div class="footer-container">
+		<UploadSlot
+			bucket="user_asset"
+			path="{$authUserData!.id}/background/{uuid()}"
+			isUploading={false}
+			onSuccess={handleSucess}
+		>
+			<div class="add-item">Add a background</div>
+		</UploadSlot>
 	</div>
 </WidgetContainer>
 
@@ -117,11 +121,15 @@
 	}
 
 	.add-item {
-		font-size: 40px;
+		font-size: 14px;
 		font-weight: 100;
-		@apply text-white/70;
+		@apply bg-white/20;
+		width: 180px;
+		@apply mt-2;
+		@apply text-center;
+		@apply rounded;
 		&:hover {
-			@apply text-white;
+			@apply bg-primary/60;
 		}
 	}
 	.content-container {

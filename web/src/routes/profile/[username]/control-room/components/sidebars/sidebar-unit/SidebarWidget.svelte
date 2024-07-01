@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Heading2 from "$src/lib/components/form/Heading2.svelte";
 	import BackgroundWidgets from "./Widgets/BackgroundWidgets.svelte";
-
- 
 </script>
 
 <div class="heading">
