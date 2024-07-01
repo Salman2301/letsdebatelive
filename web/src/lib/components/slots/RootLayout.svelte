@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Prompt from '$lib/components/prompt/Prompt.svelte';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import Header from '$lib/components/navbar/NavBar.svelte';
 	import ModalAll from '$lib/components/modal/ModalAll.svelte';
@@ -31,6 +32,7 @@
 <ModalAll />
 <SidePanelAll />
 <Toast />
+<Prompt />
 <Header />
 
 <div class="page">

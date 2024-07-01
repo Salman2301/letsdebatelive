@@ -7,6 +7,9 @@
   Can we use Docker stream as a WebRTC?
     ☐ A fake cam expose by ffmpeg? no? WebRTC require a browser anyway?
 
+  
+  Move public database to private db?
+
   ☐ Create a webRTC group feed stream
     ☐ Each participant can have their own stream
 

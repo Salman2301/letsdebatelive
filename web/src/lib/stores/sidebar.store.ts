@@ -5,11 +5,11 @@ export type SidebarKey =
 	| 'participants'
 	| 'backstage'
 	| 'chatLive'
-	| 'agenda'
+	| 'widget'
 	| 'poll'
 	| 'qa'
 	| 'banner'
 	| 'chatModerator'
 	| 'broadcast';
 
-export let currentSidebar: Writable<SidebarKey> = writable('participants');
+export let currentSidebar: Writable<SidebarKey> = writable('widget');

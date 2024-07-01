@@ -787,6 +787,30 @@ export type Database = {
 					}
 				];
 			};
+			user_asset: {
+				Row: {
+					created_at: string;
+					id: string;
+					path: string;
+					type: Database['public']['Enums']['asset_type'] | null;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					id?: string;
+					path: string;
+					type?: Database['public']['Enums']['asset_type'] | null;
+					user_id: string;
+				};
+				Update: {
+					created_at?: string;
+					id?: string;
+					path?: string;
+					type?: Database['public']['Enums']['asset_type'] | null;
+					user_id?: string;
+				};
+				Relationships: [];
+			};
 			user_data: {
 				Row: {
 					created_at: string;
@@ -968,6 +992,7 @@ export type Database = {
 			};
 		};
 		Enums: {
+			asset_type: 'image' | 'video' | 'background' | 'frame' | 'logo' | 'watermark';
 			audience_service: 'viewer' | 'chat' | 'backstage';
 			audience_type:
 				| 'supporter'

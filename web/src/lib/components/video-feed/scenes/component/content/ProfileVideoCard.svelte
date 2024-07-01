@@ -11,7 +11,7 @@
 		participant: ParticipantsWithUserData;
 	}
 
-	let { type = "video", participant }: Props = $props();
+	let { type = "audio", participant }: Props = $props();
 
 	let videoEl: HTMLVideoElement | null = $state(null);
 
@@ -73,7 +73,7 @@
 		width: 200px;
 		@apply flex items-center justify-center;
 		border: 1px solid;
-		@apply border-light-gray;
+		@apply border-none border-light-gray;
 		@apply rounded;
 	}
 	.video-container {

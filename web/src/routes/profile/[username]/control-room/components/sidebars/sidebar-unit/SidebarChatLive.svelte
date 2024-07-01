@@ -156,7 +156,9 @@
 </script>
 
 <div class="sidebar-chat-live">
-	<Heading2 content="Chat"></Heading2>
+	<div class="heading">
+		<Heading2 content="Chat"></Heading2>
+	</div>
 	<div
 		class="chat-container"
 		bind:this={scrollContainer}
@@ -215,9 +217,13 @@
 	.loader-icon {
 		@apply w-full flex justify-center;
 	}
+
+	.heading {
+		@apply flex items-center my-4 justify-between;
+	}
 	.sidebar-chat-live {
 		@apply flex flex-col h-full;
-		@apply px-2;
+		@apply px-4;
 	}
 	.chat-container {
 		width: 100%;
