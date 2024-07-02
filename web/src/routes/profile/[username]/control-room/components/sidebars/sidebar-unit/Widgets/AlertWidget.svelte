@@ -11,7 +11,9 @@
   <!-- on Follower alert -->
   <!-- on Subscriber alert -->
   <!--  -->
-  div
+  <div>
+    Coming soon
+  </div>
 </WidgetContainer>
 
 <style lang="postcss">

@@ -15,12 +15,12 @@
 		<div class="in-colors">
 			<div class="background-color">
 				<Label label="Background">
-					<input type="color" value="#000000" />
+					<input type="color" value="#ffffff" />
 				</Label>
 			</div>
 			<div class="text-color">
 				<Label label="Text">
-					<input type="color" value="#ffffff" />
+					<input type="color" value="#000000" />
 				</Label>
 			</div>
 		</div>

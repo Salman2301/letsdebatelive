@@ -12,6 +12,8 @@
 
 	import type { Tables } from '$src/lib/schema/database.types';
 	import PositionalBox from './components/PositionalBox.svelte';
+	import Fav from '$src/lib/components/icon/Fav.svelte';
+	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
 	type Props = {
 		selectedId?: string;
@@ -72,6 +74,12 @@
 
 		refreshBackgrounAsset();
 	}
+
+	async function handleFavBg(itemId: string, isFav?: boolean) {
+		await supabase.from("user_asset").update({
+			fav: isFav
+		}).eq("id", itemId)
+	}
 </script>
 
 <WidgetContainer
@@ -88,8 +96,24 @@
 						<img {src} alt="asset" />
 					{/await}
 				</button>
-				<button class="image-delete" onclick={() => handleDeleteImage(asset.id)}>
+				<div class="bg-overlay">
+				</div>
+				<button class="image-action" onclick={() => handleDeleteImage(asset.id)}>
 					<CloseX />
+				</button>
+				<button
+					class="image-action action-fav"
+					class:is-fav={asset.fav}
+					onclick={() => {
+						asset.fav = !asset.fav;
+						handleFavBg(asset.id, !!asset.fav);
+					}}
+				>
+					{#if asset.fav}
+						<Fav />
+					{:else}
+						<UnFav />
+					{/if}
 				</button>
 			</div>
 		{/each}
@@ -139,9 +163,10 @@
 		@apply flex flex-wrap justify-start gap-5;
 		@apply mt-2;
 	}
-	.image-delete {
+	.image-action {
 		@apply absolute;
 		@apply top-1 right-1;
+		@apply outline-none;
 		z-index: 1;
 		@apply hidden;
 		scale: 0.7;
@@ -149,10 +174,30 @@
 			@apply text-red-700;
 		}
 	}
+	.action-fav {
+		@apply top-1 left-1;
+		scale: 0.7;
+		right:unset;
+		&.is-fav {
+			@apply block;
+		}
+		&:hover {
+			@apply text-yellow-400;
+		}
+	}	
+	.bg-overlay {
+		@apply absolute;
+		@apply top-0 right-0 left-0 bottom-0;
+	}
 	.image-container {
 		@apply relative;
-		&:hover .image-delete {
-			@apply block;
+		&:hover {
+			.image-action {
+				@apply block;
+			}
+			.bg-overlay {
+				@apply bg-black/40;
+			}
 		}
 	}
 </style>

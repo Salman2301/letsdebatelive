@@ -11,10 +11,14 @@
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import Fav from '$src/lib/components/icon/Fav.svelte';
+	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
 	type Props = {
 		selectedId?: string;
 	};
+
+	// show extensiom
 
 	let { selectedId }: Props = $props();
 
@@ -24,11 +28,13 @@
 		refreshBackgrounAsset();
 	});
 
-	const handleSucess: OnSucess = async ({ bucket, path }) => {
+	const handleSucess: OnSucess = async ({ bucket, path, ext, mime }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
 			path,
+			mime,
 			type: 'background',
-			user_id: $authUserData?.id!
+			user_id: $authUserData?.id!,
+			ext
 		});
 
 		refreshBackgrounAsset();
@@ -36,7 +42,10 @@
 
 	let assetBg: Tables<'user_asset'>[] = $state([]);
 	async function refreshBackgrounAsset() {
-		const { data, error } = await supabase.from('user_asset').select().eq('type', 'background');
+		const { data, error } = await supabase.from('user_asset')
+			.select()
+			.eq('type', 'background')
+			.order('fav', { ascending: false });
 
 		if (error) {
 			newToast({
@@ -54,15 +63,15 @@
 		return data?.signedUrl;
 	}
 
-	async function handleDeleteImage(itemId: string, confirmed?: boolean) {
+	async function handleDeleteBg(itemId: string, confirmed?: boolean) {
 		// Open user prompt and ask if the user want to delete the image
 		// on User prompt close check if t
 		if (!confirmed) {
 			newPrompt({
-				question: 'Are you sure you want to delete the background Image?',
+				question: 'Are you sure you want to delete the background?',
 				yesLabel: 'Delete',
 				type: 'danger',
-				onYes: () => handleDeleteImage(itemId, true)
+				onYes: () => handleDeleteBg(itemId, true)
 			});
 			return;
 		}
@@ -71,26 +80,57 @@
 
 		refreshBackgrounAsset();
 	}
+
+	async function handleFavBg(itemId: string, isFav?: boolean) {
+		await supabase.from("user_asset").update({
+			fav: isFav
+		}).eq("id", itemId)
+	}
 </script>
 
 <WidgetContainer
 	title="Background"
-	desc="Upload / Select a background image that suites your brand!."
+	desc="Upload / Select a background image / video that suites your brand!."
 	expand={true}
 >
 	<div class="content-container">
 		{#each assetBg as asset}
-			<div class="image-container">
-				<button class="image-btn" class:selected={selectedId === asset.id}>
+			<div class="bg-container">
+				<div class="bg-overlay">
+				</div>
+				<button class="bg-btn" class:selected={selectedId === asset.id}>
 					{#await getPublicUrl(asset.path)}
 						<Loader />
 					{:then src}
-						<img {src} alt="asset" />
+						{#if asset.mime && asset.mime.includes('video')}
+							<video {src} muted>
+								<track kind="captions" />
+							</video>
+						{:else}
+							<img {src} alt="asset" />
+						{/if}
 					{/await}
 				</button>
-				<button class="image-delete" onclick={() => handleDeleteImage(asset.id)}>
+				<button class="bg-pos action-delete" onclick={() => handleDeleteBg(asset.id)}>
 					<CloseX />
 				</button>
+				<button
+					class="bg-pos action-fav"
+					class:is-fav={asset.fav}
+					onclick={() => {
+						asset.fav = !asset.fav;
+						handleFavBg(asset.id, !!asset.fav);
+					}}
+				>
+					{#if asset.fav}
+						<Fav />
+					{:else}
+						<UnFav />
+					{/if}
+				</button>
+				{#if asset.ext}
+					<div class="bg-pos bg-type">{asset.ext}</div>
+				{/if}
 			</div>
 		{/each}
 	</div>
@@ -101,6 +141,7 @@
 				bucket="user_asset"
 				path="{$authUserData!.id}/background/{uuid()}"
 				isUploading={false}
+				accept="image/*,video/*"
 				onSuccess={handleSucess}
 			>
 				<div class="add-item">Upload a background</div>
@@ -110,7 +151,7 @@
 </WidgetContainer>
 
 <style lang="postcss">
-	.image-btn {
+	.bg-btn {
 		aspect-ratio: 16/9;
 		@apply rounded;
 		@apply border border-light-gray;
@@ -139,20 +180,53 @@
 		@apply flex flex-wrap justify-start gap-5;
 		@apply mt-2;
 	}
-	.image-delete {
+	.bg-pos {
 		@apply absolute;
 		@apply top-1 right-1;
 		z-index: 1;
+		width: 20px;
 		@apply hidden;
+	}
+	.bg-overlay {
+		@apply absolute;
+		@apply top-0 right-0 left-0 bottom-0;
+	}
+	.bg-type {
+		@apply bottom-1 right-2;
+		top: unset;
+		width: unset;
+		@apply outline-none;
+		@apply bg-white text-black rounded;
+		@apply px-1;
+		@apply text-xs;
+		height: 20px;
+	}
+	.action-delete {
+		@apply top-1 right-1;
 		scale: 0.7;
 		&:hover {
 			@apply text-red-700;
 		}
 	}
-	.image-container {
-		@apply relative;
-		&:hover .image-delete {
+	.action-fav {
+		@apply top-1 left-1;
+		scale: 0.7;
+		&.is-fav {
 			@apply block;
+		}
+		&:hover {
+			@apply text-yellow-400;
+		}
+	}
+	.bg-container {
+		@apply relative;
+		&:hover {
+			.bg-pos {
+				@apply block;
+			}
+			.bg-overlay {
+				@apply bg-black/40;
+			}
 		}
 	}
 </style>

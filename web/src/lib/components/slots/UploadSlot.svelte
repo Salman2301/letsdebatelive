@@ -1,5 +1,11 @@
 <script context="module" lang="ts">
-	export type OnSucess = ({ path, bucket }: { path: string, bucket: string})=>void;
+	type Props = {
+		path: string;
+		bucket: string;
+		mime: string;
+		ext: string;
+	}
+	export type OnSucess = (props: Props )=>void;
 </script>
 
 <script lang="ts">
@@ -11,13 +17,14 @@
 
   type Props = {
     path: string;
-    isUploading: boolean;
+    isUploading?: boolean;
     bucket: string;
-		onSuccess: OnSucess;
+		accept?: string;
+		onSuccess?: OnSucess;
     children: any;
   }
 
-  let { children, isUploading = $bindable(), bucket, path, onSuccess }: Props = $props();
+  let { children, isUploading = $bindable(), bucket, path, onSuccess, accept="image/*" }: Props = $props();
 
   const supabase = getSupabase();
   const id = genId(4);
@@ -31,6 +38,9 @@
 			return;
 		}
 		const file = event.target.files[0];
+		console.log({ file });
+		const mime = file.type;
+		const ext = mime?.split('/')?.[1] || "";
 		// let location = `${uuid()}.${file.ext || 'png'}`;
 		if (file) {
 			const { data: fileUploaded, error: fileError } = await supabase.storage
@@ -49,9 +59,11 @@
 				});
 			}
 
-			onSuccess({
+			onSuccess?.({
 				bucket,
-				path
+				path,
+				mime,
+				ext
 			})
 			setTimeout(() => {
 				isUploading = false;
@@ -68,7 +80,7 @@
   type="file"
   id="file-upload-{id}"
   class="hidden"
-  accept="image/*"
+  accept="{accept}"
   onchange={handleFileUpload}
   disabled={isUploading}
 />

@@ -755,6 +755,35 @@ export type Database = {
 					}
 				];
 			};
+			live_widget: {
+				Row: {
+					created_at: string;
+					data: Json;
+					live_feed: string;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					created_at?: string;
+					data: Json;
+					live_feed: string;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					created_at?: string;
+					data?: Json;
+					live_feed?: string;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			social_links: {
 				Row: {
 					created_at: string;
@@ -790,21 +819,30 @@ export type Database = {
 			user_asset: {
 				Row: {
 					created_at: string;
+					ext: string | null;
+					fav: boolean | null;
 					id: string;
+					mime: string | null;
 					path: string;
 					type: Database['public']['Enums']['asset_type'] | null;
 					user_id: string;
 				};
 				Insert: {
 					created_at?: string;
+					ext?: string | null;
+					fav?: boolean | null;
 					id?: string;
+					mime?: string | null;
 					path: string;
 					type?: Database['public']['Enums']['asset_type'] | null;
 					user_id: string;
 				};
 				Update: {
 					created_at?: string;
+					ext?: string | null;
+					fav?: boolean | null;
 					id?: string;
+					mime?: string | null;
 					path?: string;
 					type?: Database['public']['Enums']['asset_type'] | null;
 					user_id?: string;
@@ -1012,6 +1050,7 @@ export type Database = {
 				| 'activity_feed';
 			participant_location: 'stage' | 'backstage';
 			role: 'host' | 'co-host' | 'mod' | 'guest';
+			widget_type: 'background' | 'watermark' | 'logo' | 'alert' | 'running_text' | 'sounds_board';
 		};
 		CompositeTypes: {
 			[_ in never]: never;

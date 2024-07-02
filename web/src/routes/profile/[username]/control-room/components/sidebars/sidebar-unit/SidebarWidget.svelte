@@ -10,6 +10,7 @@
 
 <div class="heading">
   <Heading2 content="Widgets" />
+	<p>Each widget stack up on top of each other starting from background widgets</p>
 </div>
 
 <div class="widgets">
@@ -34,10 +35,15 @@
 
 <style lang="postcss">
 	.heading {
-		@apply flex items-center my-4 justify-between;
+		@apply flex flex-col justify-start my-4;
 		@apply px-4;
+		p {
+			@apply text-sm font-semibold;
+			@apply text-white/50;
+		}
 	}
 	.widgets {
-		@apply flex flex-col gap-4;
+		@apply flex flex-col gap-4 px-2;
 	}
+
 </style>

@@ -72,7 +72,7 @@
 
 <style lang="postcss">
   .overlay {
-    z-index: 999;
+    z-index: 1000;
     @apply flex flex-col items-center justify-center;
     @apply bg-primary-dark;
     @apply absolute;
