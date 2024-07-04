@@ -6,6 +6,7 @@
 	import RunningTextWidget from "./Widgets/RunningTextWidget.svelte";
 	import SoundBoardWidget from "./Widgets/SoundBoardWidget.svelte";
 	import WatermarkWidget from "./Widgets/WatermarkWidget.svelte";
+	
 </script>
 
 <div class="heading">

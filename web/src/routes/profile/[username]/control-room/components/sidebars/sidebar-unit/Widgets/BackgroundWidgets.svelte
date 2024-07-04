@@ -2,7 +2,11 @@
 	import Loader from '$src/lib/components/icon/Loader.svelte';
 	import WidgetContainer from './WidgetContainer.svelte';
 	import UploadSlot, { type OnSucess } from '$src/lib/components/slots/UploadSlot.svelte';
+	import CheckMark from '$src/lib/components/icon/CheckMark.svelte';
+	import Fav from '$src/lib/components/icon/Fav.svelte';
+	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
+	import { PageCtx } from '$src/lib/context';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
@@ -11,22 +15,39 @@
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
-	import Fav from '$src/lib/components/icon/Fav.svelte';
-	import UnFav from '$src/lib/components/icon/UnFav.svelte';
+	
+	let selectedId: string | undefined = $state();
 
-	type Props = {
-		selectedId?: string;
-	};
-
-	// show extensiom
-
-	let { selectedId }: Props = $props();
+	const pageCtx = new PageCtx('control-room');
+	const live_feed = pageCtx.get('ctx_table$live_feed');
 
 	const supabase = getSupabase();
 
-	$effect(() => {
-		refreshBackgrounAsset();
-	});
+	refreshBackgrounAsset();
+
+	supabase.channel("background:update")
+	.on("postgres_changes", { 
+		event: "*",
+		schema: 'public',
+		table: 'live_widget_background',
+		filter: `live_feed=eq.${$live_feed?.id}`
+	}, ()=>{
+		liveWidgetBackgroundUpdate();
+	}).subscribe();
+
+	liveWidgetBackgroundUpdate();
+
+	async function liveWidgetBackgroundUpdate() {
+		if(!$live_feed?.id) return;
+		const { data, error } = await supabase.from("live_widget_background").select().eq("live_feed", $live_feed.id);
+		if (error) {
+			newToast({
+				type: 'error',
+				message: 'Failed to get the background assets'
+			});
+		}
+		selectedId = data?.[0]?.asset;
+	}
 
 	const handleSucess: OnSucess = async ({ bucket, path, ext, mime }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
@@ -86,19 +107,31 @@
 			fav: isFav
 		}).eq("id", itemId)
 	}
+
+	async function handleSelect(assetId: string) {
+		await supabase.from("live_widget_background").upsert({
+			live_feed: $live_feed?.id!,
+			widget_type: "background",
+			asset: assetId
+		});
+	}
 </script>
 
 <WidgetContainer
 	title="Background"
 	desc="Upload / Select a background image / video that suites your brand!."
-	expand={false}
+	expand={true}
 >
 	<div class="content-container">
 		{#each assetBg as asset}
 			<div class="bg-container">
 				<div class="bg-overlay">
 				</div>
-				<button class="bg-btn" class:selected={selectedId === asset.id}>
+				<button
+					class="bg-btn"
+					class:selected={selectedId === asset.id}
+					onclick={()=>handleSelect(asset.id)}
+				>
 					{#await getPublicUrl(asset.path)}
 						<Loader />
 					{:then src}
@@ -131,6 +164,11 @@
 				{#if asset.ext}
 					<div class="bg-pos bg-type">{asset.ext}</div>
 				{/if}
+				{#if asset.id === selectedId}
+					<div class="bg-pos bg-selected">
+						<CheckMark />
+					</div>
+				{/if}
 			</div>
 		{/each}
 	</div>
@@ -160,7 +198,7 @@
 		@apply flex items-center justify-center;
 
 		&.selected {
-			@apply border border-secondary;
+			@apply border border-white;
 		}
 	}
 
@@ -190,6 +228,7 @@
 	.bg-overlay {
 		@apply absolute;
 		@apply top-0 right-0 left-0 bottom-0;
+		@apply pointer-events-none;
 	}
 	.bg-type {
 		@apply bottom-1 right-2;
@@ -201,6 +240,12 @@
 		@apply text-xs;
 		height: 20px;
 	}
+	.bg-selected {
+		@apply block;
+		@apply top-0 left-0;
+		scale: 0.7;
+		@apply p-1;
+	}
 	.action-delete {
 		@apply top-1 right-1;
 		scale: 0.7;
@@ -209,7 +254,8 @@
 		}
 	}
 	.action-fav {
-		@apply top-1 left-1;
+		@apply bottom-1 left-1;
+		top: unset;
 		scale: 0.7;
 		&.is-fav {
 			@apply block;

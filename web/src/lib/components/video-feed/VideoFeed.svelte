@@ -7,6 +7,7 @@
 
 	import { getSupabase } from '$lib/supabase';
 	import { onMount } from 'svelte';
+	import { WebRTCRoom } from '$src/lib/utils/webRTC.utils';
 	import { lastScreenPayloadContent } from './scenes/store/scene';
 
 	import type { ScenePayload } from './video-feed.types';
@@ -17,7 +18,6 @@
 		type ParticipantsWithUserData
 	}
 	from '$src/lib/types';
-	import { WebRTCRoom } from '$src/lib/utils/webRTC.utils';
 
 	// let sceneType: SceneType;
 	let payloadData: ScenePayload = $state({

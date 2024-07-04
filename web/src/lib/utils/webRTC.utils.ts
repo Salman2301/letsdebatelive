@@ -104,7 +104,7 @@ export class WebRTCRoom {
     supabaseChannel.on("broadcast", { event: "icecandidate" }, async (data) => {
       const { candidate, sdpMid, sdpMLineIndex, participant_id } = data.payload;
       if (candidate) {
-        console.log("icecandidate", { data });
+        // console.log("icecandidate", { data });
 
         const rtcCandidate = new RTCIceCandidate({
           candidate,
@@ -151,7 +151,7 @@ export class WebRTCRoom {
 
   async createRTCPeerConnection(participant_id: string) {
     this.rtc.set(participant_id, new RTCPeerConnection(CONFIG));
-    console.log("creating RTC for peer ", participant_id)
+    // console.log("creating RTC for peer ", participant_id)
 
 
     // video stream track exchange
@@ -161,13 +161,13 @@ export class WebRTCRoom {
       // debugger;
       const vidEl = document.getElementById(`video-el-${this.liveFeedId}`) as HTMLDivElement;
       const video = vidEl.querySelector(`#video-${participant_id}`) as HTMLVideoElement;
-      console.log({
-        video,
-        vidEl
-      })
+      // console.log({
+      //   video,
+      //   vidEl
+      // })
       // This should be mapped based on the pariticipant id
       if( video ) {
-        console.log("setting src object", { video, s: e.streams[0] })
+        // console.log("setting src object", { video, s: e.streams[0] })
         video.srcObject = e.streams[0];
       }
 
@@ -203,7 +203,7 @@ export class WebRTCRoom {
     }
 
     const $webcamStream = get(webcamStream);
-    console.log("webcam stream", $webcamStream, this)
+    // console.log("webcam stream", $webcamStream, this)
 
     if( !$webcamStream ) {
       throw new Error(`No webcam feed to send ${participant_id}`);
@@ -259,12 +259,12 @@ export class WebRTCRoom {
     if (!this.isRTCCreated) {
       throw new Error(`Failed to create RTC: ${this.liveFeedId}`);
     }
-    console.log("make call")
+    // console.log("make call")
     await this.runForAllParticipant(this.sendOffer);
  }
 
   async sendOffer(participant_id: string) {
-    console.log("sending offer ... ", participant_id)
+    // console.log("sending offer ... ", participant_id)
     const offer = await this.rtc.get(participant_id)!.createOffer();
     const { sdp } = offer;
     this.getChannel(participant_id)!.send({

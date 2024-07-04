@@ -13,20 +13,65 @@
 	import { v4 as uuid } from 'uuid';
 	import { CloseX } from '$src/lib/components/icon';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
+	import { PageCtx } from '$src/lib/context';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import { onMount } from 'svelte';
 
-	type Props = {
-		selectedId?: string;
-	};
+	let pageCtx = new PageCtx('control-room');
+	const live_feed = pageCtx.get('ctx_table$live_feed');
 
-	let { selectedId }: Props = $props();
+	let selectedId: string | undefined = $state();
+	let rowIndex = $state(0);
+	let colIndex = $state(0);
+	let textWatermark = $state('');
 
 	const supabase = getSupabase();
 
 	let watermarkType: 'text' | 'image' = $state('text');
 
 	refreshBackgrounAsset();
+
+	onMount(() => {
+		if ($live_feed?.id) {
+			supabase
+				.channel('watermark:update')
+				.on(
+					'postgres_changes',
+					{
+						event: '*',
+						schema: 'public',
+						table: 'live_widget_watermark',
+						filter: `live_feed=eq.${$live_feed?.id}`
+					},
+					() => {
+						liveWidgetWatermarkUpdate();
+					}
+				)
+				.subscribe();
+
+			liveWidgetWatermarkUpdate();
+		}
+	});
+
+	async function liveWidgetWatermarkUpdate() {
+		if (!$live_feed?.id) return;
+		const { data, error } = await supabase
+			.from('live_widget_watermark')
+			.select()
+			.eq('live_feed', $live_feed.id);
+		if (error) {
+			newToast({
+				type: 'error',
+				message: 'Failed to get the watermark assets'
+			});
+		}
+		watermarkType = data?.[0]?.type === 'image' ? 'image' : 'text';
+		selectedId = data?.[0]?.image_asset || undefined;
+		textWatermark = data?.[0]?.text_value || '';
+		rowIndex = data?.[0]?.pos_row_index || 0;
+		colIndex = data?.[0]?.pos_col_index || 0;
+	}
 
 	const handleSucess: OnSucess = async ({ bucket, path }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
@@ -84,12 +129,25 @@
 			})
 			.eq('id', itemId);
 	}
+
+	async function handleSaveWatermark() {
+		if(!$live_feed?.id) return;
+
+		await supabase.from("live_widget_watermark").upsert({
+			live_feed: $live_feed.id,
+			type: watermarkType,
+			image_asset: watermarkType === 'image' ? selectedId : null,
+			text_value: watermarkType === 'text' ? textWatermark : null,
+			pos_row_index: rowIndex,
+			pos_col_index: colIndex
+		});
+	}
 </script>
 
 <WidgetContainer
 	title="Watermark"
 	desc="Upload / Select a your watermark that suites your brand!"
-	expand={true}
+	expand={false}
 >
 	<Label label="Type">
 		<select name="watermark" class="drop-watermark" bind:value={watermarkType}>
@@ -103,13 +161,18 @@
 			<textarea
 				class="w-full h-full"
 				placeholder="Enter a watermark text here"
+				bind:value={textWatermark}
+				onblur={handleSaveWatermark}
 			></textarea>
 		</div>
 	{:else if watermarkType === 'image'}
 		<div class="content-container">
 			{#each assetBg as asset}
 				<div class="image-container">
-					<button class="image-btn" class:selected={selectedId === asset.id}>
+					<button class="image-btn" class:selected={selectedId === asset.id} onclick={()=>{
+						selectedId = asset.id;
+						handleSaveWatermark();
+					}}>
 						{#await getPublicUrl(asset.path)}
 							<Loader />
 						{:then src}
@@ -150,7 +213,11 @@
 		</div>
 	{/if}
 
-	<PositionalBox setInitBox={{ colIndex: 2, rowIndex: 1 }} onBoxChange={console.log} />
+	<PositionalBox 
+		bind:rowIndex={rowIndex}
+		bind:colIndex={colIndex}
+		onBoxChange={handleSaveWatermark}
+	/>
 </WidgetContainer>
 
 <style lang="postcss">
@@ -223,6 +290,7 @@
 	.bg-overlay {
 		@apply absolute;
 		@apply top-0 right-0 left-0 bottom-0;
+		@apply pointer-events-none;
 	}
 	.image-container {
 		@apply relative;

@@ -22,35 +22,44 @@
 	type CB = ({ colIndex, rowIndex }: { colIndex: number; rowIndex: number }) => void;
 	type Props = {
 		onBoxChange?: CB;
+		rowIndex?: number;
+		colIndex?: number;
 		setInitBox?: { colIndex: number; rowIndex: number };
 	};
-	const { onBoxChange, setInitBox }: Props = $props();
+	let {
+		onBoxChange,
+		setInitBox,
+		rowIndex=$bindable(setInitBox?.rowIndex || 0),
+		colIndex=$bindable(setInitBox?.colIndex || 0)
+	}: Props = $props();
 
 	onMount(() => {
-		if (!setInitBox) return;
 		boxes = [...resetBox()];
-		boxes[setInitBox.colIndex][setInitBox.rowIndex] = true;
+		console.log({ rowIndex, colIndex })
+		boxes[rowIndex][colIndex] = true;
 	});
 </script>
 
 <div class="pos-box-container">
 	<p>Select a position of the logo</p>
 	<div class="box-container">
-		{#each boxes as rowBox, colIndex}
+		{#each boxes as rowBox, rowIndex1}
 			<div class="row-box">
-				{#each rowBox as box, rowIndex}
+				{#each rowBox as box, colIndex1}
 					<button
 						class="box"
 						class:active={box}
 						onclick={() => {
 							if (box) return;
 							boxes = [...resetBox()];
+							colIndex = colIndex1;
+							rowIndex = rowIndex1;
 							onBoxChange?.({ colIndex, rowIndex });
-							boxes[colIndex][rowIndex] = !box;
+							boxes[rowIndex][colIndex] = !box;
 						}}
 					>
 						<div class="box-label">
-							{boxesLabel[colIndex][rowIndex]}
+							{boxesLabel[rowIndex1][colIndex1]}
 						</div>
 					</button>
 				{/each}

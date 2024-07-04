@@ -758,25 +758,189 @@ export type Database = {
 			live_widget: {
 				Row: {
 					created_at: string;
-					data: Json;
+					id: string;
 					live_feed: string;
 					widget_type: Database['public']['Enums']['widget_type'];
 				};
 				Insert: {
 					created_at?: string;
-					data: Json;
+					id?: string;
 					live_feed: string;
 					widget_type: Database['public']['Enums']['widget_type'];
 				};
 				Update: {
 					created_at?: string;
-					data?: Json;
+					id?: string;
 					live_feed?: string;
 					widget_type?: Database['public']['Enums']['widget_type'];
 				};
 				Relationships: [
 					{
 						foreignKeyName: 'live_widget_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_widget_background: {
+				Row: {
+					asset: string;
+					created_at: string;
+					live_feed: string;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					asset: string;
+					created_at?: string;
+					live_feed: string;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					asset?: string;
+					created_at?: string;
+					live_feed?: string;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_background_asset_fkey';
+						columns: ['asset'];
+						isOneToOne: false;
+						referencedRelation: 'user_asset';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_widget_background_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_widget_logo: {
+				Row: {
+					asset: string;
+					created_at: string;
+					live_feed: string;
+					pos_col_index: number | null;
+					pos_row_index: number | null;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					asset: string;
+					created_at?: string;
+					live_feed: string;
+					pos_col_index?: number | null;
+					pos_row_index?: number | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					asset?: string;
+					created_at?: string;
+					live_feed?: string;
+					pos_col_index?: number | null;
+					pos_row_index?: number | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_logo_asset_fkey';
+						columns: ['asset'];
+						isOneToOne: false;
+						referencedRelation: 'user_asset';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_widget_logo_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_widget_running_text: {
+				Row: {
+					color_background: string | null;
+					color_text: string | null;
+					created_at: string;
+					live_feed: string;
+					position: string | null;
+					text: string | null;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					color_background?: string | null;
+					color_text?: string | null;
+					created_at?: string;
+					live_feed: string;
+					position?: string | null;
+					text?: string | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					color_background?: string | null;
+					color_text?: string | null;
+					created_at?: string;
+					live_feed?: string;
+					position?: string | null;
+					text?: string | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_running_text_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			live_widget_watermark: {
+				Row: {
+					created_at: string;
+					image_asset: string | null;
+					live_feed: string;
+					pos_col_index: number | null;
+					pos_row_index: number | null;
+					text_value: string | null;
+					type: string | null;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					created_at?: string;
+					image_asset?: string | null;
+					live_feed: string;
+					pos_col_index?: number | null;
+					pos_row_index?: number | null;
+					text_value?: string | null;
+					type?: string | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					created_at?: string;
+					image_asset?: string | null;
+					live_feed?: string;
+					pos_col_index?: number | null;
+					pos_row_index?: number | null;
+					text_value?: string | null;
+					type?: string | null;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_watermark_image_asset_fkey';
+						columns: ['image_asset'];
+						isOneToOne: false;
+						referencedRelation: 'user_asset';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_widget_watermark_live_feed_fkey';
 						columns: ['live_feed'];
 						isOneToOne: false;
 						referencedRelation: 'live_feed';
