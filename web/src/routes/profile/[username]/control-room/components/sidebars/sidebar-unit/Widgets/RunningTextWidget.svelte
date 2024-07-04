@@ -3,9 +3,11 @@
 	import WidgetContainer from './WidgetContainer.svelte';
 
 	import { PageCtx } from '$src/lib/context';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { getSupabase } from '$src/lib/supabase';
+	
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 
 	let textRunning = $state('');
 	let colorBackground = $state('#ffffff');
@@ -17,19 +19,21 @@
 
 	const supabase = getSupabase();
 
-	onMount(()=>{
-		if(!$live_feed?.id) return;
-
-		supabase.channel('running_text:update')
+	const supabaseChannel: RealtimeChannel = supabase.channel('running_text:update')
 		.on('postgres_changes', {
 			event: '*',
 			schema: 'public',
 			table: 'live_widget_running_text',
 			filter: `live_feed=eq.${$live_feed?.id}`
-		}, ()=>{
-			liveWidgetRunningTextUpdate();
-		}).subscribe();
+		}, ()=> liveWidgetRunningTextUpdate());
+
+	onMount(()=>{
+		if($live_feed?.id) supabaseChannel.subscribe();
 		liveWidgetRunningTextUpdate();
+	});
+
+	onDestroy(()=>{
+		supabaseChannel.unsubscribe();
 	});
 
 	async function liveWidgetRunningTextUpdate() {

@@ -10,13 +10,14 @@
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
+	import { onDestroy, onMount } from 'svelte';
 	import { v4 as uuid } from 'uuid';
 	import { CheckMark, CloseX } from '$src/lib/components/icon';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 	import { PageCtx } from '$src/lib/context';
 
 	import type { Tables } from '$src/lib/schema/database.types';
-	import { onMount } from 'svelte';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 
 	let pageCtx = new PageCtx('control-room');
 	const live_feed = pageCtx.get('ctx_table$live_feed');
@@ -30,28 +31,28 @@
 
 	let watermarkType: 'text' | 'image' = $state('text');
 
-	refreshBackgrounAsset();
+
+	let supabaseChannel: RealtimeChannel = supabase.channel('watermark:update').on(
+		'postgres_changes',
+		{
+			event: '*',
+			schema: 'public',
+			table: 'live_widget_watermark',
+			filter: `live_feed=eq.${$live_feed?.id}`
+		},
+		() => liveWidgetWatermarkUpdate()
+	);
 
 	onMount(() => {
 		if ($live_feed?.id) {
-			supabase
-				.channel('watermark:update')
-				.on(
-					'postgres_changes',
-					{
-						event: '*',
-						schema: 'public',
-						table: 'live_widget_watermark',
-						filter: `live_feed=eq.${$live_feed?.id}`
-					},
-					() => {
-						liveWidgetWatermarkUpdate();
-					}
-				)
-				.subscribe();
-
+			supabaseChannel.subscribe();
 			liveWidgetWatermarkUpdate();
 		}
+		refreshBackgrounAsset();
+	});
+
+	onDestroy(() => {
+		supabaseChannel.unsubscribe();
 	});
 
 	async function liveWidgetWatermarkUpdate() {
@@ -131,9 +132,9 @@
 	}
 
 	async function handleSaveWatermark() {
-		if(!$live_feed?.id) return;
+		if (!$live_feed?.id) return;
 
-		await supabase.from("live_widget_watermark").upsert({
+		await supabase.from('live_widget_watermark').upsert({
 			live_feed: $live_feed.id,
 			type: watermarkType,
 			image_asset: watermarkType === 'image' ? selectedId : null,
@@ -169,10 +170,14 @@
 		<div class="content-container">
 			{#each assetBg as asset}
 				<div class="image-container">
-					<button class="image-btn" class:selected={selectedId === asset.id} onclick={()=>{
-						selectedId = asset.id;
-						handleSaveWatermark();
-					}}>
+					<button
+						class="image-btn"
+						class:selected={selectedId === asset.id}
+						onclick={() => {
+							selectedId = asset.id;
+							handleSaveWatermark();
+						}}
+					>
 						{#await getPublicUrl(asset.path)}
 							<Loader />
 						{:then src}
@@ -218,11 +223,7 @@
 		</div>
 	{/if}
 
-	<PositionalBox 
-		bind:rowIndex={rowIndex}
-		bind:colIndex={colIndex}
-		onBoxChange={handleSaveWatermark}
-	/>
+	<PositionalBox bind:rowIndex bind:colIndex onBoxChange={handleSaveWatermark} />
 </WidgetContainer>
 
 <style lang="postcss">
@@ -284,7 +285,7 @@
 	.action-fav {
 		@apply bottom-1 left-1;
 		scale: 0.7;
-		top:unset;
+		top: unset;
 		right: unset;
 		&.is-fav {
 			@apply block;
@@ -314,5 +315,4 @@
 		right: unset;
 		@apply block;
 	}
-
 </style>

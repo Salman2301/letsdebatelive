@@ -11,10 +11,12 @@
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
 	import { v4 as uuid } from 'uuid';
+	import { onDestroy, onMount } from 'svelte';
 	import { CloseX } from '$src/lib/components/icon';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 	
 	let selectedId: string | undefined = $state();
 
@@ -22,18 +24,22 @@
 	const live_feed = pageCtx.get('ctx_table$live_feed');
 
 	const supabase = getSupabase();
-
-	refreshBackgrounAsset();
-
-	supabase.channel("background:update")
+	const supabaseChannel: RealtimeChannel = supabase.channel("background:update")
 	.on("postgres_changes", { 
 		event: "*",
 		schema: 'public',
 		table: 'live_widget_background',
 		filter: `live_feed=eq.${$live_feed?.id}`
-	}, ()=>{
-		liveWidgetBackgroundUpdate();
-	}).subscribe();
+	}, ()=> liveWidgetBackgroundUpdate() );
+
+	onMount(()=>{
+		if($live_feed?.id) supabaseChannel.subscribe();
+		refreshBackgrounAsset();
+	});
+
+	onDestroy(()=>{
+		supabaseChannel.unsubscribe();
+	});
 
 	liveWidgetBackgroundUpdate();
 

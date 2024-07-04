@@ -6,15 +6,17 @@
 	import Fav from '$src/lib/components/icon/Fav.svelte';
 	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
-	import { PageCtx } from '$src/lib/context';
-	import { newToast } from '$src/lib/components/toast/Toast.svelte';
-	import { authUserData } from '$src/lib/stores/auth.store';
-	import { getSupabase } from '$src/lib/supabase';
 	import { v4 as uuid } from 'uuid';
+	import { PageCtx } from '$src/lib/context';
+	import { getSupabase } from '$src/lib/supabase';
+	import { onDestroy, onMount } from 'svelte';
+	import { authUserData } from '$src/lib/stores/auth.store';
 	import { CheckMark, CloseX } from '$src/lib/components/icon';
+	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 
 	let selectedId: string | undefined = $state();
 	const supabase = getSupabase();
@@ -25,19 +27,23 @@
 	let rowIndex = $state(0);
 	let colIndex = $state(0);
 
-	supabase.channel("logo:update")
+	const supabaseChannel: RealtimeChannel = supabase.channel("logo:update")
 	.on("postgres_changes", { 
 		event: "*",
 		schema: 'public',
-		table: 'live_widget_background',
+		table: 'live_widget_logo',
 		filter: `live_feed=eq.${$live_feed?.id}`
-	}, ()=>{
+	}, ()=> liveWidgetLogoUpdate());
+
+	onMount(()=>{
+		if($live_feed?.id) supabaseChannel.subscribe();
+		refreshLogoAsset();
 		liveWidgetLogoUpdate();
-	}).subscribe();
+	});
 
-	liveWidgetLogoUpdate();
-
-	refreshBackgrounAsset();
+	onDestroy(()=>{
+		supabaseChannel.unsubscribe();
+	});
 
 	const handleSucess: OnSucess = async ({ bucket, path }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
@@ -46,11 +52,11 @@
 			user_id: $authUserData?.id!
 		});
 
-		refreshBackgrounAsset();
+		refreshLogoAsset();
 	};
 
 	let assetBg: Tables<'user_asset'>[] = $state([]);
-	async function refreshBackgrounAsset() {
+	async function refreshLogoAsset() {
 		const { data, error } = await supabase.from('user_asset').select().eq('type', 'logo');
 
 		if (error) {
@@ -84,7 +90,7 @@
 
 		await supabase.from('user_asset').delete().eq('id', itemId);
 
-		refreshBackgrounAsset();
+		refreshLogoAsset();
 	}
 
 	async function handleFavBg(itemId: string, isFav?: boolean) {

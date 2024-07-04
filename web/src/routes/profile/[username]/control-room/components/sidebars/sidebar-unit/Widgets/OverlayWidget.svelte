@@ -8,6 +8,7 @@
 	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
 	import { PageCtx } from '$src/lib/context';
+	import { onDestroy, onMount } from 'svelte';
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
@@ -16,6 +17,7 @@
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
 	
 	let selectedId: string | undefined = $state();
 
@@ -27,19 +29,23 @@
 
 	const supabase = getSupabase();
 
-	refreshOverlayAsset();
-
-	supabase.channel("overlay:update")
+	const supabaseChannel: RealtimeChannel = supabase.channel("overlay:update")
 	.on("postgres_changes", { 
 		event: "*",
 		schema: 'public',
 		table: 'live_widget_overlay',
 		filter: `live_feed=eq.${$live_feed?.id}`
-	}, ()=>{
-		liveWidgetOverlayUpdate();
-	}).subscribe();
+	}, ()=> liveWidgetOverlayUpdate());
 
-	liveWidgetOverlayUpdate();
+	onMount(()=>{
+		if($live_feed?.id) supabaseChannel.subscribe();
+		refreshOverlayAsset();
+		liveWidgetOverlayUpdate();
+	});
+
+	onDestroy(()=>{
+		supabaseChannel.unsubscribe();
+	});
 
 	async function liveWidgetOverlayUpdate() {
 		if(!$live_feed?.id) return;
