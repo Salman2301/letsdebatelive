@@ -51,8 +51,8 @@
 			});
 		}
 		selectedId = data?.[0]?.asset;
-    posX = data?.[0]?.pos_x || 0;
-    posY = data?.[0]?.pos_y || 0;
+    posX = Number(data?.[0]?.pos_x || 0);
+    posY = Number(data?.[0]?.pos_y || 0);
 	}
 
 	const handleSucess: OnSucess = async ({ bucket, path, ext, mime }) => {
@@ -116,12 +116,13 @@
 
   async function handleSaveOverlay() {
     if(!$live_feed?.id) return;
+		console.log({ posX, posY, selectedId });
     await supabase.from("live_widget_overlay").upsert({
       live_feed: $live_feed?.id!,
       widget_type: "overlay",
       asset: selectedId!,
-      pos_x: posX,
-      pos_y: posY
+      pos_x: Number(posX),
+      pos_y: Number(posY)
     });
   }
 </script>

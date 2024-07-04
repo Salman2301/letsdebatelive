@@ -11,7 +11,7 @@
 	import { authUserData } from '$src/lib/stores/auth.store';
 	import { getSupabase } from '$src/lib/supabase';
 	import { v4 as uuid } from 'uuid';
-	import { CloseX } from '$src/lib/components/icon';
+	import { CheckMark, CloseX } from '$src/lib/components/icon';
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 	import { PageCtx } from '$src/lib/context';
 
@@ -183,6 +183,11 @@
 					<button class="image-action" onclick={() => handleDeleteImage(asset.id)}>
 						<CloseX />
 					</button>
+					{#if selectedId === asset.id}
+						<button class="image-action image-selected">
+							<CheckMark />
+						</button>
+					{/if}
 					<button
 						class="image-action action-fav"
 						class:is-fav={asset.fav}
@@ -230,7 +235,7 @@
 		@apply flex items-center justify-center;
 
 		&.selected {
-			@apply border border-secondary;
+			@apply border border-white;
 		}
 	}
 
@@ -277,8 +282,9 @@
 		}
 	}
 	.action-fav {
-		@apply top-1 left-1;
+		@apply bottom-1 left-1;
 		scale: 0.7;
+		top:unset;
 		right: unset;
 		&.is-fav {
 			@apply block;
@@ -303,4 +309,10 @@
 			}
 		}
 	}
+	.image-selected {
+		@apply top-1 left-1;
+		right: unset;
+		@apply block;
+	}
+
 </style>

@@ -169,8 +169,8 @@
     ✔ Connect host name @done(24-06-14 04:30)
     ✔ Setup image @done(24-06-14 04:30)
       ✔ Update the seed to upload the image in the storage? @done(24-05-31 23:55)
-      ☐ Get the follower count
-        ☐ Setup database trigger and function to setup the follower count
+      ✔ Get the follower count @done(24-07-04 13:47)
+        ✔ Setup database trigger and function to setup the follower count @done(24-07-04 13:48)
     ☐ Check if the backstage panel is open only for selected team / audience type
     ☐ Show the user image in the backstage panel @low
     ☐ On mic input, show the sound wave on the icon @low 
@@ -183,10 +183,10 @@
         ☐ Check if the user can access the channel from the live site
         ☐ Check if the channel unpublish it update the channel
       Follower:
-        ☐ Add test for follow
-        ☐ Update the count
-        ☐ Leave
-        ☐ Check the count is updated
+        ✔ Add test for follow @done(24-07-04 13:48)
+        ✔ Update the count @done(24-07-04 13:48)
+        ✔ Leave @done(24-07-04 13:48)
+        ✔ Check the count is updated @done(24-07-04 13:48)
 
 
   LOGS:

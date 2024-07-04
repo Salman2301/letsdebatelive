@@ -18,9 +18,9 @@
 <div class="widgets">
 	<BackgroundWidgets />
 	<LogoWidgets />
-	<WatermarkWidget />
 	<OverlayWidget />
 	<RunningTextWidget />
+	<WatermarkWidget />
 	<AlertWidget />
 	<SoundBoardWidget />
 	<!--
