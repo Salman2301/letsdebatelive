@@ -64,7 +64,7 @@
 <WidgetContainer
 	title="Running Text"
 	desc="This widget shows the running text of the current session."
-	expand={true}
+	expand={false}
 >
 	<textarea class="w-full h-full" placeholder="Type a running text here and use ✨ as you please." bind:value={textRunning} onblur={handleSaveRunningText}></textarea>
 

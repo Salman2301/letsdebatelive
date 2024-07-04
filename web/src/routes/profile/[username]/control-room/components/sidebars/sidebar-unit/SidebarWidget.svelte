@@ -3,6 +3,7 @@
 	import AlertWidget from "./Widgets/AlertWidget.svelte";
 	import BackgroundWidgets from "./Widgets/BackgroundWidgets.svelte";
 	import LogoWidgets from "./Widgets/LogoWidgets.svelte";
+	import OverlayWidget from "./Widgets/OverlayWidget.svelte";
 	import RunningTextWidget from "./Widgets/RunningTextWidget.svelte";
 	import SoundBoardWidget from "./Widgets/SoundBoardWidget.svelte";
 	import WatermarkWidget from "./Widgets/WatermarkWidget.svelte";
@@ -18,6 +19,7 @@
 	<BackgroundWidgets />
 	<LogoWidgets />
 	<WatermarkWidget />
+	<OverlayWidget />
 	<RunningTextWidget />
 	<AlertWidget />
 	<SoundBoardWidget />
@@ -25,13 +27,10 @@
 		Chat Widget
 		User able to change different theme for the chat message 
 	-->
-		
 </div>
 
 <!--
 <p>Content</p>
-<p>Running text</p>
-<p>Freeform Overlays</p>
 <p>Banner</p> -->
 
 <style lang="postcss">

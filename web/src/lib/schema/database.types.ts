@@ -862,6 +862,54 @@ export type Database = {
 					}
 				];
 			};
+			live_widget_overlay: {
+				Row: {
+					asset: string;
+					asset_type: string | null;
+					created_at: string;
+					live_feed: string;
+					pos_x: number;
+					pos_y: number;
+					sort: number;
+					widget_type: Database['public']['Enums']['widget_type'];
+				};
+				Insert: {
+					asset: string;
+					asset_type?: string | null;
+					created_at?: string;
+					live_feed: string;
+					pos_x: number;
+					pos_y: number;
+					sort?: number;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Update: {
+					asset?: string;
+					asset_type?: string | null;
+					created_at?: string;
+					live_feed?: string;
+					pos_x?: number;
+					pos_y?: number;
+					sort?: number;
+					widget_type?: Database['public']['Enums']['widget_type'];
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'live_widget_overlay_asset_fkey';
+						columns: ['asset'];
+						isOneToOne: false;
+						referencedRelation: 'user_asset';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'live_widget_overlay_live_feed_fkey';
+						columns: ['live_feed'];
+						isOneToOne: false;
+						referencedRelation: 'live_feed';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			live_widget_running_text: {
 				Row: {
 					color_background: string | null;
@@ -1194,7 +1242,7 @@ export type Database = {
 			};
 		};
 		Enums: {
-			asset_type: 'image' | 'video' | 'background' | 'frame' | 'logo' | 'watermark';
+			asset_type: 'image' | 'video' | 'background' | 'frame' | 'logo' | 'watermark' | 'overlay';
 			audience_service: 'viewer' | 'chat' | 'backstage';
 			audience_type:
 				| 'supporter'
@@ -1214,7 +1262,14 @@ export type Database = {
 				| 'activity_feed';
 			participant_location: 'stage' | 'backstage';
 			role: 'host' | 'co-host' | 'mod' | 'guest';
-			widget_type: 'background' | 'watermark' | 'logo' | 'alert' | 'running_text' | 'sounds_board';
+			widget_type:
+				| 'background'
+				| 'watermark'
+				| 'logo'
+				| 'alert'
+				| 'running_text'
+				| 'sounds_board'
+				| 'overlay';
 		};
 		CompositeTypes: {
 			[_ in never]: never;

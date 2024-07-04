@@ -88,5 +88,6 @@
 <style lang="postcss">
 	label {
 		@apply cursor-pointer;
+		@apply contents;
 	}
 </style>
