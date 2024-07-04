@@ -2,6 +2,10 @@
 	import Loader from '$src/lib/components/icon/Loader.svelte';
 	import WidgetContainer from './WidgetContainer.svelte';
 	import UploadSlot, { type OnSucess } from '$src/lib/components/slots/UploadSlot.svelte';
+	import PositionalBox from './components/PositionalBox.svelte';
+	import Fav from '$src/lib/components/icon/Fav.svelte';
+	import UnFav from '$src/lib/components/icon/UnFav.svelte';
+	import Label from '$src/lib/components/form/input/Label.svelte';
 
 	import { newToast } from '$src/lib/components/toast/Toast.svelte';
 	import { authUserData } from '$src/lib/stores/auth.store';
@@ -11,9 +15,6 @@
 	import { newPrompt } from '$src/lib/components/prompt/Prompt.svelte';
 
 	import type { Tables } from '$src/lib/schema/database.types';
-	import PositionalBox from './components/PositionalBox.svelte';
-	import Fav from '$src/lib/components/icon/Fav.svelte';
-	import UnFav from '$src/lib/components/icon/UnFav.svelte';
 
 	type Props = {
 		selectedId?: string;
@@ -23,9 +24,9 @@
 
 	const supabase = getSupabase();
 
-	$effect(() => {
-		refreshBackgrounAsset();
-	});
+	let watermarkType: 'text' | 'image' = $state('text');
+
+	refreshBackgrounAsset();
 
 	const handleSucess: OnSucess = async ({ bucket, path }) => {
 		const { data, error } = await supabase.from('user_asset').insert({
@@ -76,61 +77,80 @@
 	}
 
 	async function handleFavBg(itemId: string, isFav?: boolean) {
-		await supabase.from("user_asset").update({
-			fav: isFav
-		}).eq("id", itemId)
+		await supabase
+			.from('user_asset')
+			.update({
+				fav: isFav
+			})
+			.eq('id', itemId);
 	}
 </script>
 
 <WidgetContainer
 	title="Watermark"
 	desc="Upload / Select a your watermark that suites your brand!"
+	expand={true}
 >
-	<div class="content-container">
-		{#each assetBg as asset}
-			<div class="image-container">
-				<button class="image-btn" class:selected={selectedId === asset.id}>
-					{#await getPublicUrl(asset.path)}
-						<Loader />
-					{:then src}
-						<img {src} alt="asset" />
-					{/await}
-				</button>
-				<div class="bg-overlay">
+	<Label label="Type">
+		<select name="watermark" class="drop-watermark" bind:value={watermarkType}>
+			<option value="text">Text</option>
+			<option value="image">Image</option>
+		</select>
+	</Label>
+
+	{#if watermarkType === 'text'}
+		<div class="text-container">
+			<textarea
+				class="w-full h-full"
+				placeholder="Enter a watermark text here"
+			></textarea>
+		</div>
+	{:else if watermarkType === 'image'}
+		<div class="content-container">
+			{#each assetBg as asset}
+				<div class="image-container">
+					<button class="image-btn" class:selected={selectedId === asset.id}>
+						{#await getPublicUrl(asset.path)}
+							<Loader />
+						{:then src}
+							<img {src} alt="asset" />
+						{/await}
+					</button>
+					<div class="bg-overlay"></div>
+					<button class="image-action" onclick={() => handleDeleteImage(asset.id)}>
+						<CloseX />
+					</button>
+					<button
+						class="image-action action-fav"
+						class:is-fav={asset.fav}
+						onclick={() => {
+							asset.fav = !asset.fav;
+							handleFavBg(asset.id, !!asset.fav);
+						}}
+					>
+						{#if asset.fav}
+							<Fav />
+						{:else}
+							<UnFav />
+						{/if}
+					</button>
 				</div>
-				<button class="image-action" onclick={() => handleDeleteImage(asset.id)}>
-					<CloseX />
-				</button>
-				<button
-					class="image-action action-fav"
-					class:is-fav={asset.fav}
-					onclick={() => {
-						asset.fav = !asset.fav;
-						handleFavBg(asset.id, !!asset.fav);
-					}}
-				>
-					{#if asset.fav}
-						<Fav />
-					{:else}
-						<UnFav />
-					{/if}
-				</button>
-			</div>
-		{/each}
-	</div>
+			{/each}
+		</div>
 
-	<div class="footer-container">
-		<UploadSlot
-			bucket="user_asset"
-			path="{$authUserData!.id}/watermark/{uuid()}"
-			isUploading={false}
-			onSuccess={handleSucess}
-		>
-			<div class="add-item">Upload a watermark</div>
-		</UploadSlot>
-	</div>
+		<div class="footer-container">
+			<UploadSlot
+				bucket="user_asset"
+				path="{$authUserData!.id}/watermark/{uuid()}"
+				isUploading={false}
+				onSuccess={handleSucess}
+			>
+				<div class="add-item">Upload a watermark</div>
+			</UploadSlot>
+		</div>
+	{/if}
 
-	<PositionalBox setInitBox={{ colIndex: 2, rowIndex: 1}} onBoxChange={console.log}	/>
+	<PositionalBox setInitBox={{ colIndex: 2, rowIndex: 1 }} onBoxChange={console.log} />
 </WidgetContainer>
 
 <style lang="postcss">
@@ -159,6 +179,21 @@
 			@apply bg-primary/60;
 		}
 	}
+
+	.drop-watermark {
+		@apply bg-primary-dark/50;
+		width: 120px;
+		@apply rounded border border-light-gray;
+		@apply py-2 px-4;
+	}
+
+	textarea {
+		@apply border border-light-gray rounded;
+		@apply bg-primary-dark;
+		@apply p-2;
+		@apply mt-2;
+	}
+
 	.content-container {
 		@apply flex flex-wrap justify-start gap-5;
 		@apply mt-2;
@@ -177,14 +212,14 @@
 	.action-fav {
 		@apply top-1 left-1;
 		scale: 0.7;
-		right:unset;
+		right: unset;
 		&.is-fav {
 			@apply block;
 		}
 		&:hover {
 			@apply text-yellow-400;
 		}
-	}	
+	}
 	.bg-overlay {
 		@apply absolute;
 		@apply top-0 right-0 left-0 bottom-0;

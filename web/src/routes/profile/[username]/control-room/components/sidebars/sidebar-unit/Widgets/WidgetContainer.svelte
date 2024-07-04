@@ -37,7 +37,7 @@
 		border: 1px solid var(--color-light-gray);
 		@apply mx-2;
 		@apply rounded;
-		&.expand {
+		&.expand, &:hover {
 			@apply bg-white/5;
 		}
 	}
@@ -49,6 +49,8 @@
 	}
 	.icon {
 		transition: rotate 0.3s;
+		scale: 0.7;
+		color: #ccc
 	}
 	.widget-desc {
 		@apply text-white/60 text-xs font-bold;

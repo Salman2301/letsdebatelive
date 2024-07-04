@@ -42,3 +42,9 @@ input,
 select:focus {
 	outline: 1px solid var(--color-light-gray);
 }
+
+select {
+	background-color: transparent;
+	color: white;
+	padding: 8px 10px;
+}

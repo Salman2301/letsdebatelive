@@ -91,7 +91,7 @@
 <WidgetContainer
 	title="Background"
 	desc="Upload / Select a background image / video that suites your brand!."
-	expand={true}
+	expand={false}
 >
 	<div class="content-container">
 		{#each assetBg as asset}
