@@ -19,6 +19,9 @@ It's useful for:
 - SvelteKit
 - TailwindCSS
 - Supabase
+- PostgreSQL
+- NodeJS
+- Typescript
 
 ### Supabase
 
